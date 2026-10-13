@@ -1,6 +1,6 @@
 ---
 id: T-001
-status: in_review
+status: changes_requested
 priority: P0
 size: L
 milestone: M0
@@ -11,7 +11,7 @@ spec_version: null
 depends_on: [T-000]
 branch: build/T-001-client-foundation-and-stack
 risk: elevated
-role: reviewer
+role: implementer
 executor: frontier
 pr: 2
 ---
@@ -77,5 +77,21 @@ Política de gate: BOOTSTRAP (docs + server + client). Gate completo local: `bas
 - Publicación: publicada en el PR #2 (ready al publicar el cierre).
 - Próximo comando o acción: sesión revisora con el prompt de docs/STATUS.md.
 
+## Checkpoint de revisión · ronda 1 · 2026-10-13
+- Sesión nueva de reviewer de frontera · herramienta Codex · modelo solicitado GPT-6.1 Sol · esfuerzo solicitado high. El runtime no expone un identificador de modelo/esfuerzo verificable; no se presenta la selección solicitada como telemetría comprobada. Implementación: Opus 5.5 / Claude Code, sesión distinta.
+- Impacto de esta sesión: solo transición documental de tarea/STATUS/BACKLOG; sin cambios de comportamiento, contratos, permisos/propiedad, datos ni UI.
+- Hechos remotos: PR #2 propio, no fork, ready; HEAD publicado `101479b59789e0e274c3767046d62960c887ac2f`, base `main` = `9f061f55f99e614e36f8317150881ed9408a8c96`; run vigente `38342385438` verde (BOOTSTRAP). Árbol local limpio al iniciar y coincidente con HEAD; no requiere worktree.
+- Diff revisado: los 75 archivos contra la base publicada, incluidas configuración/CI, código/tests, documentación y eliminación de la demo; lockfile revisado por estructura, versiones, orígenes npm e integridades, sin volcarlo entero. Sin migraciones ni cambios fuera del alcance; la modificación de AUTONOMY solo reconcilia el merge previo y no amplía permisos.
+- Gate real: `bash scripts/verify.sh` → exit 0, BOOTSTRAP: docs OK, backend `clean verify` BUILD SUCCESS (9 slice + 7 IT, cero fallos/omisiones), Spotless/JaCoCo; client `tsc -b` con tests, lint cero warnings, Prettier, 34 tests en 6 archivos, build; cobertura 96,07 % líneas / 89,87 % ramas. Aviso de bundle 538,95 kB ya registrado en BACKLOG. Log local: `$TEMP/stockpilot-review-T001-gate.log`.
+- T1-01/T1-03: `docker compose up -d --build --wait` exit 0, db/server/client healthy. `curl` vía `http://127.0.0.1:5173`: `/` y ruta profunda → 200 HTML español; asset → 200 con cache immutable; `GET /api/v1/system/info` → 200 con nombre y versión `0.0.1-SNAPSHOT`; rutas vecinas y stores → 401 ProblemDetail; POST sin CSRF → 403 ProblemDetail; HEAD al endpoint público → 401. Las rutas OAuth/callback/logout llegan al server (401; auth aún no implementada). `permitAll` nuevo restringido a GET exacto; health preexistente se conserva; CSRF sin disable/ignore.
+- T1-02: navegador Brave real muestra nombre/versión del backend; a 375 y 1280 px `scrollWidth == clientWidth`. Con server detenido y DNS sin caché: curl → 502 en 1,018529 s; UI móvil muestra error en español y Reintentar; al restaurar el server, Reintentar recupera el dato. **No queda validada la generalización de latencia de TR-08: R1 reproduce otro camino de caída.**
+- T1-04/T1-05: pruebas de validación backend y formulario real de referencia verdes, con errores accesibles/foco y éxito solo después de 204; sin debilitar pruebas ni umbrales. CI ready inicial `38342385438` verde; la del HEAD documental final se enlaza en el veredicto del PR.
+- T1-06: `flyway_schema_history` conserva `1|1|2026-10-13 02:18:22.27758|-31826885|t` antes/después de rebuild, restart, down/up sin `-v` y `up -d --force-recreate --wait server`; client conserva su ID en la recreación aislada, proxy responde 200 en 0,039016 s. No se escribieron datos de negocio ni se tocaron otros proyectos Docker.
+- HANDOFF: B-01 queda respaldado para readiness, llamada real, estados y persistencia; no demuestra un límite universal de latencia con server detenido. B-03 y V-01 respaldados por archivos y gate real. Sigue NO_LISTO; S-01…S-03, V-02/V-03 y cierre M0 no se declaran completos. La corrección debe ajustar la evidencia de caída en SETUP/tarea/HANDOFF a lo efectivamente probado.
+- **R1 · P2 · bloqueante:** `client/nginx.conf:14` y bloque proxy `:24–31`: `resolver_timeout` limita DNS, pero no la conexión a una IP resuelta/caché. Tras un GET exitoso, `docker compose stop -t 1 server` y `curl --max-time 75 -o NUL -w ... http://127.0.0.1:5173/api/v1/system/info` dieron **502 en 14,426136 s**; nginx registró `connect() failed (113: Host is unreachable) while connecting to upstream` a la IP anterior. En la primera caída con `docker compose stop server`, curl agotó 10,010765 s sin respuesta (exit 28). Contradice la respuesta ~1 s y UI ~6 s declaradas en SETUP TR-08 y esta tarea; los tests MSW de 502 inmediato no cubren esa conexión. Corregir el manejo/timeout de conexión upstream dentro de T1-02, añadir una regresión que falle primero para la caída tras tráfico exitoso además del DNS frío y revalidar UI/recuperación. No resolverlo solo ampliando esperas o reduciendo la aceptación. Fuente técnica: [nginx proxy_connect_timeout](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_connect_timeout) (default 60 s, distinto de [resolver_timeout](https://nginx.org/en/docs/http/ngx_http_core_module.html#resolver_timeout)); 60 s es el default documentado, **no** una duración observada en esta revisión.
+- Estado: `changes_requested`; corrección en nueva sesión implementer de frontera, misma rama y PR; ronda 1 de un máximo de 2. Reviewer no cambió código. Próximo comando: consultar PR #2/base/HEAD/CI y reproducir R1 antes de corregir. Prompt único vigente en STATUS.
+- Publicación: este checkpoint se guarda en el commit documental de revisión; su SHA final, CI y veredicto se publican en el PR después de verificar el push. Sin aprobación ni merge.
+- Cleanup realizado: server restaurado; db/server/client healthy; volumen de desarrollo conservado; viewport del navegador restaurado. Logs temporales locales conservados, no versionados. Kit local: lección genérica sobre fallos con/sin caché y límites de timeout, sin datos del producto.
+
 ## Resultado
-Implementación publicada en el PR #2, en revisión. Criterios T1-01…T1-06 verificados localmente y en contenedores; CI del HEAD final en el PR. Descubrimientos: TR-08 (latencia DNS del proxy con server detenido), TR-09 (HMR con bind mounts de Windows) y TR-10 (ancho mínimo de capturas headless), documentados en SETUP; dos pendientes al BACKLOG.
+**Cambios requeridos (ronda 1).** Implementación publicada en el PR #2; gate BOOTSTRAP verde y T1-01, T1-03…T1-06 revalidados. T1-02 muestra éxito/error/recuperación, pero R1 impide aceptar como general la latencia de caída declarada. Misma rama/PR, siguiente sesión implementer de frontera. Sin merge; CI y SHA finales en el comentario de veredicto.

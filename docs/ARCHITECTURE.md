@@ -16,7 +16,8 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | `server` imagen JRE 21, health/readiness, Flyway + `validate` | Materializado (T-000) |
 | Seguridad base deny-by-default, 401/403 ProblemDetail, CSRF activo | Materializado (T-000) |
 | Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio (T-000); alta al iniciar sesión en T-002 |
-| `client` con proxy, Router, MUI, Query, cliente HTTP | Propuesto (T-001) |
+| `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
+| Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
 | Google OIDC + sesión + CSRF para SPA + logout | Propuesto (T-002, con ADR de sesión/CSRF) |
 | E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
 
@@ -32,7 +33,8 @@ Paquete raíz generado `server.server` (se conserva; renombrarlo no aporta valor
 | `catalog` | Productos simples: código, nombre, precio ARS, activo/inactivo | `store` | F-02 |
 | `inventory` | Saldo y movimientos (inicial, entrada, ajuste, venta, restitución) con actor y motivo | `catalog` | F-02–F-04 |
 | `sales` | Venta, ítems con precio histórico, medio de pago único, anulación | `inventory`, `catalog` | F-03, F-04 |
-| `shared/error` | ProblemDetail transversal, sin lógica de negocio | — | Todos |
+| `shared/error` | ProblemDetail transversal, sin lógica de negocio. Materializado: `ApiExceptionHandler` (validación del body → 400 con `errors[{field, message}]` en orden estable; resto de excepciones de MVC como ProblemDetail) | — | Todos |
+| `system` | Endpoint público `GET /api/v1/system/info` (`{name, version}`, versión del POM); única excepción anónima de `/api/**` | — | — |
 
 Reglas de límites: sin ciclos; una feature usa a otra a través de su servicio (no de su repositorio). `sales` registra los movimientos de venta/restitución mediante el servicio de `inventory` dentro de la misma transacción (RN-01, RN-08). Los módulos se crean cuando un objetivo aceptado los necesita; esta tabla fija límites, no obliga a crear paquetes vacíos.
 
@@ -55,11 +57,19 @@ Reglas de límites: sin ciclos; una feature usa a otra a través de su servicio 
 - Doble confirmación (P-09): clave de idempotencia generada por el cliente por intento de venta, única por comercio; reintentar devuelve la misma venta.
 
 ## Seguridad
-- Materializado: todo requiere autenticación salvo `/actuator/health/**`; formulario y Basic deshabilitados; rechazos como ProblemDetail (`SecurityExceptionHandler`); CSRF activo; sin usuarios en memoria.
+- Materializado: todo requiere autenticación salvo `/actuator/health/**` y `GET /api/v1/system/info`; formulario y Basic deshabilitados; rechazos como ProblemDetail (`SecurityExceptionHandler`); CSRF activo; sin usuarios en memoria.
 - Propuesto (T-002): OAuth2 Login con Google (scopes `openid profile email`), sesión backend con cookie `HttpOnly`, `SameSite=Lax`, `Secure` en HTTPS; CSRF cookie→header para la SPA con renovación tras login/logout; `/api/v1/auth/me` devuelve un DTO sin credenciales; logout POST que invalida la sesión. Proveedor OIDC local solo en perfiles de prueba.
 
 ## Frontend
-Estructura `src/app`, `src/features/<feature>`, `src/shared/ui`, `src/services/http.ts`, `src/test`. Material UI con tema único, TanStack Query para datos remotos, React Hook Form + Zod para formularios de negocio, React Router en modo declarativo. Reglas en [client/AGENTS.md](../client/AGENTS.md). Materialización en T-001/T-002.
+Estructura `src/app`, `src/features/<feature>`, `src/shared/ui`, `src/shared/forms`, `src/services/http.ts`, `src/test`. Material UI con tema único, TanStack Query para datos remotos, React Hook Form + Zod para formularios de negocio, React Router en modo declarativo. Reglas en [client/AGENTS.md](../client/AGENTS.md).
+
+Materializado en T-001:
+- `app/`: `App` (BrowserRouter), `AppProviders` (Query + tema + CssBaseline, compartido con las pruebas), `AppRoutes` (shell con rutas hijas y 404), `theme.ts` (tema único, locale `esES`), `queryClient.ts` (reintenta solo red/5xx, hasta 2 veces; nunca 4xx ni respuestas fuera de contrato).
+- `services/http.ts`: único cliente `fetch`. `credentials: 'same-origin'`; header CSRF en métodos no seguros mediante un `CsrfTokenResolver` (hoy sin token: el mecanismo lo fija T-002); 4xx/5xx → `ApiError` con `ProblemDetail` (o `null` si el cuerpo no lo es, p. ej. 502 del proxy); red caída → `NetworkError`; cuerpo vacío/no JSON/fuera de esquema → `UnexpectedResponseError`; el aborto se propaga sin envolver. Toda respuesta con cuerpo se valida con un esquema Zod: no hay `any` ni casts en la frontera.
+- `shared/ui`: `ErrorAlert` + `errorMessage` (mensajes en español sin detalles técnicos). `shared/forms`: `FormTextField` (TextField controlado por RHF, error accesible por `aria-describedby`) y `applyServerFieldErrors` (vuelca `errors[]` del server junto a cada campo, foco al primero, el resto en `root.server`).
+- `features/system`: primera feature de referencia (api + hook de Query + componente con estados cargando/error/éxito).
+
+Operación: el contenedor `client` (target `runtime`) sirve el build con nginx y reenvía `/api/`, `/oauth2/`, `/login/oauth2/code/` y `/logout` a `server:8080` conservando el `Host` del navegador y agregando `X-Forwarded-*`; resuelve `server` por el DNS de Docker en cada petición (sobrevive a la recreación del server). `client-dev` (perfil `dev`) ofrece Vite con HMR y el mismo proxy. Detalle en [SETUP.md](SETUP.md).
 
 ## Pruebas y operación
 Niveles, gate y políticas en [TESTING.md](TESTING.md); comandos y versiones en [SETUP.md](SETUP.md).

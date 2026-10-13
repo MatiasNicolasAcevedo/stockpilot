@@ -4,6 +4,7 @@
 #   bash scripts/verify.sh            todas las suites de la fase actual
 #   bash scripts/verify.sh --docs     solo docs-check
 #   bash scripts/verify.sh --server   solo backend (runner server-tests o alternativa host)
+#   bash scripts/verify.sh --client   solo client (runner client-tests: typecheck, lint, formato, tests, build)
 #   bash scripts/verify.sh --fast     fase actual sin E2E (solo iteración; nunca autoriza merge)
 #   bash scripts/verify.sh --policy <base>   muestra la política del diff contra <base> sin ejecutar suites
 set -uo pipefail
@@ -16,7 +17,7 @@ cd "$ROOT" || exit 2
 
 phase_suites() {
   case "$GATE_PHASE" in
-    BOOTSTRAP) echo "docs server" ;;
+    BOOTSTRAP) echo "docs server client" ;;
     FULL) echo "docs server client e2e" ;;
     *) echo "verify.sh: fase desconocida $GATE_PHASE" >&2; exit 2 ;;
   esac
@@ -24,7 +25,7 @@ phase_suites() {
 
 materialized() {
   case "$1" in
-    docs|server) return 0 ;;
+    docs|server|client) return 0 ;;
     *) return 1 ;;
   esac
 }
@@ -52,6 +53,11 @@ run_server() {
   esac
 }
 
+# La imagen verify copia las fuentes actuales; --build la reconstruye (npm ci queda en caché si el lockfile no cambió).
+run_client() {
+  docker compose --profile verify run --build --rm client-tests
+}
+
 suites=()
 case "${1:-}" in
   "") read -r -a suites <<< "$(phase_suites)" ;;
@@ -64,7 +70,7 @@ case "${1:-}" in
     base="${2:-origin/main}"
     node scripts/ci/classify-diff.mjs --base "$base" --head HEAD --phase "$GATE_PHASE"
     exit $? ;;
-  -h|--help) sed -n '2,9p' "$0"; exit 0 ;;
+  -h|--help) sed -n '2,10p' "$0"; exit 0 ;;
   *) echo "verify.sh: opción desconocida $1" >&2; exit 2 ;;
 esac
 

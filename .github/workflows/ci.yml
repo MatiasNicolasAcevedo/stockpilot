@@ -113,9 +113,34 @@ jobs:
             server/target/failsafe-reports/
           retention-days: 7
 
+  client:
+    name: client
+    needs: classify
+    if: needs.classify.outputs.policy != 'DOCS_ONLY'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test:ci
+      - run: npm run build
+
   verify-required:
     name: verify-required
-    needs: [classify, docs, server]
+    needs: [classify, docs, server, client]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -129,15 +154,16 @@ jobs:
           CLASSIFY: ${{ needs.classify.result }}
           DOCS: ${{ needs.docs.result }}
           SERVER: ${{ needs.server.result }}
+          CLIENT: ${{ needs.client.result }}
         run: |
           echo "Política: ${POLICY:-desconocida} · fase $GATE_PHASE · base $BASE · head $HEAD"
-          echo "classify=$CLASSIFY docs=$DOCS server=$SERVER"
+          echo "classify=$CLASSIFY docs=$DOCS server=$SERVER client=$CLIENT"
           {
             echo "### verify-required"
             echo "| Campo | Valor |"; echo "|---|---|"
             echo "| Política | ${POLICY:-desconocida} (fase $GATE_PHASE) |"
             echo "| Base / HEAD | \`$BASE\` / \`$HEAD\` |"
-            echo "| classify / docs / server | $CLASSIFY / $DOCS / $SERVER |"
+            echo "| classify / docs / server / client | $CLASSIFY / $DOCS / $SERVER / $CLIENT |"
           } >> "$GITHUB_STEP_SUMMARY"
           fail() { echo "::error::$1"; echo "**Resultado:** $1" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
           [ "$CLASSIFY" = success ] || fail "el clasificador no terminó con éxito"
@@ -147,9 +173,11 @@ jobs:
           fi
           case "$POLICY" in
             DOCS_ONLY)
-              [ "$SERVER" = skipped ] || fail "DOCS_ONLY con suite técnica ejecutada inesperadamente ($SERVER)" ;;
+              [ "$SERVER" = skipped ] || fail "DOCS_ONLY con suite técnica ejecutada inesperadamente (server $SERVER)"
+              [ "$CLIENT" = skipped ] || fail "DOCS_ONLY con suite técnica ejecutada inesperadamente (client $CLIENT)" ;;
             BOOTSTRAP)
-              [ "$SERVER" = success ] || fail "BOOTSTRAP exige backend verde ($SERVER)" ;;
+              [ "$SERVER" = success ] || fail "BOOTSTRAP exige backend verde ($SERVER)"
+              [ "$CLIENT" = success ] || fail "BOOTSTRAP exige client verde ($CLIENT)" ;;
             *)
               fail "política no soportada por este workflow: ${POLICY:-vacía}" ;;
           esac

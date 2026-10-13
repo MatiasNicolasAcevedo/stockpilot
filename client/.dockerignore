@@ -1,0 +1,10 @@
+# Contexto de build del client: solo fuentes y manifiestos. node_modules se instala dentro de la imagen.
+node_modules
+dist
+coverage
+*.log
+*.local
+.env
+.env.*
+Dockerfile
+.dockerignore

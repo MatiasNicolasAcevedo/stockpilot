@@ -2,14 +2,20 @@
 
 Reglas del frontend; complementan el AGENTS.md raíz. Detalle de diseño en docs/ARCHITECTURE.md.
 
-## Estado
-Scaffold Vite `react-ts` conservado tal como se generó (React 19.2, Vite 8, TypeScript 6.0, ESLint 10).
-La base (Router, MUI/Emotion, TanStack Query, cliente HTTP, pruebas, Dockerfile y servicio Compose) se materializa en T-001
-(docs/tasks/T-001-client-foundation-and-stack.md). Hasta entonces, solo los scripts `lint` y `build` del scaffold existen.
+## Estado y comandos
+Base materializada en T-001 sobre el scaffold Vite `react-ts` (React 19, Vite 8, TypeScript 6, ESLint 10); versiones en docs/SETUP.md.
+Gate client: `bash scripts/verify.sh --client` desde la raíz (runner client-tests). Equivale a `npm run verify`:
+`typecheck` (`tsc -b`, incluye tests) · `lint` (cero warnings) · `format:check` · `test:ci` (cobertura) · `build`.
+Iteración en el host: `npm ci`, `npm test`, `npm run format`. Dependencias nuevas solo con `npm install --save-exact`.
+Stack: `docker compose up -d --build --wait` → http://127.0.0.1:5173; HMR opcional con el perfil `dev` (docs/SETUP.md).
+Proxy de `/api/`, `/oauth2/`, `/login/oauth2/code/`, `/logout`: mantener iguales `nginx.conf` y `vite.config.ts`.
 
-## Estructura objetivo
+## Estructura
 `src/app/` router, providers y tema · `src/features/<feature>/` páginas, componentes, hooks, tipos y tests ·
-`src/shared/ui/` componentes reutilizados de verdad · `src/services/http.ts` único cliente HTTP · `src/test/` setup, MSW, factories.
+`src/shared/ui/` componentes reutilizados de verdad · `src/shared/forms/` campo RHF y errores del servidor ·
+`src/services/http.ts` único cliente HTTP · `src/test/` setup, MSW, factories, `renderWithProviders`.
+Referencias: `features/system/` (api con esquema Zod + hook de Query + componente con estados) y
+`shared/forms/ReferenceForm.test.tsx` (formulario RHF + Zod con errores del servidor junto al campo).
 
 ## Reglas
 Componentes funcionales `.tsx`; lógica y tipos `.ts`; TypeScript `strict` explícito; sin `any`, casts forzados ni `@ts-ignore`.

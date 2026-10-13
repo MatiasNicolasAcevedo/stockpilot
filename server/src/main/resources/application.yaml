@@ -20,6 +20,10 @@ spring:
     problemdetails:
       enabled: true
 
+stockpilot:
+  # Versión del artefacto Maven, filtrada en el build por spring-boot-starter-parent (delimitador @).
+  version: "@project.version@"
+
 server:
   error:
     include-stacktrace: never

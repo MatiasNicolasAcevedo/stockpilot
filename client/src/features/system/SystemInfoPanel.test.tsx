@@ -19,15 +19,21 @@ describe('SystemInfoPanel (T1-02)', () => {
     expect(screen.getByText('Servidor conectado')).toBeInTheDocument()
   })
 
-  it('con el server caído detrás del proxy (502) muestra un error comprensible', async () => {
-    server.use(http.get(INFO, () => new HttpResponse('Bad Gateway', { status: 502 })))
+  it.each([502, 504])('con el proxy en %i muestra error y permite reintentar', async (status) => {
+    server.use(
+      http.get(INFO, () => new HttpResponse('Upstream unavailable', { status }), { once: true }),
+    )
 
-    renderWithProviders(<SystemInfoPanel />)
+    const { user } = renderWithProviders(<SystemInfoPanel />)
 
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('No se pudo obtener el estado del servidor')
     expect(alert).toHaveTextContent('El servidor no está disponible en este momento')
     expect(screen.queryByText(/versión/)).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Reintentar' }))
+    expect(await screen.findByText('StockPilot · versión 0.0.1-TEST')).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
   it('sin red muestra el error de conexión y «Reintentar» recupera el dato', async () => {

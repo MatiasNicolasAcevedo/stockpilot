@@ -1,13 +1,13 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · sesión nueva: implementer de frontera T-002 parte A · Codex (API), familia GPT-6 declarada; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
+Actualizado: 2026-10-13 (UTC-3) · sesión nueva: implementer de frontera T-002 parte B1 · Codex (API), basado en GPT-6 según entorno; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Sesión nueva implementer de frontera: T-002 B1, después de salida A comprobada en misma tarea/rama/PR draft |
+| Acción | Implementer de frontera ejecuta solo T-002 B1; inicio reconciliado, impacto registrado, docs-check y línea de base antes de código |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
 | Estado | `in_progress` |
-| Ejecutor | Frontera · implementer de A en esta sesión; B1 requiere sesión nueva abierta por el dueño |
+| Ejecutor | Frontera · implementer B1 en esta sesión nueva abierta por el dueño |
 | Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; inicio A `523acdf`, transición `6e195ea`, base `84d103c`; SHA final A/CI/coincidencia remota en comentario de salida tras push |
 | Hecho remoto comprobado | PR #2 MERGED `2026-10-13T18:06:01Z`, squash/main `84d103cd4c6b1c58f45f6272354ef49c918bce06`; APROBADO ronda 2 HEAD `b1cfff045d6a918ea8dc18d60451ef447e1a7a74`, base `9f061f55f99e614e36f8317150881ed9408a8c96`; CI HEAD `38443725709` y main `38444010437` SUCCESS. Sin PR abierto al inicio del planner; T-001 done reconciliada en primer commit de rama T-002 |
 | Bloqueo | Ninguno para B1. Proveedor local/topología/pull pendientes B2; Google real externo con dueño. Junie aún no habilitada |
@@ -36,6 +36,8 @@ BOOTSTRAP vigente, no FULL; T-003 draft, M0 NO_LISTO 7/21. Google real externo c
 | Cobertura back/front | back JaCoCo ejecutado, umbral M0 = 0; front 96,07 % líneas / 89,87 % ramas | T-002 A | gate local; no se presenta como FULL |
 
 ## Checkpoint breve
+Inicio B1: árbol limpio, HEAD local/PR `22c4a1e`, base/main `84d103c`, único PR #3 OPEN/draft y comentario A comprobados mediante gh. CI A suites emitidas SUCCESS, verify-required FAILURE esperado por DRAFT. Impacto/archivos en tarea: OIDC → servicio A, principal/me/csrf/sesión/logout y perfiles; sin forwarding/proxies/UI ni migración. Próxima operación: docs-check/transición publicada y baseline backend; logs `$TEMP/stockpilot-T002-B1-{start,baseline}.log`, cleanup runners efímeros. Codex API basado en GPT-6, runtime exacto/esfuerzo no expuestos; sin simulación o delegación. Prompt B1 sigue vigente hasta salida publicada.
+
 Salida A: IdentityService/Profile, actualización AppUser y Clock UTC; identidad exacta/estable, atributos opcionales, transacciones independientes y recuperación solo de constraint de identidad tras rollback. 16 unitarios + 5 IT nuevos verdes; concurrencia sincronizada exige ID/fila única y tercera transacción. Mutación sin recuperación falla por 23505 real; servicio restaurado. Un error inicial del fixture spy fue corregido/reprobado sin tocar aceptación. Gate BOOTSTRAP completo local exit 0 (25 unit/slices + 12 IT, client 35 tests/tsc/lint/formato/build, docs), log `$TEMP/stockpilot-T002-A-gate.log`; docs final en `$TEMP/stockpilot-T002-A-close-docs.log`. Sin cambios heredados, sin rutas/seguridad/proxy/UI nuevas ni operación de datos persistentes. Cleanup runners --rm/Testcontainers, sin pendientes. Kit mejorado solo local/excluido. Transición publicada `6e195ea`; HEAD final/CI/local=remoto se comprueban y comentan tras push en PR #3 draft. Siguiente sesión B1, mismo executor de frontera; no in_review ni merge parcial. Codex API/familia GPT-6 declarada, exacto/esfuerzo no verificables. Elevación técnica autorizada para Git/network/Docker/Bash, ningún rechazo de auto-review.
 
 Antecedente planner:

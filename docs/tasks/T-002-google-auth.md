@@ -1,6 +1,6 @@
 ---
 id: T-002
-status: ready
+status: in_progress
 priority: P0
 size: L
 milestone: M0
@@ -16,6 +16,12 @@ executor: frontier
 pr: 3
 ---
 # T-002 · Google OIDC, sesión, CSRF e identidad local
+
+## Checkpoint de implementación · parte A · inicio · 2026-10-13
+- Rol real: implementer de frontera, sesión nueva; herramienta Codex (API), familia GPT-6 declarada por el entorno. Identificador runtime exacto y esfuerzo real no expuestos/verificables; recomendación GPT-6.1 Sol/high no atribuida como selección observada. Sin otra sesión/modelo ni delegación.
+- Inicio limpio, sin cambios heredados; HEAD local/tracking/PR `523acdf7d131008caad9970271b8708837e4ab1a`, base `84d103cd4c6b1c58f45f6272354ef49c918bce06`. gh confirmó único PR #3 OPEN/draft y PR #2 MERGED con ese squash; CI main `38444010437` SUCCESS. CI planner `38446536400`: docs/classify SUCCESS, verify-required FAILURE esperado por draft. Consulta de red elevada autorizada, sin rechazo de auto-review.
+- Impacto antes de editar server: servicio interno para alta/recuperación/update de app_user por issuer/subject exactos, atributos opcionales y Clock UTC; transacciones independientes para recuperar exclusivamente el conflicto de la constraint de identidad. Datos ficticios en PostgreSQL Testcontainers. Sin migración ni operación del volumen persistente; sin rutas, permisos comerciales, seguridad/proxy ni UI nuevos. AUTONOMY, aceptación y protecciones intactas.
+- Próxima acción: docs-check de transición y línea de base backend en contenedores; luego servicio/tests A. Comandos: `bash scripts/verify.sh --docs` y `bash scripts/verify.sh --server`; logs `$TEMP/stockpilot-T002-A-start.log` y `$TEMP/stockpilot-T002-A-baseline.log`. Cleanup: runners --rm/Testcontainers efímeros; stack de desarrollo no operado. Publicar transición en misma rama/PR antes de código.
 
 ## Checkpoint de planificación · inicio · 2026-10-13
 - Rol real: planner de frontera; herramienta Codex (API); modelo declarado GPT-6. El identificador runtime exacto y el esfuerzo real no están expuestos/verificables. GPT-6.1 Sol / high es la recomendación del dueño, no telemetría de esta sesión. No se lanzó otra sesión/modelo.

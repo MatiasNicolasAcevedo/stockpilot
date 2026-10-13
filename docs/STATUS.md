@@ -1,14 +1,14 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · sesión nueva: planner de frontera T-002 y reconciliación T-001 · Codex (API), GPT-6 declarado; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
+Actualizado: 2026-10-13 (UTC-3) · sesión nueva: implementer de frontera T-002 parte A · Codex (API), familia GPT-6 declarada; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Nueva sesión implementer de frontera: T-002 parte A (identidad); contrato S-001 v1/ADR 0002 refinado y división secuencial publicada |
+| Acción | Implementar y comprobar solo T-002 parte A (identidad), publicar checkpoint en misma rama/PR draft |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
-| Estado | `ready` |
-| Ejecutor | Frontera · implementer en sesión nueva; esta sesión solo planner, sin código de auth |
-| Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; planificación publicada `c9a8b59`, HEAD final/CI se registran en comentario de cierre tras push |
+| Estado | `in_progress` |
+| Ejecutor | Frontera · implementer en esta sesión nueva, solo parte A |
+| Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; HEAD planner local/publicado `523acdf`, base `84d103c` comprobados al iniciar A |
 | Hecho remoto comprobado | PR #2 MERGED `2026-10-13T18:06:01Z`, squash/main `84d103cd4c6b1c58f45f6272354ef49c918bce06`; APROBADO ronda 2 HEAD `b1cfff045d6a918ea8dc18d60451ef447e1a7a74`, base `9f061f55f99e614e36f8317150881ed9408a8c96`; CI HEAD `38443725709` y main `38444010437` SUCCESS. Sin PR abierto al inicio; T-001 done reconciliada en primer commit de rama T-002 |
 | Bloqueo | Ninguno para A. Proveedor local/topología/pull pendientes B2; Google real externo con dueño. Junie aún no habilitada |
 
@@ -34,6 +34,9 @@ No modificar AUTONOMY/protecciones/aceptación ni datos persistentes. Antes de c
 | Cobertura back/front | back JaCoCo ejecutado, umbral M0 = 0; front 96,07 % líneas / 89,87 % ramas | corrección R1 | gate local; no se presenta como FULL |
 
 ## Checkpoint breve
+Inicio A: árbol limpio sin heredados; gh reconcilió HEAD `523acdf`, base `84d103c`, único PR #3 draft y PR #2 MERGED/CI main verde. Transición conjunta in_progress con impacto en tarea. Próxima acción: docs-check, publicación del tablero, línea de base backend y servicio/tests de identidad. Logs `$TEMP/stockpilot-T002-A-start.log` y `$TEMP/stockpilot-T002-A-baseline.log`; cleanup runners --rm/Testcontainers. Sin operar stack persistente. Modelo Codex API/familia GPT-6 declarada, exacto/esfuerzo no verificables. No avanzar a B en esta sesión sin salida A publicada.
+
+Antecedente planner:
 T-001 done reconciliada en primer commit `c9a8b59` de rama T-002: veredicto/merge y CI HEAD/main consultados con gh; sin reejecutar ni atribuir pruebas de ronda 2 a planner. Contrato S-001/ADR 0002 refinado y partes A/B1/B2/B3/C1/C2/D secuenciales dentro de la tarea mayor M0. T-002 ready con PR #3 draft; implementación solo en nueva sesión. Diff documental, docs-check containerizado exit 0 (36 Markdown/4 tareas/HANDOFF 7/21), revalidado al cierre, log `$TEMP/stockpilot-T002-planner-docs.log`. SHA final/CI y HEAD local=remoto se comprueban tras push y se comentan en PR #3. Sin cambios heredados, stack de desarrollo no operado, cleanup pendiente ninguno. Kit mejorado solo local/excluido. Git/network/Git Bash requieren elevación técnica del sandbox para operaciones ya autorizadas; no hubo rechazo de auto-review. Próxima acción ejecutable: sesión nueva, `gh pr view 3`, parte A. El prompt único vigente está arriba.
 
 ## Últimas sesiones

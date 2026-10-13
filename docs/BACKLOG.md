@@ -1,15 +1,18 @@
 # Tablero vivo
-Próxima acción: T-002 ready con S-001 v1/ADR 0002; nueva sesión implementer de frontera toma parte A en la misma rama/PR draft. T-001 done reconciliada tras MERGED confirmado; ninguna tercera ronda.
+Próxima acción: implementer de frontera trabaja solo T-002 parte A con S-001 v1/ADR 0002, misma rama/PR draft. T-001 done reconciliada tras MERGED confirmado; ninguna tercera ronda.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
-Ninguna implementación en vuelo; planificación de T-002 publicada en su rama/PR draft, contrato listo para implementer en sesión nueva.
+| Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
+|---|---|---|---|---|---|
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | Parte A: identidad transaccional y concurrencia PostgreSQL; B1/B2/B3/C1/C2/D pendientes | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para A; proveedor local/red por verificar en B2; DRAFT no autoriza merge |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | ready | Google OIDC/sesión/CSRF: partes A → B1/B2/B3 → C1/C2 → D; primera salida identidad local | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para A; implementación solo en sesión nueva, proveedor local/red por verificar en B2; DRAFT no autoriza merge |
+
+Ninguna tarea ready; retomar T-002 en vuelo.
 
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |

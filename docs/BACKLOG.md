@@ -3,6 +3,10 @@ Próxima acción: dueño resuelve pin exacto del proveedor bloqueado de T-002; l
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
+Retoma B2 2026-10-13: HEAD heredado `272b9a1` local/remoto/PR y base `84d103c` reconfirmados; único PR #3 OPEN/draft, suites CI SUCCESS y verify-required FAILURE exclusivamente DRAFT. Decisión explícita del pin solicitada al dueño; sigue pendiente, sin proveedor ejecutado ni B3. Checkpoint de esta sesión en tarea/STATUS, conservando blocked.
+
+Validación de retoma: docs-check containerizado exit 0 (36 Markdown/4 tareas/HANDOFF 7/21); cleanup del runner/red efímeros completo, sin operar DB/volumen persistente. Publicación/SHA/CI del checkpoint en comentario PR #3.
+
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|

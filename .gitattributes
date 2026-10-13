@@ -1,0 +1,21 @@
+# Texto normalizado a LF en el repositorio y en el working tree de todas las plataformas.
+# Evita diferencias CRLF entre Windows (core.autocrlf=true) y los contenedores/CI Linux
+# que ejecutan formato (Spotless/Prettier), mvnw y scripts .sh.
+* text=auto eol=lf
+
+# Scripts de Windows conservan CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.jar binary
+*.zip binary
+*.woff binary
+*.woff2 binary

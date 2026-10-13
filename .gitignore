@@ -1,0 +1,34 @@
+# StockPilot · ignores comunes del monorepo.
+# Cada subproyecto conserva además su propio .gitignore (server/, client/).
+# El kit personal plantilla/ se excluye localmente en .git/info/exclude; no se lista aquí.
+
+# Configuración real y secretos: solo se versionan los *.example
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.p12
+*.jks
+
+# Runtime de orquestación y logs locales
+.orchestrator/
+*.log
+
+# Reportes y artefactos de pruebas
+e2e/playwright-report/
+e2e/test-results/
+e2e/blob-report/
+coverage/
+
+# Dependencias y builds
+node_modules/
+dist/
+target/
+
+# IDE y sistema operativo
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db

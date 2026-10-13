@@ -45,7 +45,7 @@ No incluye: client (T-001), login OIDC/sesión/CSRF para la SPA (T-002), E2E y g
 | T0-07 | Sin sesión: `/api/**` → 401 ProblemDetail; POST sin CSRF → 403 ProblemDetail; sin form/Basic | `SecurityConfigTest`; `curl` contra el stack: 401 JSON | Verificado |
 | T0-08 | `docker compose up -d --build --wait` levanta db/server healthy; reinicio, `down`/`up` y rebuild conservan datos de desarrollo | `flyway_schema_history.installed_on` idéntico tras restart, down/up y rebuild | Verificado 2026-10-12 |
 | T0-09 | docs-check verde y gate BOOTSTRAP local; fallos propagan exit ≠ 0 | `bash scripts/verify.sh` → docs OK, server OK (BUILD SUCCESS 3 + 7); `--client` → exit 1, opción inválida → exit 2; docs-check detecta 11 mutaciones controladas | Verificado 2026-10-12 |
-| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Ruleset con `verify-required` requerido; run draft 38337479833 sobre `1e70271`: classify BOOTSTRAP, docs-check y server verdes en checkout limpio sin `plantilla/`, `verify-required` falla a propósito por DRAFT. El run de ready sobre el HEAD final se registra en el comentario de evidencia del PR #1 | Parcial: verde de ready a confirmar por la revisión |
+| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Ruleset con `verify-required` requerido; run draft 38337479833 sobre `1e70271`: classify BOOTSTRAP, docs-check y server verdes en checkout limpio sin `plantilla/`, `verify-required` falla a propósito por DRAFT. Los runs de `18f293b` mostraron la carrera TR-07 (el DRAFT de `synchronize` canceló al de `ready_for_review`); corregida leyendo el estado draft vigente. El run completo sobre el HEAD final se registra en el comentario de evidencia del PR #1 | Parcial: verde de ready a confirmar por la revisión |
 
 Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 
@@ -58,9 +58,9 @@ Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 - Pruebas: ver tabla; comandos ejecutados el 2026-10-12.
 - Bloqueos: ninguno.
 - Rama / PR: `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) (ready al publicar este commit).
-- Último commit conocido: `1e70271` (corrección de CI); este commit de transición cambia el HEAD y su SHA queda en el PR.
+- Último commit conocido: `18f293b` (transición a revisión); la corrección de TR-07 cambia el HEAD y su SHA queda en el comentario de evidencia del PR.
 - Publicación: publicada en el PR #1.
 - Próximo comando o acción: sesión revisora con el prompt de docs/STATUS.md.
 
 ## Resultado
-Implementación publicada en el PR #1 y en revisión. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java), documentados en SETUP. Merge pendiente.
+Implementación publicada en el PR #1 y en revisión. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java) y TR-07 (carrera draft/ready en CI, corregida en `ci.yml`), documentados en SETUP. Merge pendiente.

@@ -26,7 +26,7 @@ Revisá y, si es elegible, mergeá el PR #1 (T-000) de StockPilot como modelo de
 | Front: unitarios/componentes | no materializado | — | T-001 |
 | Build/lint | Spotless OK; client pendiente | `1e70271` | run 38337479833 |
 | Playwright desktop/mobile | no materializado | — | T-003 |
-| CI y docs-check | docs-check OK; `verify-required` DRAFT (falla a propósito); verde de ready en el PR | `1e70271` | run 38337479833 |
+| CI y docs-check | docs-check OK; `verify-required` en draft falla a propósito; carrera draft/ready (TR-07) corregida; verde completo del HEAD final en el comentario de evidencia del PR | `1e70271`, `18f293b` | runs 38337479833, 38337803034 |
 | Cobertura back/front | back 83 % líneas (umbral M0 = 0) / front — | Árbol de T-000 | JaCoCo combinado |
 
 ## Checkpoint breve

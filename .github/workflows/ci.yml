@@ -28,6 +28,9 @@ jobs:
     name: classify
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       policy: ${{ steps.policy.outputs.policy }}
       draft: ${{ steps.policy.outputs.draft }}
@@ -48,9 +51,15 @@ jobs:
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
           PR_DRAFT: ${{ github.event.pull_request.draft }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           PUSH_BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "$EVENT" = "pull_request" ]; then base="$PR_BASE"; head="$PR_HEAD"; draft="$PR_DRAFT"
+          if [ "$EVENT" = "pull_request" ]; then
+            base="$PR_BASE"; head="$PR_HEAD"
+            # Estado draft vigente: el payload de un synchronize puede quedar viejo si el PR pasó a ready
+            # mientras tanto y concurrency canceló el run de ready_for_review (trampa TR-07).
+            draft="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .draft 2>/dev/null || echo "$PR_DRAFT")"
           else base="$PUSH_BEFORE"; head="$GITHUB_SHA"; draft=false; fi
           node scripts/ci/classify-diff.mjs --base "$base" --head "$head" --phase "$GATE_PHASE" | tee -a "$GITHUB_OUTPUT"
           { echo "draft=$draft"; echo "base=$base"; echo "head=$head"; } >> "$GITHUB_OUTPUT"

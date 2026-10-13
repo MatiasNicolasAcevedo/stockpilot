@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: implementar T-000 (in_progress) · frontera · `chore/T-000-governance-and-server-foundation` / PR #1.
+Próxima acción: revisar y mergear si es elegible T-000 (in_review) · frontera, sesión distinta (recomendado GPT-6.1 Sol) · `chore/T-000-governance-and-server-foundation` / PR #1.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 1 | [T-000](tasks/T-000-governance-and-server-foundation.md) | in_progress | Gobierno del repo + base server PostgreSQL/Flyway | `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) | ninguno |
+| 1 | [T-000](tasks/T-000-governance-and-server-foundation.md) | in_review | Gobierno del repo + base server PostgreSQL/Flyway | `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) | ninguno |
 
 ## Listas — orden de ejecución
 Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su dependencia.

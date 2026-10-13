@@ -1,6 +1,6 @@
 ---
 id: T-000
-status: in_progress
+status: in_review
 priority: P0
 size: L
 milestone: M0
@@ -11,7 +11,7 @@ spec_version: null
 depends_on: []
 branch: chore/T-000-governance-and-server-foundation
 risk: elevated
-role: implementer
+role: reviewer
 executor: frontier
 pr: 1
 ---
@@ -45,22 +45,22 @@ No incluye: client (T-001), login OIDC/sesión/CSRF para la SPA (T-002), E2E y g
 | T0-07 | Sin sesión: `/api/**` → 401 ProblemDetail; POST sin CSRF → 403 ProblemDetail; sin form/Basic | `SecurityConfigTest`; `curl` contra el stack: 401 JSON | Verificado |
 | T0-08 | `docker compose up -d --build --wait` levanta db/server healthy; reinicio, `down`/`up` y rebuild conservan datos de desarrollo | `flyway_schema_history.installed_on` idéntico tras restart, down/up y rebuild | Verificado 2026-10-12 |
 | T0-09 | docs-check verde y gate BOOTSTRAP local; fallos propagan exit ≠ 0 | `bash scripts/verify.sh` → docs OK, server OK (BUILD SUCCESS 3 + 7); `--client` → exit 1, opción inválida → exit 2; docs-check detecta 11 mutaciones controladas | Verificado 2026-10-12 |
-| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Run del PR + ruleset actualizado | pendiente |
+| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Ruleset con `verify-required` requerido; run draft 38337479833 sobre `1e70271`: classify BOOTSTRAP, docs-check y server verdes en checkout limpio sin `plantilla/`, `verify-required` falla a propósito por DRAFT. El run de ready sobre el HEAD final se registra en el comentario de evidencia del PR #1 | Parcial: verde de ready a confirmar por la revisión |
 
 Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 
 ## Checkpoint de implementación
 - Sesiones: implementación · Opus 5.5 (`claude-opus-5-5`) · Claude Code (extensión VS Code) · esfuerzo configurado `xhigh` en los settings del usuario (el contrato pide high; no es un modelo menor).
 - Hecho: herramientas del paso 0 comprobadas (todas presentes); inventario de scaffolds; Git + exclusión + ancla; repo y ruleset; código, pruebas y Compose del server; documentación de gobierno.
-- Pendiente: CI verde del HEAD publicado (el primer run falló en `actions/setup-java` por el formato de versión, TR-06, corregido), paso a `in_review` y PR ready.
+- Pendiente: revisión en sesión distinta (recomendado GPT-6.1 Sol / Codex) y merge elegible. El primer run de CI falló en `actions/setup-java` por el formato de versión (TR-06); corregido en `1e70271`.
 - Decisiones y supuestos: ADR 0001; la alternativa preaprobada de host para Testcontainers **no** se aplicó porque el runner containerizado funcionó en la primera configuración.
 - Archivos propios y cambios heredados: scaffolds del dueño anclados sin cambios en `2d06bbb`; todo lo demás es de esta tarea.
 - Pruebas: ver tabla; comandos ejecutados el 2026-10-12.
 - Bloqueos: ninguno.
-- Rama / PR: `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) (draft).
-- Último commit conocido: `f064cec` (implementación inicial publicada).
-- Publicación: publicada en el PR #1 (draft); este checkpoint se publica con la corrección de CI.
-- Próximo comando o acción: `gh pr checks 1` sobre el HEAD publicado; si `server` y `docs-check` están verdes, pasar a `in_review`, push y `gh pr ready 1`.
+- Rama / PR: `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) (ready al publicar este commit).
+- Último commit conocido: `1e70271` (corrección de CI); este commit de transición cambia el HEAD y su SHA queda en el PR.
+- Publicación: publicada en el PR #1.
+- Próximo comando o acción: sesión revisora con el prompt de docs/STATUS.md.
 
 ## Resultado
-Pendiente.
+Implementación publicada en el PR #1 y en revisión. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java), documentados en SETUP. Merge pendiente.

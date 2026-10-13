@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: merge de T-000 (mergeable, veredicto APROBADO en el PR) · merger en la sesión revisora o retoma de merge · `chore/T-000-governance-and-server-foundation` / PR #1.
+Próxima acción: implementar T-001 (in_progress) · implementer de frontera · `build/T-001-client-foundation-and-stack` / PR draft.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 1 | [T-000](tasks/T-000-governance-and-server-foundation.md) | mergeable | Gobierno del repo + base server PostgreSQL/Flyway | `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) | ninguno |
+| 2 | [T-001](tasks/T-001-client-foundation-and-stack.md) | in_progress | Base client + stack Compose db/server/client | `build/T-001-client-foundation-and-stack` / PR draft | ninguno |
 
 ## Listas — orden de ejecución
 Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su dependencia.
@@ -14,7 +14,6 @@ Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su de
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |
 |---|---|---|---|---|---|
-| 2 | [T-001](tasks/T-001-client-foundation-and-stack.md) | blocked | T-000 sin merge | implementer (frontera) | GitHub confirma MERGED del PR de T-000 |
 | 3 | [T-002](tasks/T-002-google-auth.md) | draft | T-001; contrato por refinar | planner (frontera) | T-001 mergeada y contrato refinado |
 | 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | draft | T-002; contrato por refinar | planner (frontera) | T-002 mergeada y contrato refinado |
 
@@ -27,4 +26,6 @@ Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su de
 | Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
 
 ## Hechas recientes
-Ninguna todavía.
+| ID | Estado | Resultado | PR / merge |
+|---|---|---|---|
+| [T-000](tasks/T-000-governance-and-server-foundation.md) | done | Gobierno del repo + base server PostgreSQL/Flyway | [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) → `9f061f5` (2026-10-13), CI de `main` verde |

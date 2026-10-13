@@ -1,6 +1,6 @@
 ---
 id: T-000
-status: mergeable
+status: done
 priority: P0
 size: L
 milestone: M0
@@ -72,4 +72,6 @@ Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 - Veredicto: `APROBADO`, publicado en el PR #1 con SHA de HEAD final y base.
 
 ## Resultado
-Implementación publicada en el PR #1; revisión favorable y tarea `mergeable`. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java) y TR-07 (carrera draft/ready en CI, corregida en `ci.yml`), documentados en SETUP. Merge pendiente.
+**Done.** PR #1 squash-mergeado el 2026-10-13T02:52:20Z (UTC) con `--match-head-commit` sobre el HEAD aprobado `bc1667c`; commit de merge `9f061f55f99e614e36f8317150881ed9408a8c96` en `main` (padre `2d06bbb`), rama borrada. CI de `main` sobre `9f061f5`: [run 38338964430](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38338964430) (classify, docs-check, server y `verify-required` verdes). GitHub detecta `license.spdx_id = MIT`. TR-04 no bloqueó el merge. Reconciliado con `gh` el 2026-10-13 por la sesión implementer de T-001.
+
+Criterios T0-01…T0-10 cumplidos. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java) y TR-07 (carrera draft/ready en CI, corregida en `ci.yml`), documentados en SETUP; allowlist DOCS_ONLY anotada en BACKLOG.

@@ -66,4 +66,4 @@ Una sesión nueva reduce el arrastre de contexto, pero no es una revisión human
 | Aspecto | Valor | Evidencia / condición |
 |---|---|---|
 | Continuidad | `POR_SESION` | El dueño abre cada sesión con el prompt de [STATUS.md](STATUS.md). No hay dispatcher instalado ([ORCHESTRATION.md](ORCHESTRATION.md)) |
-| Merge | `AUTOMATICO_ELEGIBLE` (preparado) | Protecciones completas desde el 2026-10-12; falta comprobar un primer merge real (HANDOFF G-02) |
+| Merge | `AUTOMATICO_ELEGIBLE` | Protecciones completas desde el 2026-10-12; primer merge real comprobado el 2026-10-13 (PR #1 → `9f061f5`, HANDOFF G-02) |

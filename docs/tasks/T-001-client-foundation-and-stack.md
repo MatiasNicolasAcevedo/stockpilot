@@ -1,6 +1,6 @@
 ---
 id: T-001
-status: blocked
+status: in_progress
 priority: P0
 size: L
 milestone: M0
@@ -17,7 +17,7 @@ pr: null
 ---
 # T-001 · Base client y stack Compose db/server/client
 
-**Bloqueo:** depende de T-000. Se desbloquea cuando GitHub confirme el merge del PR de T-000; la sesión que la tome la pasa a `in_progress` en el primer commit de su rama, junto con la reconciliación del cierre de T-000.
+**Desbloqueada:** T-000 mergeada (PR #1, `9f061f5`, confirmado con `gh` el 2026-10-13).
 
 ## Objetivo y evidencia
 El navegador abre la SPA desde el contenedor `client`, que actúa como origen único con proxy hacia `server`, y la app muestra un dato real obtenido del backend. Quedan establecidos los patrones de frontend (router, tema MUI, Query, cliente HTTP con ProblemDetail/CSRF, formularios RHF+Zod) y sus pruebas de referencia, para que el primer flujo siga patrones existentes.
@@ -34,6 +34,13 @@ Incluye:
 - Gate: suite `client` materializada en `verify.sh` y en CI (`setup-node` + caché npm), `verify-required` exige client en BOOTSTRAP. Actualizar SETUP/TESTING/README/ARCHITECTURE/HANDOFF.
 No incluye: login, sesión y logout (T-002); E2E/Playwright (T-003); pantallas de negocio (M1).
 
+## Impacto
+- Comportamiento: aparece la SPA (shell en español) servida por `client`; el server agrega un único endpoint anónimo de solo lectura. Todo lo demás de `/api/**` sigue en 401 y los POST sin CSRF en 403.
+- Contratos: `GET /api/v1/system/info` → `200 {"name","version"}` sin datos sensibles; errores de validación del body → `400 application/problem+json` con `errors[{field, message}]` (las demás excepciones estándar de MVC siguen como ProblemDetail). Sin cambios de esquema ni rutas existentes.
+- Permisos/propiedad: `permitAll` explícito solo para `GET /api/v1/system/info`; ninguna otra excepción a deny-by-default. CSRF intacto; el cliente deja el punto de extensión para el token (mecanismo en T-002).
+- Datos: sin migraciones; el volumen de desarrollo no cambia. El client no persiste nada en el navegador.
+- UI y operación: se reemplaza la demo del scaffold; nuevo servicio Compose `client` (origen público en loopback) con proxy a `server`; nueva suite `client` en `verify.sh` y CI (`verify-required` la exige en BOOTSTRAP). Documentación: SETUP, TESTING, README, ARCHITECTURE, HANDOFF, client/AGENTS.
+
 ## Leer antes
 [client/AGENTS.md](../../client/AGENTS.md) · [ARCHITECTURE.md](../ARCHITECTURE.md) (Vista general, Frontend) · [TESTING.md](../TESTING.md) · [SETUP.md](../SETUP.md) (trampas) · PROJECT_CONTEXT §7.
 
@@ -48,7 +55,13 @@ No incluye: login, sesión y logout (T-002); E2E/Playwright (T-003); pantallas d
 | T1-06 | Rebuild y reinicio del stack conservan datos de desarrollo | Mismo método que T0-08 |
 
 ## Checkpoint de implementación
-Sin iniciar.
+- Sesiones: implementación · Opus 5.5 (`claude-opus-5-5`) · Claude Code (extensión VS Code) · esfuerzo configurado `xhigh` en los settings del usuario (el contrato pide high; no es un modelo menor).
+- Hecho: reconciliación de T-000 (MERGED `9f061f5`, CI de `main` verde en el run 38338964430, licencia MIT detectada, TR-04 sin bloqueo); rama creada desde `main` actualizada.
+- Pendiente: T1-01…T1-06.
+- Rama / PR: `build/T-001-client-foundation-and-stack` / PR draft al primer push.
+- Último commit conocido: `9f061f5` (base).
+- Publicación: local.
+- Próximo comando o acción: commit de tablero, push y PR draft; luego dependencias del client.
 
 ## Resultado
 Pendiente.

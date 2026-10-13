@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 import server.server.identity.IdentityService;
 
 /** HTTPS cookie configuration in a slice, not a TLS deployment or proxy protocol test. */
@@ -23,6 +25,17 @@ class HttpsAuthCookieTest {
 
     @MockitoBean
     private IdentityService identities;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private PublicOrigin origin;
+
+    @BeforeEach
+    void usePublicOrigin() {
+        mvc = AuthOriginMockMvc.create(context, origin);
+    }
 
     @Test
     void csrfAndDeletedCookiesRemainSecureRegardlessOfSpoofedProtoHeader() throws Exception {

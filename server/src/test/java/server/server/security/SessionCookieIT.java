@@ -37,6 +37,9 @@ class SessionCookieIT {
                 .send(
                         HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + port + "/oauth2/authorization/google"))
                                 .GET()
+                                .header("X-Forwarded-Host", "demo.example:8443")
+                                .header("X-Forwarded-Proto", "https")
+                                .header("X-Forwarded-Port", "8443")
                                 .build(),
                         HttpResponse.BodyHandlers.discarding());
         assertThat(response.statusCode()).isEqualTo(302);

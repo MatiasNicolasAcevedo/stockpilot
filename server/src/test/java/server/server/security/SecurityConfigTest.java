@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 import server.server.identity.IdentityService;
 
 /** Contrato de rechazo de la base de seguridad: JSON ProblemDetail, nunca HTML ni redirección al login. */
@@ -34,6 +36,17 @@ class SecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private PublicOrigin origin;
+
+    @BeforeEach
+    void usePublicOrigin() {
+        mockMvc = AuthOriginMockMvc.create(context, origin);
+    }
 
     @Test
     void anonymousApiRequestGets401ProblemDetail() throws Exception {

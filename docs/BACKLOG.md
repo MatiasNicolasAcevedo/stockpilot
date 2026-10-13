@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: implementer de frontera ejecuta solo T-002 B2 en sesión nueva; checkpoint previo, baseline y proveedor/frontera conjunta de proxies con S-001 v1/ADR 0002, misma rama/PR draft. Inicio limpio/base y salida B1 reconciliados. T-001 done; ninguna tercera ronda.
+Próxima acción: dueño resuelve pin exacto del proveedor bloqueado de T-002; luego sesión nueva implementer frontera completa misma B2/rama/PR draft. Frontera conjunta probada y publicada parcialmente, sin B3. S-001 v1/ADR 0002 conservados. T-001 done; ninguna tercera ronda.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A y B1 publicadas/probadas parcialmente; B2 en ejecución: proveedor/proxies/Compose, luego B3/C1/C2/D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno al inicio B2; proveedor/red/cableado y request-origin pendientes, stack parcial no operado; DRAFT no autoriza merge |
+| 3 | [T-002](tasks/T-002-google-auth.md) | blocked | A/B1 y frontera B2 probadas parcialmente/publicadas; proveedor B2 bloqueado, luego B3/C1/C2/D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Pin 3.1.4 pull not found/manifest unknown y tag/release 404; dueño decide fuente exacta o autoriza pin publicado 3.0.3 propuesto (sin ejecutar). Endpoints/topología no acreditados; no avanzar B3 ni merge parcial |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
@@ -25,7 +25,7 @@ Ninguna tarea ready; retomar T-002 en vuelo.
 | Primer flujo de M1 (ciclo C1 propuesto: alta de comercio y comercio activo) | ROADMAP M1; CA-01, RN-11, RN-18, RN-21 | Spec y T-004/T-005 se refinan en T-003 para Junie Lite |
 | Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
 | Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
-| Forwarded headers del server detrás del proxy del client | T-002 B2; hallazgo de T-001 ya refinado | S-001/ADR 0002 fijan framework forwarding + saneamiento nginx/Vite, APP_PUBLIC_URL validado/callback fijo y server interno; implementación/prueba de spoofing pendiente, no deuda sin contrato |
+| Proveedor exacto OIDC y frontera de proxy | T-002 B2; hallazgo T-001 refinado | Frontera framework/nginx/Vite/origen/Host/server interno/diagnóstico y spoofing probados B2; proveedor exacto 3.1.4 inexistente en pull/API requiere decisión puntual, sin cambio de aceptación. Protocolo sigue B3 |
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |
 | Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
 

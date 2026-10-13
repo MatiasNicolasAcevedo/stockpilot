@@ -44,6 +44,11 @@ public record PublicOrigin(URI uri) {
         return uri.toASCIIString() + "/login/oauth2/code/google";
     }
 
+    public boolean matches(String scheme, String host, int port) {
+        int publicPort = uri.getPort() == -1 ? (secure() ? 443 : 80) : uri.getPort();
+        return uri.getScheme().equalsIgnoreCase(scheme) && uri.getHost().equalsIgnoreCase(host) && publicPort == port;
+    }
+
     private static IllegalArgumentException invalid() {
         return new IllegalArgumentException(
                 "APP_PUBLIC_URL must be an HTTPS origin or an HTTP loopback origin without a path");

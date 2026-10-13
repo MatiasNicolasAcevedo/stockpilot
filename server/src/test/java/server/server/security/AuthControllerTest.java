@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.context.WebApplicationContext;
 import server.server.identity.IdentityService;
 
 /** Cookie/header and session contracts; oidcLogin is a fixture, not evidence of OIDC protocol validation. */
@@ -33,6 +35,17 @@ class AuthControllerTest {
 
     @MockitoBean
     private IdentityService identityService;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private PublicOrigin origin;
+
+    @BeforeEach
+    void usePublicOrigin() {
+        mvc = AuthOriginMockMvc.create(context, origin);
+    }
 
     @Test
     void anonymousMeIs401JsonAndNeverRedirects() throws Exception {

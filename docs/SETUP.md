@@ -34,6 +34,7 @@ Docker Desktop debe estar abierto mientras se trabaja. El JDK del host es Corret
 | Testing Library react / dom / jest-dom / user-event | 16.3.3 / 10.4.2 / 7.0.1 / 14.6.7 | `client/package.json` |
 | Prettier / eslint-config-prettier | 3.9.10 / 10.1.8 | `client/package.json` |
 | nginx (client `runtime`) | 1.30.5 (`nginx:1.30.5-alpine`, rama estable) | `client/Dockerfile` |
+| Proveedor OIDC de pruebas | `ghcr.io/navikt/mock-oauth2-server:3.1.4` exigida; pull bloqueado `not found` el 2026-10-13, tag/release API 404 | `compose.auth-test.yml`; no sustituida ni compatibilidad acreditada |
 | Playwright | Pendiente (T-003) | — |
 
 Peers y engines de las dependencias nuevas comprobados con `npm view` el 2026-10-13 contra React 19.3, Vite 8, TypeScript 6 y Node 24.21; instaladas con `npm install --save-exact`, sin `--force` ni `--legacy-peer-deps`. El lockfile conserva los bindings nativos de todas las plataformas (`@rolldown/binding-linux-x64-musl`, `lightningcss-linux-x64-musl`), por eso `npm ci` funciona igual en Windows, en `node:alpine` y en CI.
@@ -42,22 +43,24 @@ Peers y engines de las dependencias nuevas comprobados con `npm view` el 2026-10
 ```bash
 git clone https://github.com/MatiasNicolasAcevedo/stockpilot.git
 cd stockpilot
-docker compose up -d --build --wait     # db + server + client; espera healthchecks
+docker compose up -d --build --wait     # requiere configuración Google privada en backend
 # abrir http://127.0.0.1:5173  (SPA; /api va por el mismo origen al server)
 ```
-- Opcional: copiar `.env.example` a `.env` para cambiar puertos o credenciales de desarrollo (los defaults ya funcionan).
+- Copiar `.env.example` a `.env` y configurar en privado `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` reales y `APP_PUBLIC_URL`. Defaults de DB/puertos son ficticios; credenciales OIDC vacías hacen fallar el arranque sin fallback. Guía Google/smoke real pendientes T-002 D; no presentar auth completa antes de B3/C/D.
 - Si la copia local tiene el kit personal `plantilla/`, excluirlo en cada clon antes de cualquier `git add`: agregar `/plantilla/` al archivo que indica `git rev-parse --git-path info/exclude` y comprobar con `git check-ignore -v -- plantilla/PROJECT_TEMPLATE.md` y `git ls-files -- plantilla` (vacío).
 
 ## Comandos habituales (desde la raíz)
 | Acción | Comando | Comprobado |
 |---|---|---|
-| Levantar/reconstruir | `docker compose up -d --build --wait` | Sí (≈1–2 min la primera vez) |
+| Levantar/reconstruir | `docker compose up -d --build --wait` | Stack ordinario Google aún no operado; último smoke T-001 histórico. Pruebas B2 usan proyectos ficticios aislados |
 | Estado | `docker compose ps` | Sí |
 | Logs del server / client | `docker compose logs -f server` · `docker compose logs -f client` | Sí |
 | Reiniciar el server | `docker compose restart server` | Sí; los datos persisten y el client sigue llegando al server (también si se recrea) |
 | Detener conservando datos | `docker compose down` | Sí; el volumen `stockpilot_db-data` persiste |
-| Frontend con HMR (opcional) | `docker compose --profile dev up -d --build --wait client-dev` → http://127.0.0.1:5174 · detener: `docker compose --profile dev rm -sf client-dev` | Sí (HMR comprobado 2026-10-13); monta solo `src/`, `public/` e `index.html`; tras cambiar dependencias o `vite.config.ts`, reconstruir |
-| Frontend en el host (opcional) | `cd client && npm ci` · `npm test` · `npm run dev` (proxy a `http://127.0.0.1:8080`) | Parcial: `npm ci`, `npm test`, typecheck y lint sí; `npm run dev` no ejecutado (usa el puerto 5173 del client: detenerlo antes). `node_modules` del host nunca se monta en contenedores |
+| Frontend con HMR (opcional) | Elegir `APP_PUBLIC_URL=http://127.0.0.1:5174` para server/client-dev; `docker compose --profile dev up -d --build --wait server client-dev` | Un solo origen auth a la vez; cambiar URL exige recrear server/proxy y callback permitido. HMR T-001 histórico; frontera B2 se prueba con Vite real |
+| Frontend en el host (opcional) | `cd client && npm ci`; `APP_PUBLIC_URL=http://127.0.0.1:5173 npm run dev` con backend diagnóstico en origen coherente | Requiere configurar también backend/callback; no conectar un Vite con URL distinta al server. Node_modules del host no se monta en contenedores |
+| Diagnóstico directo | `docker compose -f docker-compose.yml -f compose.diagnostic.yml up -d --build --wait db server` | Publicación loopback explícita y forwarding `none`; auth solo coincide con origen directo configurado. Para volver a proxies recrear server con Compose base |
+| Frontera auth aislada | `node scripts/test-auth-proxies.mjs` | nginx/Vite observados upstream y backend real, HTTP/HTTPS simulado; sin token exchange ni Google real. Cleanup automático solo proyecto efímero |
 | Cambiar dependencias del client | `cd client && npm install --save-exact <pkg>@<versión>` y revisar el diff del lockfile | Sí |
 | Gate (fase actual) | `bash scripts/verify.sh` | Ver [TESTING.md](TESTING.md) |
 | Solo backend | `bash scripts/verify.sh --server` | Sí |
@@ -73,18 +76,22 @@ En PowerShell, invocar los scripts con Git Bash: `& "C:\Program Files\Git\bin\ba
 |---|---|---|
 | client | http://127.0.0.1:5173 (`CLIENT_PORT`) | **Origen público único del navegador**: SPA compilada (nginx) + proxy de `/api/`, `/oauth2/`, `/login/oauth2/code/` y `/logout` a `server`. Health del contenedor: `/healthz` |
 | client-dev | http://127.0.0.1:5174 (`CLIENT_DEV_PORT`), perfil `dev` | Vite con HMR y el mismo proxy |
-| server | http://127.0.0.1:8080/actuator/health | Publicado para diagnóstico; `GET /api/v1/system/info` es público, el resto de `/api/**` responde 401 sin sesión |
+| server | `server:8080` interno; diagnóstico explícito http://127.0.0.1:8080/actuator/health | Sin publicación en Compose ordinario; override diagnóstico fija origen directo y forwarding none. Rutas auth con origen reconstruido distinto responden 400 seguro |
 | db | `127.0.0.1:55432`, DB/usuario `stockpilot`, contraseña de desarrollo `stockpilot-dev-only` | Valores ficticios solo para desarrollo local |
 
 Dentro de la red de Compose el server llega a la DB como `db:5432` y el client al server como `server:8080`; el navegador nunca usa nombres internos.
 
 ## Variables de entorno
-Definidas con defaults en `docker-compose.yml` y documentadas en [.env.example](../.env.example): `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `DB_PORT`, `SERVER_PORT`, `CLIENT_PORT`, `CLIENT_DEV_PORT`, `STOCKPILOT_SERVER_TESTS`. El server recibe `SPRING_DATASOURCE_URL/USERNAME/PASSWORD`. Internas del client (no van en `.env`): `STOCKPILOT_API_TARGET` (destino del proxy de Vite; `http://server:8080` en `client-dev`, `http://127.0.0.1:8080` en el host) y `STOCKPILOT_WATCH_POLLING` (polling de archivos en `client-dev`). El bundle no recibe variables `VITE_*`. Variables de Google OIDC (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `APP_PUBLIC_URL`) se agregan en T-002; los valores reales nunca entran en Git ni en documentos.
+Defaults en `docker-compose.yml` y [.env.example](../.env.example): `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `DB_PORT`, `CLIENT_PORT`, `CLIENT_DEV_PORT`, `STOCKPILOT_SERVER_TESTS`. `DIAGNOSTIC_SERVER_PORT` solo en override diagnóstico. Backend recibe `SPRING_DATASOURCE_*` y credenciales Google; proxies reciben exclusivamente `APP_PUBLIC_URL` (default http://127.0.0.1:5173, puerto desde CLIENT_PORT si no se fija). nginx valida origen al arrancar y genera config desde template; Vite lo exige para servir. `STOCKPILOT_API_TARGET` es destino interno Vite, `STOCKPILOT_WATCH_POLLING` habilita polling. No hay `VITE_*`, credenciales ni tokens en el bundle. Server/proxies deben elegir la misma URL; ningún request la reemplaza.
 
 ## Google OIDC real
-T-002 B1 configura el perfil default explícito `google`: requiere `APP_PUBLIC_URL`, `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en el backend; ausencia o perfil real/local mixto falla sin fallback. Issuer Google fijo `https://accounts.google.com`, scopes `openid profile email`, callback `${APP_PUBLIC_URL}/login/oauth2/code/google`. `APP_PUBLIC_URL` debe ser origen HTTPS sin path/query/fragment/userinfo, o HTTP loopback (`localhost`, `127.0.0.1`, `[::1]`) para desarrollo/pruebas. La cookie de sesión y CSRF deriva Secure de ese origen; forwarding permanece `none` hasta B2.
+Perfil default explícito `google`: requiere `APP_PUBLIC_URL`, `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en backend; ausencia o perfil real/local mixto falla sin fallback. Issuer Google fijo `https://accounts.google.com`, scopes `openid profile email`, callback `${APP_PUBLIC_URL}/login/oauth2/code/google`. Origen HTTPS sin path/query/fragment/userinfo, o HTTP loopback (`localhost`, `127.0.0.1`, `[::1]`). Cookies derivan Secure del origen. B2 conecta framework forwarding a nginx/Vite: eliminan integralmente headers entrantes Forwarded/X-Forwarded-*, fijan Host/proto/port desde config y for desde peer, rechazan autoridad Host ajena. nginx usa allowlist de headers upstream (incluye cookie/CSRF/body); Vite elimina todo el namespace dinámicamente. Guard backend compara request reconstruido antes de efectos auth: discrepancia → 400/no-store/sin cookie ni redirect. Diagnóstico explícito ignora forwarding con `none`.
 
-**Salida parcial B1:** Compose aún no aporta estas variables ni el proveedor aislado/saneamiento de proxies. Los comandos de stack anteriores describen la última prueba T-001 y deben revalidarse en B2; no levantar el stack parcial para afirmar login operativo. Los runners sí funcionan con configuración ficticia del perfil `test` en test resources; `test`/`e2e` requieren issuer/client ID/secreto local explícitos (`stockpilot.oidc.local-*`), nunca seleccionados desde `google`. Conectividad/endpoints del proveedor local siguen pendientes B2 y protocolo B3. Guía exacta de Google Cloud, ejemplos de entorno y smoke real con el dueño siguen en D; no se leyó configuración real ni se probó login contra Google.
+**B2 parcial, proveedor bloqueado:** no presentar login operativo. Override [compose.auth-test.yml](../compose.auth-test.yml) y [inputs ficticios](../scripts/fixtures/auth-test.env.example) requieren `-p` único y `--env-file` explícito, PostgreSQL/volumen aislados, perfil `e2e`/registration `google`, sin credenciales reales. Mock se activa únicamente con `--profile oidc`, pin exacto 3.1.4. Pull `not found`, API tag/release 404: README del mantenedor usa ese número como ejemplo, no evidencia de release publicada. Fixture [oidc.json](../scripts/fixtures/oidc.json) y probe [test-oidc-provider.mjs](../scripts/test-oidc-provider.mjs) son provisionales hasta ejecución exacta. No cambiar pin/aceptación para destrabar.
+
+Issuer previsto idéntico `http://host.docker.internal:8090/default`: mismo puerto interno/publicado loopback, alias de red al mock para server/browser containerizados. Resolución/alcance desde Windows y backend aún no acreditados por falta de imagen. Sin hosts global ni relajación de issuer/TLS. Tras resolver imagen, iniciar proveedor aislado y ejecutar probe desde host y `node:24.21.0-alpine` en red del proyecto; comprueba discovery/authorize/token/firma JWKS/UserInfo sin imprimir tokens. Antes de B3 acreditar ambos lados y readiness. Alternativa propuesta al dueño: [3.0.3](https://github.com/navikt/mock-oauth2-server/releases/tag/3.0.3), release y manifest amd64/arm64 comprobados, sin pull/selección/ejecución ni cambio de pin; requiere decisión explícita por el contrato exacto 3.1.4. Guía Google/smoke real con dueño siguen D; no se leyó config real ni se probó Google.
+
+Puerto estándar explícito (`https://demo.example:443`) conserva el callback de APP_PUBLIC_URL y acepta Host con o sin `:443`, que representan el mismo origen. Los proxies reconstruyen autoridad canónica y puerto efectivo; puertos ajenos siguen rechazados. No confundir HTTPS simulado con TLS real.
 
 ## Fuentes y limitaciones
 Context7 **no estaba disponible** en T-000 ni en la implementación inicial de T-001; sí se consultó en la corrección R1, junto con la documentación oficial de nginx enlazada en TR-08. En T-001 las versiones, peers y engines del client salieron del registro npm (`npm view`), la API de las majors nuevas (MSW 3, React Router 8, jest-dom 7, Vitest 5) de sus tipos/exports instalados, y el tag de nginx de Docker Hub. Se consultaron fuentes oficiales: metadata de Maven Central (Boot, springdoc, Spotless, palantir-java-format, JaCoCo, Maven), Docker Hub (postgres, eclipse-temurin, node), [springdoc.org](https://springdoc.org/) (recomienda la última 3.x estable para Boot 4), releases de GitHub Actions resueltos con `gh api`. Los paquetes de Boot 4.1.1 (slices de test, auto-configuraciones) se comprobaron en los jars resueltos.

@@ -24,6 +24,8 @@ FROM source AS build
 RUN npm run build
 
 FROM nginx:1.30.5-alpine AS runtime
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /opt/stockpilot/nginx.conf.template
+COPY 19-public-origin.sh /docker-entrypoint.d/19-public-origin.sh
+RUN chmod +x /docker-entrypoint.d/19-public-origin.sh
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80

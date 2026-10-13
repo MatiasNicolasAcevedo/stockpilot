@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -34,7 +35,8 @@ public class SecurityConfig {
         var csrfCookies = CookieCsrfTokenRepository.withHttpOnlyFalse();
         csrfCookies.setCookiePath("/");
         csrfCookies.setCookieCustomizer(cookie -> cookie.sameSite("Lax").secure(origin.secure()));
-        http.authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health", "/actuator/health/**")
+        http.addFilterBefore(new PublicOriginFilter(origin), CsrfFilter.class)
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health", "/actuator/health/**")
                         .permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,

@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: sesión nueva implementer de frontera toma solo T-002 B2 tras salida B1 probada/checkpoint publicado, con S-001 v1/ADR 0002, misma rama/PR draft. T-001 done reconciliada tras MERGED confirmado; ninguna tercera ronda.
+Próxima acción: implementer de frontera ejecuta solo T-002 B2 en sesión nueva; checkpoint previo, baseline y proveedor/frontera conjunta de proxies con S-001 v1/ADR 0002, misma rama/PR draft. Inicio limpio/base y salida B1 reconciliados. T-001 done; ninguna tercera ronda.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A y B1 backend publicadas/probadas parcialmente; retoma B2 proveedor/proxies/Compose, luego B3/C1/C2/D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para retoma B2; proveedor/red/cableado y request-origin pendientes, stack parcial no operado; DRAFT no autoriza merge |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A y B1 publicadas/probadas parcialmente; B2 en ejecución: proveedor/proxies/Compose, luego B3/C1/C2/D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno al inicio B2; proveedor/red/cableado y request-origin pendientes, stack parcial no operado; DRAFT no autoriza merge |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

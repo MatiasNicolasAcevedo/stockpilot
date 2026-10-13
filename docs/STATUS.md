@@ -1,16 +1,16 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · sesión nueva: implementer de frontera T-002 parte B1 · Codex (API), basado en GPT-6 según entorno; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
+Actualizado: 2026-10-13 (UTC-3) · sesión nueva: implementer de frontera T-002 parte B2 · Codex (API), basado en GPT-6 según entorno; identificador runtime exacto/esfuerzo reales no expuestos/verificables; high recomendado no se atribuye como observado
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Sesión nueva implementer de frontera toma solo T-002 B2 tras salida B1 comprobada/publicada en misma tarea/rama/PR draft |
+| Acción | Implementer de frontera ejecuta solo T-002 B2: checkpoint previo, baseline y proveedor/frontera de proxies, misma tarea/rama/PR draft |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
 | Estado | `in_progress` |
-| Ejecutor | Frontera · implementer B1 en esta sesión; B2 requiere sesión nueva abierta por el dueño |
+| Ejecutor | Frontera · implementer B2 en esta sesión nueva abierta por el dueño |
 | Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; A `22c4a1e`, transición B1 `ea42b14`, base `84d103c`; SHA final B1/CI/coincidencia remota en comentario de salida tras push |
 | Hecho remoto comprobado | PR #2 MERGED `2026-10-13T18:06:01Z`, squash/main `84d103cd4c6b1c58f45f6272354ef49c918bce06`; APROBADO ronda 2 HEAD `b1cfff045d6a918ea8dc18d60451ef447e1a7a74`, base `9f061f55f99e614e36f8317150881ed9408a8c96`; CI HEAD `38443725709` y main `38444010437` SUCCESS. Sin PR abierto al inicio del planner; T-001 done reconciliada en primer commit de rama T-002 |
-| Bloqueo | Ninguno para retoma B2. Proveedor/topología/pull, proxies y cableado Compose pendientes; stack parcial B1 no operado. Google real externo con dueño, Junie aún no habilitada |
+| Bloqueo | Ninguno al inicio B2: HEAD B1/remoto 5b8f6f0 y base 84d103c reconfirmados. Proveedor/topología/pull y frontera conjunta pendientes; stack parcial no operado. Google real externo con dueño, Junie aún no habilitada |
 
 **M0:** T-000/T-001 integradas; bloque actual T-002 (A identidad y B1 seguridad backend probadas parcialmente; B2/B3/C1/C2/D pendientes) · Verificados: 7/21 · pendientes: C-02, C-03, E-01, E-02, E-03, S-01, S-02, S-03, V-02, V-03, G-03, H-01, H-02, H-03 · bloqueados: ninguno · detalle en [HANDOFF.md](HANDOFF.md). BOOTSTRAP no es FULL; T-003 draft. Corte ROADMAP anticipado 2026-10-13 por cola sin ready y contrato fundacional; 0 tareas de producto, mismo objetivo/ciclo propuesto.
 
@@ -38,6 +38,8 @@ BOOTSTRAP vigente, no FULL; T-003 draft, M0 NO_LISTO 7/21. Google real externo c
 | Cobertura back/front | JaCoCo ejecutado, umbral M0 = 0; front 96,07 % líneas / 89,87 % ramas | T-002 B1 | gate local BOOTSTRAP, no FULL |
 
 ## Checkpoint breve
+Inicio B2 registrado en tarea antes de editar: árbol limpio sin heredados, gh/remoto/base/CI B1 y main reconciliados; solo proveedor ficticio aislado y frontera conjunta de origen/proxies/Compose. Próximos comandos docs-check/baseline/pull; logs `$TEMP/stockpilot-T002-B2-{start,baseline,provider,origin,proxies,gate}.log`, cleanup limitado a runners efímeros/proyecto `stockpilot-t002-b2`. A/V1/constraint/datos persistentes intactos; B3/C1/C2/D pendientes. Codex API/GPT-6 declarado, runtime exacto/esfuerzo no expuestos.
+
 Salida B1: OIDC configurado con endpoints Google fijos, servicio Spring antes de IdentityService A, principal de ID local sin roles comerciales ni tokens en DTO; me/csrf, cookie/header CSRF sin query, sesión 30 min/cookie-only, logout POST 204 y GET 401/405, destinos internos fijos. Perfiles real/local separados y credenciales ausentes fallan sin fallback. APP_PUBLIC_URL validado fija callback/Secure; forwarding none hasta frontera conjunta B2. Sin cambio de V1, datos persistentes, client, proxies, Compose, CI, AUTONOMY o aceptación.
 
 Baseline backend exit 0 (25 unit + 12 IT). Primera corrida 74 tests tuvo 2 fallos de helper csrf() y 1 error de fixture usuario sin ID persistido, corregidos sin rebajar asserts; 74 verdes y luego 2 casos de URL inválida añadidos. IT dirigida Tomcat/PostgreSQL exit 0; primer comando no inició tests por argumento Maven con punto sin comillas, corregido en PowerShell. Mutaciones temporales CSRF disabled y query admitida → tests rojos (401 vs 403 y 204 vs 403), restauración en finally comprobada. Gate final BOOTSTRAP exit 0: 76 unit/slices + 13 IT, client 35 tests/tsc/lint/formato/build, docs 36 Markdown/4 tareas/HANDOFF 7/21. Logs `$TEMP/stockpilot-T002-B1-{start,baseline,unit,unit-fixed,integration,integration-fixed,mutation,mutation-query,gate}.log`; docs final `close-docs.log`.

@@ -1,10 +1,10 @@
 # PROJECT_CONTEXT.md · StockPilot
 
 **Producto:** StockPilot  
-**Versión del contexto:** 1.0  
-**Estado:** **MVP aceptado por el dueño del producto**; preparación del repositorio pendiente.  
+**Versión del contexto:** 1.1 (2026-10-12; cambios en §12)  
+**Estado:** **MVP aceptado por el dueño del producto**; preparación técnica M0 en curso (estado vivo en `docs/STATUS.md`).  
 **Fecha de aprobación:** no registrada; no se asigna una fecha por inferencia.  
-**Destino:** `mi-proyecto/PROJECT_CONTEXT.md` (raíz del producto, fuera de `plantilla/`).
+**Ubicación:** `PROJECT_CONTEXT.md` en la raíz del repositorio `MatiasNicolasAcevedo/stockpilot`, fuera del kit local `plantilla/`.
 
 Este documento recoge la intención y el alcance aceptados para StockPilot. Es la referencia de producto para preparar posteriormente el repositorio; **no acredita que exista código, que una integración funcione o que se haya completado la preparación técnica**. Las etiquetas **Confirmado**, **Propuesto** y **Pendiente** distinguen acuerdos, recomendaciones aún no aceptadas y decisiones abiertas. Las cuestiones pendientes no bloqueantes pueden resolverse durante la preparación sin ampliar el MVP; si una propuesta altera el comportamiento aceptado, debe consultarse al dueño.
 
@@ -17,8 +17,8 @@ Este documento recoge la intención y el alcance aceptados para StockPilot. Es l
 - **Prioridad:** flujo comercial completo y verificable, separación entre comercios, consistencia de inventario y experiencia visual intuitiva. **Confirmado** como dirección de producto.
 - **Stack y proceso de desarrollo:** base técnica del §9, acordada de antemano; no reabrir elecciones durante la definición de la idea.
 - **Diseño:** implementar y refinar la interfaz directamente con los agentes de desarrollo y revisión visual. **Confirmado: no introducir una etapa ni una dependencia de Claude Design/Artifacts**; no se excluye utilizar referencias visuales sencillas cuando resulten útiles.
-- **Repositorio GitHub:** nombre y propietario/organización **Pendiente**; confirmar antes de crear el remoto.
-- **Visibilidad y licencia:** repositorio **público en GitHub** con **licencia MIT** como valores por defecto aceptados. Titular de la licencia (nombre o alias): **Pendiente** para la preparación. Los ejemplos y datos publicados serán ficticios; ningún secreto o registro comercial real debe entrar al repositorio.
+- **Repositorio GitHub:** `MatiasNicolasAcevedo/stockpilot`. **Confirmado** por el dueño el 2026-10-12 durante la preparación (P-11).
+- **Visibilidad y licencia:** repositorio **público en GitHub** con **licencia MIT** como valores por defecto aceptados. Titular de la licencia: **Matias Nicolas Acevedo**, **Confirmado** por el dueño el 2026-10-12 (P-11). Los ejemplos y datos publicados serán ficticios; ningún secreto o registro comercial real debe entrar al repositorio.
 - **Límite del alcance:** este documento define exclusivamente StockPilot; no incorpora requisitos de otras ideas.
 
 ## 2. Problema y resultado esperado
@@ -212,7 +212,7 @@ Estos datos expresan el dominio; **no constituyen un esquema SQL ni prescriben t
 
 - **Venta:** `CONFIRMADA` → `ANULADA` por Administrador, con motivo y restitución. No hay retorno ni segunda anulación. Esos son los únicos estados de venta necesarios en el MVP.
 - **Producto:** `ACTIVO` → `INACTIVO` por Administrador; los inactivos no se ofrecen para ventas nuevas y se conservan para historial. **Pendiente no bloqueante:** si el MVP incluirá reactivación `INACTIVO` → `ACTIVO`; propuesta: omitir hasta definir una necesidad real.
-- **Invitación:** `PENDIENTE` → `ACEPTADA` o `VENCIDA` (incluido rechazo por uso previo). **Propuesto:** si se precisa un estado técnico `CONSUMIDA`, tratarlo como invitación ya aceptada, no como una nueva opción de negocio. Revocación administrativa: **Pendiente no bloqueante**, no requerida por el flujo aceptado.
+- **Invitación:** `PENDIENTE` → `ACEPTADA` o `VENCIDA` (incluido rechazo por uso previo). **Propuesto:** si se precisa un estado técnico `CONSUMIDA`, tratarlo como invitación ya aceptada, no como una nueva opción de negocio. Revocación administrativa: **Pendiente no bloqueante**, no requerida por el flujo aceptado. La redacción de «rechazo por uso previo» admite dos lecturas; su aclaración propuesta figura en P-14, sin cambiar el comportamiento aceptado (un enlace ya usado nunca crea otra membresía).
 - **Membresía:** activa tras creación del comercio o aceptación de invitación. Desvinculación y suspensión: **no incluidas** por no haberse acordado su comportamiento.
 
 **Límites y validaciones**
@@ -296,6 +296,8 @@ Este bloque refleja los **defaults técnicos y de proceso confirmados antes de i
 
 **Situación:** conversación de definición de producto; **no hubo inspección del repositorio ni validación de entorno**. Todos los elementos siguientes requieren comprobación posterior.
 
+**Actualización 2026-10-12 (v1.1):** el inventario efectivo de herramientas, scaffolds y versiones se registra en `docs/SETUP.md`, y el avance verificable de la preparación en `docs/HANDOFF.md`. El cuadro siguiente conserva el estado de conocimiento al definir el producto; no se duplica aquí el estado técnico vivo.
+
 | Elemento | Estado de conocimiento | Resolución posterior |
 |---|---|---|
 | `server/` de Spring Initializr | **Por verificar en el repositorio** | Dueño genera; agente de frontera inventaría y conserva |
@@ -369,9 +371,10 @@ Los siguientes criterios describen resultados observables del **MVP aceptado**. 
 | P-08 | Detalles de validación/cálculo ARS | No | Propuesta: cálculo decimal exacto con dos posiciones; preservar centavos | Preparación de specs/tests |
 | P-09 | Reintentos y doble confirmación accidental | No | Propuesta: una confirmación lógica produce una sola venta; definir protección observable sin añadir infraestructura sin necesidad | Preparación de specs/tests |
 | P-10 | Retirar miembros, transferir administración, revocar invitaciones | No | No agregar al MVP: comportamientos no acordados; ampliar solo con decisión nueva | Dueño, fase posterior eventual |
-| P-11 | Nombre/owner del repositorio y titular MIT | No | Confirmar antes de crear remote/publicar licencia; no afecta dominio | Dueño, preparación |
-| P-12 | Disponibilidad efectiva de herramientas/versiones y Google OAuth | No para intención; sí para ejecutar la preparación | **Por verificar en el repositorio/entorno**; no afirmar que funciona | Agente de frontera y dueño |
+| P-11 | Nombre/owner del repositorio y titular MIT | No | **Resuelto 2026-10-12:** repo público `MatiasNicolasAcevedo/stockpilot`; titular MIT Matias Nicolas Acevedo | Dueño — cerrado |
+| P-12 | Disponibilidad efectiva de herramientas/versiones y Google OAuth | No para intención; sí para ejecutar la preparación | **En curso:** herramientas y versiones comprobadas el 2026-10-12 (`docs/SETUP.md`); Google OAuth real pendiente de credenciales del dueño | Agente de frontera y dueño |
 | P-13 | Hosting, presupuesto, respaldo para uso real | No | Mantener demo local; exigir decisión nueva antes de producción con datos reales | Dueño, si se despliega |
+| P-14 | Redacción del estado de invitación ante reutilización (§6, «incluido rechazo por uso previo») | No | Propuesta: un intento de reutilizar una invitación `ACEPTADA` se rechaza y la invitación conserva `ACEPTADA`; `VENCIDA` aplica a una `PENDIENTE` cuyo plazo expiró. Impacto: modelo de estados y mensajes de la spec de invitaciones; el resultado de negocio (sin nueva membresía) no cambia | Dueño valida al especificar invitaciones (F-01) |
 
 **Pendientes bloqueantes para entender el MVP:** **ninguno identificado** en el alcance aceptado. Una divergencia futura sobre permisos, anulación o transacciones sería una **nueva decisión de producto**, no licencia para inventar comportamiento.
 
@@ -392,6 +395,7 @@ Los siguientes criterios describen resultados observables del **MVP aceptado**. 
 | **1.0 / fecha de aprobación no registrada** | §1–§11, F-01–F-04, RN-01–RN-23, CA-01–CA-19 | Contexto inicial específico de StockPilot: comercio multiempresa, roles por comercio, invitaciones, productos, movimientos, ventas, anulación y pruebas observables. Se reemplazó la cabecera del formulario genérico por la identidad del producto. | **MVP aceptado expresamente por el dueño del producto** | Preparación del repositorio y verificación del entorno; pendientes no bloqueantes P-01–P-13 |
 | **1.0 / fecha de aprobación no registrada** | §5 / visión posterior | Pagos combinados registrados exclusivamente para una fase posterior; el MVP mantiene un único medio de pago por venta. | **Decisión de visión posterior confirmada**, implementación no autorizada | Evaluar solo tras observar necesidades del MVP |
 | **1.0 / fecha de aprobación no registrada** | §1, §7, §9 | Se descarta el uso de Claude Design/Artifacts para evitar complejidad; el diseño se define/refina directamente con agentes en React/Material UI y revisión visual. | **Confirmado** | Calidad visual a validar durante implementación, sin exigir prototipo externo |
+| **1.1 / 2026-10-12** | Cabecera, §1, §6 (invitación), §10, §11 (P-11, P-12, P-14) | Revisión de preparación (T-000, Opus 5.5 / Claude Code): ubicación real del archivo; repo `MatiasNicolasAcevedo/stockpilot` y titular MIT confirmados por el dueño en la sesión de preparación; referencia al inventario técnico vivo en `docs/` en lugar de duplicarlo; P-11 resuelto, P-12 actualizado; P-14 nuevo para aclarar una redacción ambigua de estados de invitación. Sin cambios de alcance, reglas RN, flujos ni criterios CA. | Repo/titular **confirmados por el dueño**; P-14 **propuesto** | P-14 se valida al especificar invitaciones |
 
 Las próximas revisiones de intención deben registrarse aquí con su aceptación real y su efecto sobre flujos, reglas y criterios. Ajustes menores de trabajo dentro de un objetivo van al ROADMAP/BACKLOG cuando existan, sin introducirlos en este documento. El historial de cambios del kit genérico sigue separado del historial de StockPilot.
 

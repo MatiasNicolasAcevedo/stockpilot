@@ -1,0 +1,12 @@
+# Contexto de build mínimo: wrapper, POM y fuentes (incluidas las de pruebas).
+target/
+HELP.md
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+.env
+.env.*
+*.log

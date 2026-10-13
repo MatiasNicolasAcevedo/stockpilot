@@ -1,0 +1,156 @@
+# CI de StockPilot. Política y reglas de eficiencia en docs/TESTING.md.
+# verify-required es el check requerido por el ruleset de main: siempre se emite e informa política, base y HEAD.
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Fase del gate: debe coincidir con scripts/verify.sh (lo valida docs-check).
+  GATE_PHASE: BOOTSTRAP
+  NODE_VERSION: 24.21.0
+  # Formato de versión de Temurin en actions/setup-java (equivale a la imagen eclipse-temurin:21.0.12_8).
+  JAVA_VERSION: 21.0.12+8.0.LTS
+
+jobs:
+  classify:
+    name: classify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      policy: ${{ steps.policy.outputs.policy }}
+      draft: ${{ steps.policy.outputs.draft }}
+      base: ${{ steps.policy.outputs.base }}
+      head: ${{ steps.policy.outputs.head }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - id: policy
+        name: Clasificar el diff
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            base="$PR_BASE"; head="$PR_HEAD"
+            # Estado draft vigente: el payload de un synchronize puede quedar viejo si el PR pasó a ready
+            # mientras tanto y concurrency canceló el run de ready_for_review (trampa TR-07).
+            draft="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .draft 2>/dev/null || echo "$PR_DRAFT")"
+          else base="$PUSH_BEFORE"; head="$GITHUB_SHA"; draft=false; fi
+          node scripts/ci/classify-diff.mjs --base "$base" --head "$head" --phase "$GATE_PHASE" | tee -a "$GITHUB_OUTPUT"
+          { echo "draft=$draft"; echo "base=$base"; echo "head=$head"; } >> "$GITHUB_OUTPUT"
+
+  docs:
+    name: docs-check
+    needs: classify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: node scripts/docs-check.mjs
+
+  server:
+    name: server
+    needs: classify
+    if: needs.classify.outputs.policy != 'DOCS_ONLY'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          cache-dependency-path: server/pom.xml
+      - name: Backend rápido (draft)
+        if: needs.classify.outputs.draft == 'true'
+        run: ./mvnw -B -ntp spotless:check test
+      - name: Backend completo (clean verify con Testcontainers)
+        if: needs.classify.outputs.draft != 'true'
+        run: ./mvnw -B -ntp clean verify
+      - name: Reportes de pruebas (solo en fallos)
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: server-test-reports
+          path: |
+            server/target/surefire-reports/
+            server/target/failsafe-reports/
+          retention-days: 7
+
+  verify-required:
+    name: verify-required
+    needs: [classify, docs, server]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Evaluar política y suites exigidas
+        env:
+          POLICY: ${{ needs.classify.outputs.policy }}
+          DRAFT: ${{ needs.classify.outputs.draft }}
+          BASE: ${{ needs.classify.outputs.base }}
+          HEAD: ${{ needs.classify.outputs.head }}
+          CLASSIFY: ${{ needs.classify.result }}
+          DOCS: ${{ needs.docs.result }}
+          SERVER: ${{ needs.server.result }}
+        run: |
+          echo "Política: ${POLICY:-desconocida} · fase $GATE_PHASE · base $BASE · head $HEAD"
+          echo "classify=$CLASSIFY docs=$DOCS server=$SERVER"
+          {
+            echo "### verify-required"
+            echo "| Campo | Valor |"; echo "|---|---|"
+            echo "| Política | ${POLICY:-desconocida} (fase $GATE_PHASE) |"
+            echo "| Base / HEAD | \`$BASE\` / \`$HEAD\` |"
+            echo "| classify / docs / server | $CLASSIFY / $DOCS / $SERVER |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          fail() { echo "::error::$1"; echo "**Resultado:** $1" >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+          [ "$CLASSIFY" = success ] || fail "el clasificador no terminó con éxito"
+          [ "$DOCS" = success ] || fail "docs-check exigido no está verde"
+          if [ "$DRAFT" = true ]; then
+            fail "DRAFT: solo corrieron checks rápidos; el gate de la política se exige al pasar a ready"
+          fi
+          case "$POLICY" in
+            DOCS_ONLY)
+              [ "$SERVER" = skipped ] || fail "DOCS_ONLY con suite técnica ejecutada inesperadamente ($SERVER)" ;;
+            BOOTSTRAP)
+              [ "$SERVER" = success ] || fail "BOOTSTRAP exige backend verde ($SERVER)" ;;
+            *)
+              fail "política no soportada por este workflow: ${POLICY:-vacía}" ;;
+          esac
+          echo "**Resultado:** verde para la política $POLICY" >> "$GITHUB_STEP_SUMMARY"

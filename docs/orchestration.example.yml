@@ -1,0 +1,29 @@
+# Ejemplo de configuración para un dispatcher secuencial futuro. NO hay uno instalado (ver ORCHESTRATION.md).
+# Valores de propuesta inicial; no son opciones nativas de Junie Lite.
+schema_version: 1
+phase: preparation                # pasar a execution solo con HANDOFF en LISTO_PARA_JUNIE
+preparation_executor: frontier
+preparation_models: [GPT-6.1 Sol, Opus 5.5]  # el dueño elige por sesión; se registra cuál
+preparation_effort: high
+prefer_cross_model_review: true   # recomendación; no abre sesiones del otro modelo
+executor: junie
+executor_label: Junie Lite
+adapter: manual                   # automatizar solo con capacidad y autorización comprobadas
+base_branch: main
+max_active_tasks: 1
+max_open_task_prs: 1
+max_parallel_sessions: 1
+max_review_rounds: 2
+max_distinct_fix_attempts: 3
+max_sessions_per_cycle: 8
+max_cycle_minutes: 90
+max_budget_per_cycle: null        # sin presupuesto monetario acordado
+roles: [planner, implementer, reviewer, merger]
+reviewer_may_continue_to_merge: true
+required_checks: [verify-required]
+allow_auto_merge: false
+merge_method: squash
+require_fresh_review: true
+require_matching_head: true
+allow_protection_bypass: false
+stop_on_unpublished_changes: true

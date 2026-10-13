@@ -32,7 +32,7 @@ El traspaso a Junie Lite no revoca estos permisos Git. Si una tarea requiere red
 | Auto-merge de GitHub | Deshabilitado |
 | Secret scanning / push protection | Activos |
 | Ruleset `main-protection` (id 24964732) | Rama por defecto; PR obligatorio con 0 aprobaciones formales; solo squash; sin eliminación; sin force push (non-fast-forward); sin actores con bypass |
-| Check requerido | `verify-required` con rama actualizada antes del merge: se agrega cuando haya reportado por primera vez en el PR de T-000 (estado en [HANDOFF.md](HANDOFF.md), criterio G-01) |
+| Check requerido | `verify-required` (emitido por GitHub Actions, integración 15368) con rama actualizada antes del merge (`strict`); agregado el 2026-10-12 después de su primer reporte en el PR #1 |
 
 Después de esta configuración ningún agente modifica, relaja ni elimina rulesets, ajustes de merge, visibilidad, permisos o planes. Si una protección bloquea un PR, se conserva el checkpoint y se informa al dueño.
 
@@ -66,4 +66,4 @@ Una sesión nueva reduce el arrastre de contexto, pero no es una revisión human
 | Aspecto | Valor | Evidencia / condición |
 |---|---|---|
 | Continuidad | `POR_SESION` | El dueño abre cada sesión con el prompt de [STATUS.md](STATUS.md). No hay dispatcher instalado ([ORCHESTRATION.md](ORCHESTRATION.md)) |
-| Merge | `AUTOMATICO_ELEGIBLE` (preparado) | Requiere `verify-required` como check requerido y un primer merge comprobado; hasta entonces se registra como pendiente en HANDOFF G-02 |
+| Merge | `AUTOMATICO_ELEGIBLE` (preparado) | Protecciones completas desde el 2026-10-12; falta comprobar un primer merge real (HANDOFF G-02) |

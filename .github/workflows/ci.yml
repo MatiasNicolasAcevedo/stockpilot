@@ -20,7 +20,8 @@ env:
   # Fase del gate: debe coincidir con scripts/verify.sh (lo valida docs-check).
   GATE_PHASE: BOOTSTRAP
   NODE_VERSION: 24.21.0
-  JAVA_VERSION: 21.0.12+8
+  # Formato de versión de Temurin en actions/setup-java (equivale a la imagen eclipse-temurin:21.0.12_8).
+  JAVA_VERSION: 21.0.12+8.0.LTS
 
 jobs:
   classify:

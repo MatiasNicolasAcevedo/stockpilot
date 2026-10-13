@@ -13,7 +13,7 @@ branch: chore/T-000-governance-and-server-foundation
 risk: elevated
 role: implementer
 executor: frontier
-pr: null
+pr: 1
 ---
 # T-000 · Gobierno del repositorio y base server con PostgreSQL/Flyway
 
@@ -38,7 +38,7 @@ No incluye: client (T-001), login OIDC/sesión/CSRF para la SPA (T-002), E2E y g
 |---|---|---|---|
 | T0-01 | Un solo Git en la raíz; `plantilla/` excluido localmente y fuera del índice | `git check-ignore -v -- plantilla/PROJECT_TEMPLATE.md plantilla/PROJECT_WORKFLOW.md plantilla/PROJECT_CONTEXT.md` → regla `.git/info/exclude:9:/plantilla/`; `git ls-files -- plantilla` → 0 | Verificado 2026-10-12 |
 | T0-02 | Ancla en `main` con scaffolds, contexto e ignores, sin kit ni secretos | Commit `2d06bbb` (33 archivos revisados) publicado en `origin/main` | Verificado |
-| T0-03 | Repo público, solo squash, borrado de ramas, secret scanning y push protection, ruleset sin bypass | `gh api repos/MatiasNicolasAcevedo/stockpilot` y ruleset `main-protection` (id 24964732) | Verificado; `verify-required` requerido pendiente de su primer reporte |
+| T0-03 | Repo público, solo squash, borrado de ramas, secret scanning y push protection, ruleset sin bypass | `gh api repos/MatiasNicolasAcevedo/stockpilot` y ruleset `main-protection` (id 24964732) | Verificado; `verify-required` agregado como requerido (integración GitHub Actions 15368, rama actualizada) tras reportar en el PR #1 |
 | T0-04 | Backend: Spotless, unitarios/slices, integración Testcontainers y JaCoCo en el runner containerizado | `docker compose --profile verify run --rm server-tests` → `BUILD SUCCESS`, 3 + 7 tests | Verificado 2026-10-12 (árbol de trabajo de T-000 sobre base `2d06bbb`) |
 | T0-05 | Flyway desde DB vacía + Hibernate `validate` + PostgreSQL 18.x | `ServerApplicationIT` (historial Flyway V1, `server_version_num` 18xxxx) | Verificado |
 | T0-06 | Identidad estable `(issuer, subject)` única; mismo `subject` de otro issuer es otra identidad | `AppUserRepositoryIT` | Verificado |
@@ -52,15 +52,15 @@ Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 ## Checkpoint de implementación
 - Sesiones: implementación · Opus 5.5 (`claude-opus-5-5`) · Claude Code (extensión VS Code) · esfuerzo configurado `xhigh` en los settings del usuario (el contrato pide high; no es un modelo menor).
 - Hecho: herramientas del paso 0 comprobadas (todas presentes); inventario de scaffolds; Git + exclusión + ancla; repo y ruleset; código, pruebas y Compose del server; documentación de gobierno.
-- Pendiente: gate local completo, PR draft, CI, `verify-required` requerido, paso a `in_review`.
+- Pendiente: CI verde del HEAD publicado (el primer run falló en `actions/setup-java` por el formato de versión, TR-06, corregido), paso a `in_review` y PR ready.
 - Decisiones y supuestos: ADR 0001; la alternativa preaprobada de host para Testcontainers **no** se aplicó porque el runner containerizado funcionó en la primera configuración.
 - Archivos propios y cambios heredados: scaffolds del dueño anclados sin cambios en `2d06bbb`; todo lo demás es de esta tarea.
 - Pruebas: ver tabla; comandos ejecutados el 2026-10-12.
 - Bloqueos: ninguno.
-- Rama / PR: `chore/T-000-governance-and-server-foundation` / pendiente.
-- Último commit conocido: `2d06bbb` (base).
-- Publicación: local.
-- Próximo comando o acción: `bash scripts/verify.sh`, commit de rutas explícitas, push y PR draft.
+- Rama / PR: `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) (draft).
+- Último commit conocido: `f064cec` (implementación inicial publicada).
+- Publicación: publicada en el PR #1 (draft); este checkpoint se publica con la corrección de CI.
+- Próximo comando o acción: `gh pr checks 1` sobre el HEAD publicado; si `server` y `docs-check` están verdes, pasar a `in_review`, push y `gh pr ready 1`.
 
 ## Resultado
 Pendiente.

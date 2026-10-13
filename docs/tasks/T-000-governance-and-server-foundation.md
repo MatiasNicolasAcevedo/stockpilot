@@ -1,6 +1,6 @@
 ---
 id: T-000
-status: in_review
+status: mergeable
 priority: P0
 size: L
 milestone: M0
@@ -11,7 +11,7 @@ spec_version: null
 depends_on: []
 branch: chore/T-000-governance-and-server-foundation
 risk: elevated
-role: reviewer
+role: merger
 executor: frontier
 pr: 1
 ---
@@ -45,7 +45,7 @@ No incluye: client (T-001), login OIDC/sesión/CSRF para la SPA (T-002), E2E y g
 | T0-07 | Sin sesión: `/api/**` → 401 ProblemDetail; POST sin CSRF → 403 ProblemDetail; sin form/Basic | `SecurityConfigTest`; `curl` contra el stack: 401 JSON | Verificado |
 | T0-08 | `docker compose up -d --build --wait` levanta db/server healthy; reinicio, `down`/`up` y rebuild conservan datos de desarrollo | `flyway_schema_history.installed_on` idéntico tras restart, down/up y rebuild | Verificado 2026-10-12 |
 | T0-09 | docs-check verde y gate BOOTSTRAP local; fallos propagan exit ≠ 0 | `bash scripts/verify.sh` → docs OK, server OK (BUILD SUCCESS 3 + 7); `--client` → exit 1, opción inválida → exit 2; docs-check detecta 11 mutaciones controladas | Verificado 2026-10-12 |
-| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Ruleset con `verify-required` requerido; run draft 38337479833 sobre `1e70271`: classify BOOTSTRAP, docs-check y server verdes en checkout limpio sin `plantilla/`, `verify-required` falla a propósito por DRAFT. Los runs de `18f293b` mostraron la carrera TR-07 (el DRAFT de `synchronize` canceló al de `ready_for_review`); corregida leyendo el estado draft vigente. El run completo sobre el HEAD final se registra en el comentario de evidencia del PR #1 | Parcial: verde de ready a confirmar por la revisión |
+| T0-10 | CI: `verify-required` reporta BOOTSTRAP verde en el PR y queda como check requerido | Ruleset con `verify-required` requerido; run draft 38337479833 sobre `1e70271`: classify BOOTSTRAP, docs-check y server verdes en checkout limpio sin `plantilla/`, `verify-required` falla a propósito por DRAFT. Los runs de `18f293b` mostraron la carrera TR-07 (el DRAFT de `synchronize` canceló al de `ready_for_review`); corregida leyendo el estado draft vigente. El run completo sobre el HEAD final se registra en el comentario de evidencia del PR #1 | Verificado por la revisión: run 38337986915 (`pull_request`, PR ready) sobre `4ae508b` y base `2d06bbb`: classify BOOTSTRAP, docs-check, server `clean verify` (7 IT) y `verify-required` verdes |
 
 Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 
@@ -62,5 +62,14 @@ Política de gate: BOOTSTRAP (docs + backend). FULL no existe todavía (T-003).
 - Publicación: publicada en el PR #1.
 - Próximo comando o acción: sesión revisora con el prompt de docs/STATUS.md.
 
+## Checkpoint de revisión
+- Sesión: revisión → merger · Opus 5.5 (`claude-opus-5-5`) · Claude Code (extensión VS Code) · sesión nueva, distinta de la implementación (Opus 5.5 / Claude Code). Se recomendaba GPT-6.1 Sol / Codex; el dueño abrió la revisión con Opus 5.5 en otra sesión, lo que AUTONOMY admite (la independencia exigida es de sesión).
+- SHA revisado: HEAD `4ae508b18a031db3c4567e918b43babe114497fa` sobre base `main` = `2d06bbb2b49fb50f826ee9204beca7efa4781efb`; workspace limpio en ese SHA, `plantilla/` excluida y fuera del índice.
+- Diff completo revisado contra `main` (56 archivos): PROJECT_CONTEXT v1.1 y §12, gobierno, POM Java 21, seguridad deny-by-default, V1, Compose, Dockerfile, `verify.sh`, `docs-check.mjs`, `classify-diff.mjs`, `ci.yml`.
+- Pruebas reales (2026-10-12): `bash scripts/verify.sh` → exit 0 (docs-check OK, 34 Markdown, HANDOFF 3/21; server BUILD SUCCESS 3 + 7 con `postgres:18.6`). `docker compose up -d --build --wait` → db/server healthy; `curl` anónimo: `/actuator/health` 200 UP, `GET /api/v1/stores` 401 `application/problem+json`, `POST` sin CSRF 403 `application/problem+json`, `/login` y `/actuator/env` 401; PostgreSQL 18.6; `flyway_schema_history.installed_on` idéntico tras rebuild, restart y down/up. Repo y ruleset 24964732 consultados con `gh api`: coinciden con T0-03.
+- T0-01…T0-10: verificados. HANDOFF, STATUS y BACKLOG no declaran más de lo comprobado (C-01, B-02 y G-01 verificados; resto pendiente).
+- Observaciones no bloqueantes: (1) GitHub aún no detecta la licencia porque `LICENSE` llega a `main` con este merge; la reconciliación confirma `license.spdx_id = MIT`. (2) La allowlist DOCS_ONLY acepta cualquier `*.md`, también bajo `server/src` o `client/src`; riesgo bajo, anotado en BACKLOG. (3) TR-04 se observa en el merge.
+- Veredicto: `APROBADO`, publicado en el PR #1 con SHA de HEAD final y base.
+
 ## Resultado
-Implementación publicada en el PR #1 y en revisión. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java) y TR-07 (carrera draft/ready en CI, corregida en `ci.yml`), documentados en SETUP. Merge pendiente.
+Implementación publicada en el PR #1; revisión favorable y tarea `mergeable`. Descubrimientos: TR-01 (zona horaria del JVM), TR-04 (parámetro por defecto del ruleset), TR-06 (formato de versión en setup-java) y TR-07 (carrera draft/ready en CI, corregida en `ci.yml`), documentados en SETUP. Merge pendiente.

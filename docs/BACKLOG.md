@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: revisar y mergear si es elegible T-000 (in_review) · frontera, sesión distinta (recomendado GPT-6.1 Sol) · `chore/T-000-governance-and-server-foundation` / PR #1.
+Próxima acción: merge de T-000 (mergeable, veredicto APROBADO en el PR) · merger en la sesión revisora o retoma de merge · `chore/T-000-governance-and-server-foundation` / PR #1.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 1 | [T-000](tasks/T-000-governance-and-server-foundation.md) | in_review | Gobierno del repo + base server PostgreSQL/Flyway | `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) | ninguno |
+| 1 | [T-000](tasks/T-000-governance-and-server-foundation.md) | mergeable | Gobierno del repo + base server PostgreSQL/Flyway | `chore/T-000-governance-and-server-foundation` / [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) | ninguno |
 
 ## Listas — orden de ejecución
 Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su dependencia.
@@ -24,6 +24,7 @@ Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su de
 | Primer flujo de M1 (ciclo C1 propuesto: alta de comercio y comercio activo) | ROADMAP M1; CA-01, RN-11, RN-18, RN-21 | Spec y T-004/T-005 se refinan en T-003 para Junie Lite |
 | Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
 | Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
+| Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
 
 ## Hechas recientes
 Ninguna todavía.

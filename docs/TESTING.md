@@ -32,11 +32,13 @@ Se ejecuta con Bash (Git Bash/WSL) desde la raíz y despacha contenedores con Co
 | Backend integración | `@SpringBootTest`/`@DataJpaTest` + Testcontainers `postgres:18.6` | Materializado | `ServerApplicationIT.java`, `identity/AppUserRepositoryIT.java` |
 | Front unitario/componente | Vitest (jsdom), Testing Library, user-event, jest-dom, MSW | Materializado (T-001) | `client/src/services/http.test.ts`, `features/system/SystemInfoPanel.test.tsx`, `shared/forms/ReferenceForm.test.tsx`, `app/AppRoutes.test.tsx` |
 | Estáticos | Spotless (Java); `tsc -b`, ESLint, Prettier, build (client) | Materializado | — |
-| Auth OIDC | `oidcLogin()` en slices; proveedor OIDC local (navikt/mock-oauth2-server, tag fijo) en integración/E2E | Pendiente (T-002/T-003) | — |
+| Auth OIDC | `oidcLogin()` en slices; proveedor OIDC local (navikt/mock-oauth2-server, tag fijo) en integración/E2E | Parcial B1: slices/configuración; proveedor/protocolo pendientes B2/B3 | `security/AuthControllerTest`, `SecurityConfigTest`, `OidcProfileTest`, `HttpsAuthCookieTest`; cookie real servlet `SessionCookieIT` sin callback |
 | E2E | Playwright en `e2e/`, stack Compose aislado con nombre único y cleanup | Pendiente (T-003) | — |
 | Documentación | `scripts/docs-check.mjs` | Materializado | — |
 
 Convenciones backend: `*Test`/`*Tests` corren con Surefire (`test`); `*IT` con Failsafe (`integration-test` + `verify`). `./mvnw test` no demuestra la integración. Cada test usa datos ficticios propios; las pruebas `RANDOM_PORT` limpian explícitamente lo que escriben (el rollback del test no alcanza al servidor).
+
+Auth B1: usar cookie obtenida por GET csrf y `X-XSRF-TOKEN` real para probar el transporte; `csrf()` de Security Test reemplaza el repositorio por uno de sesión y puede ocultar la conducta cookie/header. Los slices y SpringBootTest activan `test` explícitamente con valores ficticios; el default real no hace fallback. La sonda de validación MVC tiene una cadena exclusivamente de test para su ruta exacta: conserva las pruebas de validación mientras producción deniega endpoints comerciales sin permisos. `oidcLogin()` no ejecuta authorize/token/JWKS/UserInfo, fijación de sesión ni renovación al login; esas pruebas siguen en B3.
 
 Convenciones client: `*.test.ts(x)` junto al código; `renderWithProviders` (`src/test/render.tsx`) monta tema, Query y `MemoryRouter` reales con un QueryClient nuevo sin reintentos por test; MSW (`src/test/msw/`) con `onUnhandledFrame: 'error'`, así que una petición sin handler falla el test; datos de `src/test/factories.ts`, siempre ficticios. Consultas por rol/label accesible, no por clases. `tsconfig.test.json` tipa los tests (`tsconfig.app.json` los excluye del bundle). Los formularios de negocio copian el patrón de `shared/forms/ReferenceForm.test.tsx`.
 

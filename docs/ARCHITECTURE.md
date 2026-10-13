@@ -15,10 +15,10 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | `db` PostgreSQL 18.6 con volumen persistente y healthcheck | Materializado (T-000) |
 | `server` imagen JRE 21, health/readiness, Flyway + `validate` | Materializado (T-000) |
 | Seguridad base deny-by-default, 401/403 ProblemDetail, CSRF activo | Materializado (T-000) |
-| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio (T-000); alta al iniciar sesión en T-002 |
+| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio T-000 y servicio transaccional A T-002; protocolo de login pendiente B3 |
 | `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
 | Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
-| Google OIDC + sesión + CSRF para SPA + logout | Contrato refinado S-001 v1/ADR 0002 (T-002 ready); implementación/pruebas pendientes |
+| Google OIDC + sesión + CSRF para SPA + logout | T-002 B1 parcial: configuración backend/slices y cookies; proveedor/proxy/protocolo/UI pendientes B2/B3/C/D |
 | E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
 
 ## Backend: módulos por feature
@@ -57,8 +57,8 @@ Reglas de límites: sin ciclos; una feature usa a otra a través de su servicio 
 - Doble confirmación (P-09): clave de idempotencia generada por el cliente por intento de venta, única por comercio; reintentar devuelve la misma venta.
 
 ## Seguridad
-- Materializado: todo requiere autenticación salvo `/actuator/health/**` y `GET /api/v1/system/info`; formulario y Basic deshabilitados; rechazos como ProblemDetail (`SecurityExceptionHandler`); CSRF activo; sin usuarios en memoria.
-- Contrato aceptado, aún no materializado (T-002): [S-001 v1](specs/S-001-auth-google.md) y [ADR 0002](adr/0002-google-oidc-session-csrf-and-proxy.md). OAuth2 Login Google (`openid profile email`), identidad por issuer/subject, sesión backend en memoria 30 min, cookie HttpOnly/SameSite=Lax/Secure en HTTPS; CSRF `XSRF-TOKEN` → `X-XSRF-TOKEN` con `csrf.spa()` y GET `/api/v1/auth/csrf` 204 para renovación. GET me DTO mínimo del usuario actual sin tokens/roles; POST logout 204 invalida sesión y cache privada. Mock exclusivo test/e2e y perfiles mezclados rechazados; sin fallback desde Google.
+- Materializado B1: health y GET system/info/csrf públicos; inicio/callback GET exactos de google. GET me/logout requieren sesión; el resto denegado, sin permiso comercial implícito. Formulario/Basic/Bearer deshabilitados; rechazos como ProblemDetail, CSRF SPA cookie/header exclusivamente y sin usuarios en memoria. Principal local tras servicio OIDC de Spring y IdentityService A, DTO me mínimo; logout POST 204 invalida sesión/cookies. Perfiles reales/locales sin fallback y callback configurado desde origen validado. Slices no acreditan protocolo real ni integración de proxies.
+- Contrato completo parcialmente materializado (T-002): [S-001 v1](specs/S-001-auth-google.md) y [ADR 0002](adr/0002-google-oidc-session-csrf-and-proxy.md). OAuth2 Login Google (`openid profile email`), identidad por issuer/subject, sesión backend en memoria 30 min, cookie HttpOnly/SameSite=Lax/Secure en HTTPS; CSRF `XSRF-TOKEN` → `X-XSRF-TOKEN` con `csrf.spa()` y GET `/api/v1/auth/csrf` 204 para renovación. GET me DTO mínimo del usuario actual sin tokens/roles; POST logout 204 invalida sesión y cache privada. Mock exclusivo test/e2e y perfiles mezclados rechazados; sin fallback desde Google. Protocolo/red/proxy y cache/UI siguen pendientes B2/B3/C/D.
 - Frontera prevista T-002 B2: `APP_PUBLIC_URL` validado fija callback/origen; framework forwarding solo junto a saneamiento de headers en nginx/Vite y server interno (diagnóstico directo separado sin forwarding). Headers entrantes nunca cambian origen/callback. Configuración actual T-001 aún conserva Host/envía X-Forwarded sin aplicar esa decisión; pruebas proxy/spoofing y HTTPS simulado pendientes.
 
 ## Frontend

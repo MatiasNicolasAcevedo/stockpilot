@@ -3,33 +3,95 @@ package server.server.security;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-/**
- * Base de seguridad de M0: todo requiere autenticación salvo el health de Actuator y el endpoint público de
- * referencia {@code GET /api/v1/system/info} (nombre y versión, sin datos sensibles). Los rechazos se delegan al
- * manejo de errores de MVC para responder ProblemDetail (401/403) en lugar de HTML o redirecciones. El login Google
- * OIDC, la sesión y la entrega del token CSRF a la SPA se agregan en T-002; CSRF ya está activo por defecto.
- */
+/** Session authentication grants access only to the current identity, not future commercial resources. */
 @Configuration(proxyBeanMethods = false)
+@Import({OidcConfiguration.class, LocalOidcUserService.class})
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(
-            HttpSecurity http, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver)
+            HttpSecurity http,
+            PublicOrigin origin,
+            LocalOidcUserService oidcUsers,
+            ClientRegistrationRepository registrations,
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver)
             throws Exception {
+        var csrfCookies = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        csrfCookies.setCookiePath("/");
+        csrfCookies.setCookieCustomizer(cookie -> cookie.sameSite("Lax").secure(origin.secure()));
         http.authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health", "/actuator/health/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/system/info")
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/system/info",
+                                "/api/v1/auth/csrf",
+                                "/oauth2/authorization/google",
+                                "/login/oauth2/code/google")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/auth/me", "/logout")
+                        .authenticated()
                         .anyRequest()
-                        .authenticated())
+                        .denyAll())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .requestCache(cache -> cache.requestCache(new NullRequestCache()))
+                .csrf(csrf -> csrf.spa()
+                        .csrfTokenRepository(csrfCookies)
+                        .csrfTokenRequestHandler(new HeaderOnlySpaCsrfTokenRequestHandler()))
+                .sessionManagement(session -> session.sessionFixation(fixation -> fixation.changeSessionId()))
+                .oauth2Login(oauth -> oauth.loginPage("/oauth2/authorization/google")
+                        .authorizationEndpoint(endpoint -> endpoint.authorizationRequestResolver(
+                                new GoogleAuthorizationRequestResolver(registrations)))
+                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/google"))
+                        .withObjectPostProcessor(new ObjectPostProcessor<OAuth2LoginAuthenticationFilter>() {
+                            @Override
+                            public <O extends OAuth2LoginAuthenticationFilter> O postProcess(O filter) {
+                                filter.setRequiresAuthenticationRequestMatcher(PathPatternRequestMatcher.pathPattern(
+                                        HttpMethod.GET, "/login/oauth2/code/google"));
+                                return filter;
+                            }
+                        })
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(oidcUsers))
+                        .successHandler((request, response, authentication) -> {
+                            response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
+                            response.setStatus(302);
+                            response.setHeader(HttpHeaders.LOCATION, "/");
+                        })
+                        .failureHandler((request, response, failure) -> {
+                            response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
+                            response.setStatus(302);
+                            response.setHeader(HttpHeaders.LOCATION, "/login?error=authentication");
+                        }))
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .addLogoutHandler((request, response, authentication) -> response.addHeader(
+                                HttpHeaders.SET_COOKIE,
+                                ResponseCookie.from("JSESSIONID", "")
+                                        .path("/")
+                                        .httpOnly(true)
+                                        .sameSite("Lax")
+                                        .secure(origin.secure())
+                                        .maxAge(0)
+                                        .build()
+                                        .toString()))
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
+                            response.setStatus(204);
+                        }))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, failure) ->
                                 exceptionResolver.resolveException(request, response, null, failure))
                         .accessDeniedHandler((request, response, failure) ->

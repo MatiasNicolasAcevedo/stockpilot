@@ -209,6 +209,13 @@ const phaseCi = existsSync(join(ROOT, '.github/workflows/ci.yml')) && read('.git
 const phaseSh = existsSync(join(ROOT, 'scripts/verify.sh')) && read('scripts/verify.sh').match(/^GATE_PHASE="(\w+)"/m)?.[1];
 if (!phaseCi || phaseCi !== phaseSh) fail('scripts/verify.sh', `GATE_PHASE distinto de ci.yml (${phaseSh} vs ${phaseCi})`);
 if (phaseSh && !read('docs/TESTING.md').includes(`**Fase actual: \`${phaseSh}\`**`)) fail('docs/TESTING.md', `no declara la fase ${phaseSh}`);
+// Node: misma versión en CI, en el runner docs-check de Compose y en la imagen del client.
+const nodeCi = existsSync(join(ROOT, '.github/workflows/ci.yml')) && read('.github/workflows/ci.yml').match(/NODE_VERSION:\s*([\d.]+)/)?.[1];
+const nodeCompose = existsSync(join(ROOT, 'docker-compose.yml')) && read('docker-compose.yml').match(/image:\s*node:([\d.]+)/)?.[1];
+const nodeClient = existsSync(join(ROOT, 'client/Dockerfile')) && read('client/Dockerfile').match(/^FROM node:([\d.]+)/m)?.[1];
+if (!nodeCi || nodeCi !== nodeCompose || nodeCi !== nodeClient) {
+  fail('client/Dockerfile', `versión de Node distinta entre ci.yml, docker-compose.yml y client/Dockerfile (${nodeCi} / ${nodeCompose} / ${nodeClient})`);
+}
 
 if (errors.length) {
   console.error(`docs-check: ${errors.length} error(es)`);

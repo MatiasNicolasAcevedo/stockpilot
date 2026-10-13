@@ -9,7 +9,7 @@ Ninguna implementación en vuelo; planificación de T-002 publicada en su rama/P
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | ready | Google OIDC/sesión/CSRF: partes A → B1/B2/B3 → C1/C2 → D; primera salida identidad local | `feat/T-002-google-auth` / PR draft al publicar (número en tarea/STATUS) | Ninguno para A; implementación solo en sesión nueva, proveedor local/red por verificar en B2 |
+| 3 | [T-002](tasks/T-002-google-auth.md) | ready | Google OIDC/sesión/CSRF: partes A → B1/B2/B3 → C1/C2 → D; primera salida identidad local | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para A; implementación solo en sesión nueva, proveedor local/red por verificar en B2; DRAFT no autoriza merge |
 
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |

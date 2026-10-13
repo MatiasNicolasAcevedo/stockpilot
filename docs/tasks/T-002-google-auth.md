@@ -13,7 +13,7 @@ branch: feat/T-002-google-auth
 risk: elevated
 role: implementer
 executor: frontier
-pr: null
+pr: 3
 ---
 # T-002 · Google OIDC, sesión, CSRF e identidad local
 
@@ -78,11 +78,11 @@ Política de este diff: documental; docs-check containerizado antes de push. Imp
 ## Checkpoint de planificación · salida · 2026-10-13
 - Hecho: cierre remoto T-001 reconciliado, S-001 v1/ADR 0002 y división secuencial; revisión anticipada de ROADMAP por cola sin ready/cambio fundacional de identidad, sin cambiar objetivo ni autonomía. T-002 ready; T-003 draft.
 - Cambios propios: documentos de tarea/STATUS/BACKLOG/HANDOFF/ROADMAP/ARCHITECTURE, spec y ADR. Heredados: ninguno; código y entorno no modificados, sin lectura de secretos. Kit local mejorado con dos lecciones genéricas de planificación/frontera de proxy, sin datos del producto, excluido del commit.
-- Publicación: primer commit de esta rama reconcilia T-001; PR draft al primer push útil. SHA final/CI y número real de PR se registran después sin SHA autorreferencial.
+- Publicación comprobada: primer commit `c9a8b59` reconcilia T-001 y publica contrato; push útil seguido de [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), misma rama `feat/T-002-google-auth`, base `84d103c`. El cierre documental registra número/retoma; SHA final y CI se comprueban y comentan en PR tras su push, sin SHA autorreferencial. No hay otro PR activo.
 - Pruebas reales: `bash scripts/verify.sh --docs` containerizado exit 0 (36 Markdown, 4 tareas, HANDOFF 7/21), 2026-10-13. Dos invocaciones restringidas fallaron antes del runner por utilidades Git Bash inaccesibles (dirname/sh); ejecución elevada autorizada pasó sin cambiar scripts ni aceptación. `git diff --check` verde. No se ejecutó gate técnico ni se afirma auth materializada. Log `$TEMP/stockpilot-T002-planner-docs.log`; sin cleanup pendiente.
 - Bloqueos: ninguno para parte A. Pull/configuración/red del proveedor pendientes B2; Google real con dueño, Junie Lite pendiente E-01. Modelo declarado GPT-6/Codex API, exacto/esfuerzo no verificables, sin atribuir high solicitado.
-- Último commit conocido al planificar: base `84d103cd4c6b1c58f45f6272354ef49c918bce06`.
-- Próxima acción: nueva sesión implementer de frontera, misma T-002/rama/PR, parte A; prompt único y completo en STATUS. No se implementa código en esta sesión.
+- Último commit conocido: planificación publicada `c9a8b59`; base `84d103cd4c6b1c58f45f6272354ef49c918bce06`.
+- Próxima acción: nueva sesión implementer de frontera, misma T-002/rama/PR #3, parte A; primer comando `gh pr view 3 --json state,isDraft,headRefOid,baseRefOid,statusCheckRollup`. Prompt único y completo en STATUS. No se implementa código en esta sesión.
 
 ## Resultado
 Contrato refinado v1 y dependencia cumplida: ready para parte A en sesión implementer nueva. Planificación no equivale a autenticación implementada ni a aprobación de PR. T-002 permanece abierta hasta entrega/revisión/merge; M0 NO_LISTO, 7/21, BOOTSTRAP.

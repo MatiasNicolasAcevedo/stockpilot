@@ -1,0 +1,74 @@
+# Stack de desarrollo de StockPilot (Docker Compose V2). Uso: docker compose up -d --build --wait
+# - db y server: perfil por defecto. El client se agrega en T-001.
+# - server-tests y docs-check: perfil "verify", los invoca scripts/verify.sh.
+# Los defaults coinciden con .env.example; un .env local (ignorado) puede sobrescribirlos.
+name: stockpilot
+
+services:
+  db:
+    # Misma imagen fijada que Testcontainers (TestcontainersConfiguration.POSTGRES_IMAGE); docs-check lo verifica.
+    image: postgres:18.6
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-stockpilot}
+      POSTGRES_USER: ${POSTGRES_USER:-stockpilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stockpilot-dev-only}
+    volumes:
+      # PostgreSQL 18+: el volumen se monta en /var/lib/postgresql (PGDATA = /var/lib/postgresql/18/docker).
+      - db-data:/var/lib/postgresql
+    ports:
+      - "127.0.0.1:${DB_PORT:-55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+
+  server:
+    build:
+      context: ./server
+      target: runtime
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-stockpilot}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-stockpilot}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-stockpilot-dev-only}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${SERVER_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health/readiness"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  # Runner de pruebas backend: ./mvnw clean verify (Spotless, unitarios, integración Testcontainers, JaCoCo).
+  # Recibe el socket Docker para crear contenedores PostgreSQL hermanos; ningún servicio de la app lo monta.
+  server-tests:
+    profiles: ["verify"]
+    image: eclipse-temurin:21.0.12_8-jdk-noble
+    working_dir: /workspace
+    command: ["./mvnw", "-B", "-ntp", "clean", "verify"]
+    environment:
+      TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./server:/workspace
+      - m2-cache:/root/.m2
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # Validación documental determinista (scripts/docs-check.mjs), sin dependencias npm.
+  docs-check:
+    profiles: ["verify"]
+    image: node:24.21.0-alpine
+    working_dir: /repo
+    command: ["node", "scripts/docs-check.mjs"]
+    volumes:
+      - .:/repo:ro
+
+volumes:
+  db-data:
+  m2-cache:

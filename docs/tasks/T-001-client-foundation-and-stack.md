@@ -1,6 +1,6 @@
 ---
 id: T-001
-status: changes_requested
+status: in_progress
 priority: P0
 size: L
 milestone: M0
@@ -92,6 +92,13 @@ Política de gate: BOOTSTRAP (docs + server + client). Gate completo local: `bas
 - Estado: `changes_requested`; corrección en nueva sesión implementer de frontera, misma rama y PR; ronda 1 de un máximo de 2. Reviewer no cambió código. Próximo comando: consultar PR #2/base/HEAD/CI y reproducir R1 antes de corregir. Prompt único vigente en STATUS.
 - Publicación: este checkpoint se guarda en el commit documental de revisión; su SHA final, CI y veredicto se publican en el PR después de verificar el push. Sin aprobación ni merge.
 - Cleanup realizado: server restaurado; db/server/client healthy; volumen de desarrollo conservado; viewport del navegador restaurado. Logs temporales locales conservados, no versionados. Kit local: lección genérica sobre fallos con/sin caché y límites de timeout, sin datos del producto.
+
+## Checkpoint de corrección · R1 · 2026-10-13
+- Sesión nueva de implementer de frontera · herramienta real Codex (API) · identidad disponible GPT-6; el runtime no expone identificador exacto de modelo ni esfuerzo verificable. El prompt pidió Opus 5.5 / Claude Code / high; esa herramienta/modelo no están disponibles en esta sesión y no se simula su uso. Sin cambio de ejecutor ni lanzamiento de otra sesión.
+- Inicio: árbol limpio, rama conservada; HEAD local/remoto `abf857de3ba3f5cb6c07891517506bf2458a2f3e`, base `main` `9f061f55f99e614e36f8317150881ed9408a8c96`; PR #2 propio, OPEN y ready. CI `38343919991` BOOTSTRAP verde; veredicto CAMBIOS REQUERIDOS de ronda 1 reconciliado con `gh`.
+- Impacto antes de editar código: acotar conexión upstream de nginx además de DNS, sin cambiar rutas ni contratos públicos; sin cambios de permisos/propiedad, CSRF, datos o esquema. La UI conserva sus estados y Reintentar; se comprueban con ambos caminos de caída. Prueba de regresión del stack, SETUP TR-08 y evidencia HANDOFF se ajustan dentro de T1-02, sin ampliar aceptación.
+- Próxima acción: reproducir caída tras GET exitoso antes del fix, guardar tiempos/logs locales; luego prueba DNS fría y corrección mínima. Operaciones largas: gate y rebuild con logs en `$TEMP/stockpilot-R1-*`. Cleanup obligatorio: restaurar server/client healthy, conservar volúmenes y no tocar otros proyectos Docker.
+- Ronda vigente: corrección de la primera revisión; pendiente segunda revisión independiente. No iniciar T-002.
 
 ## Resultado
 **Cambios requeridos (ronda 1).** Implementación publicada en el PR #2; gate BOOTSTRAP verde y T1-01, T1-03…T1-06 revalidados. T1-02 muestra éxito/error/recuperación, pero R1 impide aceptar como general la latencia de caída declarada. Misma rama/PR, siguiente sesión implementer de frontera. Sin merge; CI y SHA finales en el comentario de veredicto.

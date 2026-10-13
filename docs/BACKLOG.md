@@ -1,12 +1,12 @@
 # Tablero vivo
-Próxima acción: corregir R1 de T-001 (changes_requested, ronda 1) · implementer de frontera en sesión nueva · `build/T-001-client-foundation-and-stack` / PR #2.
+Próxima acción: corregir R1 de T-001 (in_progress, corrección de ronda 1) · implementer de frontera · `build/T-001-client-foundation-and-stack` / PR #2.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 2 | [T-001](tasks/T-001-client-foundation-and-stack.md) | changes_requested | Base client + stack Compose db/server/client | `build/T-001-client-foundation-and-stack` / [#2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2) | R1: caída con IP resuelta tarda 14,43 s; corregir timeout/regresión y evidencia TR-08 |
+| 2 | [T-001](tasks/T-001-client-foundation-and-stack.md) | in_progress | Base client + stack Compose db/server/client | `build/T-001-client-foundation-and-stack` / [#2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2) | R1: reproducir caída, corregir conexión upstream y evidencia TR-08 |
 
 ## Listas — orden de ejecución
 Ninguna: las tareas de M0 se habilitan en orden al confirmarse el merge de su dependencia.

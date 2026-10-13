@@ -6,7 +6,7 @@ Actualizado: 2026-10-13 (UTC-3) · sesión: revisión T-001, ronda 1 · Codex (G
 |---|---|
 | Acción | Corregir R1 de T-001 en una sesión nueva de implementación de frontera |
 | Tarea y contrato | T-001 · [tasks/T-001-client-foundation-and-stack.md](tasks/T-001-client-foundation-and-stack.md) |
-| Estado | `changes_requested` |
+| Estado | `in_progress` |
 | Ejecutor | Frontera · implementer; misma rama y PR, sin tomar otra tarea |
 | Rama / PR | `build/T-001-client-foundation-and-stack` · [PR #2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2) (ready) |
 | Hecho remoto comprobado | Base `main` = `9f061f55f99e614e36f8317150881ed9408a8c96`; implementación revisada `101479b59789e0e274c3767046d62960c887ac2f`, run ready `38342385438` verde. SHA y CI del HEAD documental final en el veredicto del PR |

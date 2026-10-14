@@ -32,7 +32,7 @@ Se ejecuta con Bash (Git Bash/WSL) desde la raíz y despacha contenedores con Co
 | Backend integración | `@SpringBootTest`/`@DataJpaTest` + Testcontainers `postgres:18.6` | Materializado | `ServerApplicationIT.java`, `identity/AppUserRepositoryIT.java` |
 | Front unitario/componente | Vitest (jsdom), Testing Library, user-event, jest-dom, MSW | Materializado (T-001) | `client/src/services/http.test.ts`, `features/system/SystemInfoPanel.test.tsx`, `shared/forms/ReferenceForm.test.tsx`, `app/AppRoutes.test.tsx` |
 | Estáticos | Spotless (Java); `tsc -b`, ESLint, Prettier, build (client) | Materializado | — |
-| Auth OIDC | Slices + protocolo HTTP/Tomcat/PostgreSQL/proveedor 3.0.3 + fixture negativa HTTP/JWKS; transporte y UI de sesión client con MSW | A/B1/B2, 18 casos de protocolo B3, transporte C1, UI/cache C2 y smoke en navegador real + OpenAPI D verificados; revisión independiente pendiente | `OidcLoginIT`, `OidcFailureIT`, `client/src/services/{http,csrf,sessionEvents}.test.ts`, `client/src/features/auth/*.test.ts(x)` (`AuthSession.test.tsx`), `client/src/app/AppRoutes.test.tsx`, `AuthControllerTest`, `SecurityConfigTest`, `OidcProfileTest`, `HttpsAuthCookieTest`, `SessionCookieIT`, `PublicOriginIT`, `PublicOriginDiagnosticIT`, `OpenApiContractIT`, `scripts/test-auth-proxies.mjs`, `scripts/test-auth-ui-smoke.mjs` |
+| Auth OIDC | Slices + protocolo HTTP/Tomcat/PostgreSQL/proveedor 3.0.3 + fixture negativa HTTP/JWKS; transporte y UI de sesión client con MSW | A/B1/B2, 18 casos de protocolo B3, transporte C1, UI/cache C2 y smoke en navegador real + OpenAPI D verificados, R2 APROBADO e integrados en PR #3 (`512bfd9`) | `OidcLoginIT`, `OidcFailureIT`, `client/src/services/{http,csrf,sessionEvents}.test.ts`, `client/src/features/auth/*.test.ts(x)` (`AuthSession.test.tsx`), `client/src/app/AppRoutes.test.tsx`, `AuthControllerTest`, `SecurityConfigTest`, `OidcProfileTest`, `HttpsAuthCookieTest`, `SessionCookieIT`, `PublicOriginIT`, `PublicOriginDiagnosticIT`, `OpenApiContractIT`, `scripts/test-auth-proxies.mjs`, `scripts/test-auth-ui-smoke.mjs` |
 | E2E | Playwright en `e2e/`, stack Compose aislado con nombre único y cleanup | Pendiente (T-003) | — |
 | Documentación | `scripts/docs-check.mjs` | Materializado | — |
 
@@ -86,3 +86,10 @@ Prueba dirigida de R1 (T-001): con el stack local healthy, `node scripts/test-pr
 
 ## Trampas conocidas
 Ver [SETUP.md · Trampas conocidas](SETUP.md#trampas-conocidas) (TR-01 zona horaria del JVM, TR-03 Testcontainers desde contenedor, TR-05 `target/` compartido, TR-08 latencia del proxy con server detenido, TR-10 capturas headless a 375 px).
+
+## Contrato propuesto T-003 (todavía no materializado)
+[T-003 v1](tasks/T-003-e2e-gate-and-handoff.md) define partes A…E y criterios AC-01…12. BOOTSTRAP sigue vigente hasta C, después de materializar A/B. Playwright exacto e imagen correspondiente se verifican y fijan en A; Chromium desktop 1280/móvil 375, build real, API/DB/proveedor local, sin MSW para acreditar integración. Se requieren aislamiento, cleanup en éxito/fallo/señal, retries 0 y reportes saneados en fallos. El camino dev local explícito conserva Google sin fallback y no acredita el stack ordinario.
+
+C acota DOCS_ONLY a Markdown de raíz, `docs/**/*.md`, AGENTS.md/CLAUDE.md de raíz/server/client y LICENSE (solo A/M). La allowlist actual descrita arriba sigue efectiva hasta implementar y probar el cambio: Markdown bajo código y archivos no Markdown bajo docs exigirán fase técnica, junto con desconocidos/renombres/borrados/errores. La matriz del agregado prueba estados success/failure/skipped/cancelled/ausente; DRAFT sigue rechazado y el cierre de M0 exige FULL sobre el HEAD final aun si es documental. No se modifican protecciones.
+
+B-01 ordinario y S-03 real siguen pendientes del dueño; las pruebas aisladas son evidencia adicional con alcance explícito. No declarar FULL ni Junie habilitada desde esta planificación.

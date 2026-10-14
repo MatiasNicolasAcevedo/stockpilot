@@ -5,7 +5,7 @@ Hitos por resultados y dependencias, sin fechas inventadas. Intención y aceptac
 ## Hitos
 | Hito | Objetivo | Criterio de salida | Ejecutor | Estado |
 |---|---|---|---|---|
-| M0 · Base verificable | Conservar scaffolds y dejar la base lista para Junie Lite | Contexto trazado; arquitectura y Google OIDC (local) probados; unitarios/typecheck/integración; Playwright con OIDC local; CI requerida; HANDOFF con 21 criterios verificados y merges confirmados | Frontera | En curso: T-000/T-001 integradas; T-002 refinada ready, T-003 draft |
+| M0 · Base verificable | Conservar scaffolds y dejar la base lista para Junie Lite | Contexto trazado; arquitectura y Google OIDC (local) probados; unitarios/typecheck/integración; Playwright con OIDC local; CI requerida; HANDOFF con 21 criterios verificados y merges confirmados | Frontera | En curso: T-000/T-001 integradas; T-002 integrada; T-003 ready, contrato técnico y partes A…E refinados |
 | M1 · Primer flujo útil | Una funcionalidad vertical completa (ciclo C1) | Criterios de su spec cumplidos, persistencia, UI con estados/errores, E2E desktop/móvil, umbrales de cobertura activos | Junie Lite | Propuesto |
 | M2 · MVP | Los cuatro flujos F-01–F-04 del contexto | CA-01–CA-19 cubiertos con pruebas, permisos y aislamiento probados, demo con datos ficticios y README probado | Junie Lite (frontera para lo fundacional) | Propuesto |
 | M3 · Mantenimiento | Cambios pequeños y calidad sostenible | Regresiones cubiertas, dependencias atendidas por riesgo, backlog sin bloqueos olvidados, gate verde | Junie Lite | Futuro |
@@ -27,9 +27,9 @@ El dashboard (P-07) y las mejoras visuales se ordenan después de los flujos pri
 | Primer ciclo propuesto | **C1 · M1 — Alta de comercio y comercio activo** (F-01 parcial): crear comercio y quedar como Administrador (CA-01, RN-18), listar y seleccionar comercios propios con rol por comercio (RN-11, RN-21) y denegar acceso a no miembros (CA-13 y CA-19 en lo aplicable). Ordenado por el contexto §5 («identificar comercio y miembros» primero). Se confirma al redactar su spec en T-003; invitaciones, catálogo, inventario, ventas y anulación siguen en M2 |
 | Alcance y salida | Se fija en la spec del primer flujo (T-003) |
 | Cadencia efectiva | 5 tareas de producto mergeadas (`counts_for_cycle: true`), además del cierre de hito o un disparador anticipado, lo que ocurra primero |
-| Último corte revisado | 2026-10-13, corte anticipado de preparación: T-000 PR #1 `9f061f5`, T-001 PR #2 `84d103c` confirmados; 0 tareas de producto mergeadas |
-| Balance de la revisión | Cola sin ready y contrato fundacional de identidad/proxy activan revisión anticipada; base server/client aceptada con CI BOOTSTRAP, R1 cerrado en 2/2 rondas. M0 no cerró: auth/protocolo local, E2E/FULL y recepción Junie pendientes; sin beneficio de producto/usuarios observado. Contrato S-001/ADR 0002 y partes pequeñas dentro de T-002 habilitan siguiente tramo sin ampliar objetivo |
-| Próximo tramo | T-002 A → B1/B2/B3 → C1/C2 → D, un PR secuencial; luego refinar T-003 para FULL/handoff y spec del primer flujo. Ejecutor frontera hasta M0 cerrado |
+| Último corte revisado | 2026-10-14, corte anticipado de preparación: T-000 PR #1 `9f061f5`, T-001 PR #2 `84d103c`, T-002 PR #3 `512bfd9` confirmados; 0 tareas de producto mergeadas |
+| Balance de la revisión | Cola sin ready y dependencia de desarrollo sin Google activan corte anticipado. T-002 auth/protocolo/UI integrados tras R2 APROBADO, CI HEAD/main BOOTSTRAP verde; M0 NO_LISTO 9/21, E2E/FULL, primer contrato y recepción Junie pendientes. B-01 ordinario/S-03 con dueño; sin beneficio de producto/usuarios observado. Se absorben en T-003 el camino local explícito y allowlist DOCS_ONLY, sin ampliar objetivo. Corte previo 2026-10-13 en checkpoint planner de T-002 y PR #3 |
+| Próximo tramo | T-003 A stack/runner/dev aislados → B Playwright → C FULL/CI/clasificador → D spec C1 y tareas S → E evidencia/revisión/handoff, un PR secuencial y sesiones separadas. Frontera hasta M0 cerrado; C1 propuesto conserva alta de comercio/comercio activo, sin invitaciones |
 | Decisiones pendientes | P-01–P-10 y P-14 del contexto se resuelven al especificar el flujo que los necesita; ninguna bloquea M0 |
 
 ## Política de revisión del backlog y del alcance

@@ -18,7 +18,7 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio T-000; servicio transaccional y alta/recuperación tras el login OIDC en T-002 (ver Seguridad) |
 | `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
 | Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
-| Google OIDC + sesión + CSRF para SPA + logout | Materializado en T-002 (backend, proxies, proveedor OIDC local de pruebas y UI de sesión; PR #3, revisión independiente pendiente). Google real sin probar: pendiente externo del dueño (HANDOFF S-03) |
+| Google OIDC + sesión + CSRF para SPA + logout | Materializado en T-002 (backend, proxies, proveedor OIDC local de pruebas y UI de sesión; PR #3 MERGED `512bfd9`, revisión independiente R2 APROBADO). Google real sin probar: pendiente externo del dueño (HANDOFF S-03) |
 | E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
 
 ## Backend: módulos por feature
@@ -57,7 +57,7 @@ Reglas de límites: sin ciclos; una feature usa a otra a través de su servicio 
 - Doble confirmación (P-09): clave de idempotencia generada por el cliente por intento de venta, única por comercio; reintentar devuelve la misma venta.
 
 ## Seguridad
-Contrato [S-001 v1](specs/S-001-auth-google.md) y [ADR 0002](adr/0002-google-oidc-session-csrf-and-proxy.md), materializado en T-002 (A…D; revisión independiente pendiente):
+Contrato [S-001 v1](specs/S-001-auth-google.md) y [ADR 0002](adr/0002-google-oidc-session-csrf-and-proxy.md), materializado en T-002 (A…D; R2 APROBADO y PR #3 MERGED `512bfd9`):
 - **Rutas:** health y GET system/info/csrf públicos; inicio `/oauth2/authorization/google` y callback `/login/oauth2/code/google` GET exactos. GET me y GET `/logout` (405) requieren sesión; POST `/logout` exige CSRF. Todo lo demás denegado (incluidos `/v3/api-docs` y swagger-ui): una sesión no concede permisos comerciales. Formulario/Basic/Bearer deshabilitados; 401/403 como ProblemDetail sin redirects para API.
 - **Identidad y sesión:** OAuth2 Login de Spring (`openid profile email`); tras la validación de Spring, `IdentityService` crea/recupera `app_user` por issuer/subject exactos (concurrencia recuperada por la constraint) y el principal lleva solo el UUID local. Sesión en memoria 30 min, `JSESSIONID` HttpOnly/SameSite=Lax/Secure según origen, cambio de ID al login, fallo del callback invalida la sesión previa; destinos fijos `/` y `/login?error=authentication`. me devuelve id/displayName/email/emailVerified, sin tokens/issuer/subject/roles.
 - **CSRF:** `csrf.spa()` con cookie `XSRF-TOKEN` legible y header `X-XSRF-TOKEN` exclusivamente (sin query); GET `/api/v1/auth/csrf` 204 la materializa. Login y logout la renuevan.
@@ -88,4 +88,7 @@ Niveles, gate y políticas en [TESTING.md](TESTING.md); comandos y versiones en 
 | ADR | Decisión | Estado |
 |---|---|---|
 | [0001](adr/0001-base-tecnica-y-alineacion-del-scaffold.md) | Base técnica, Java 21 sobre el scaffold, imágenes fijadas, UUID v7, formato y cobertura | Aceptada |
-| [0002](adr/0002-google-oidc-session-csrf-and-proxy.md) | Google OIDC, sesión, cookie/CSRF y frontera del proxy | Aceptada; implementada en T-002 (PR #3, revisión independiente pendiente) |
+| [0002](adr/0002-google-oidc-session-csrf-and-proxy.md) | Google OIDC, sesión, cookie/CSRF y frontera del proxy | Aceptada; implementada, revisada en R2 e integrada en T-002 (PR #3 → `512bfd9`) |
+
+## Camino aislado propuesto en T-003
+El stack ordinario conserva el perfil Google y exige credenciales privadas, sin fallback. T-003 A materializa un runner Chromium/Playwright en contenedor sobre build real/nginx/API/PostgreSQL/proveedor OIDC local con proyecto, red y volumen propios; origen/issuer coherentes en toda la red. También documenta una entrada explícita de desarrollo aislado (nginx/Vite) sin credenciales Google y resolución Windows por proceso cuando corresponda. Sin rutas de test productivas ni acceso al volumen ordinario. Sigue propuesto: no acredita B-01 ni S-03. Contrato, división y matriz en [T-003](tasks/T-003-e2e-gate-and-handoff.md).

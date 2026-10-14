@@ -1,5 +1,5 @@
 # Tablero vivo
-Próxima acción: sesión nueva implementer frontera para solo T-002 C1, después de comprobar salida B3/SHA/CI, misma rama/PR draft. A/B1/B2/B3 verificadas por HTTP real y gate BOOTSTRAP; C1/C2/D pendientes. T-001 done.
+Próxima acción: implementer frontera ejecuta solo T-002 C1, salida B3 b653bbd/CI publicada, misma rama/PR draft. A/B1/B2/B3 verificadas por HTTP real y gate BOOTSTRAP; C1/C2/D pendientes. T-001 done.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
@@ -10,7 +10,7 @@ Salida B2 2026-10-13: pin autorizado 3.0.3 y trazabilidad S-001 v1/ADR 0002/tare
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3 comprobadas; retoma C1, C2/D pendientes | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para C1; protocolo y gate BOOTSTRAP verdes; no revisión/merge parcial |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3 comprobadas; C1 en ejecución, C2/D pendientes | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para C1; protocolo y gate BOOTSTRAP verdes; no revisión/merge parcial |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

@@ -1,15 +1,15 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 B3 completada · Codex API basado en GPT-6; runtime exacto/esfuerzo no expuestos/verificables, sin selección simulada ni otra sesión/modelo/delegación.
+Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 C1 en ejecución · Opus 5.5 en Claude Code; esfuerzo efectivo no expuesto, sin selección simulada ni otra sesión/modelo/delegación.
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Dueño abre sesión nueva implementer frontera para completar solo C1, después de comprobar salida B3/SHA/CI; misma tarea/rama/PR draft |
+| Acción | Implementer frontera ejecuta solo C1; salida B3 publicada (b653bbd) y CI/comentario reconciliados; misma tarea/rama/PR draft |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
 | Estado | `in_progress` |
 | Ejecutor | Frontera · implementer C1; continuidad POR_SESION, dueño abre retoma |
-| Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; B2 e2162ce, transición B3 756a65c; SHA final/CI/local=remoto en comentario tras push |
-| Hecho remoto comprobado | Base/main 84d103cd4c6b1c58f45f6272354ef49c918bce06; #2 MERGED/T-001 done. CI B2 38486684177: suites SUCCESS, verify-required FAILURE por DRAFT; HEAD/base/checks finales B3 se reconfirman en comentario |
+| Rama / PR | `feat/T-002-google-auth` · [PR #3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3), único PR abierto; B2 e2162ce, B3 b653bbd; SHA final C1/CI/local=remoto en comentario tras push |
+| Hecho remoto comprobado | Base/main 84d103cd4c6b1c58f45f6272354ef49c918bce06; #2 MERGED/T-001 done. CI B3 38491510732 sobre b653bbd: suites SUCCESS, verify-required FAILURE por DRAFT; salida B3 comentada en PR #3 |
 | Bloqueo | Ninguno para C1. Protocolo B3 y gate BOOTSTRAP verdes; Google real externo con dueño, sin auth completa aún |
 
 **M0:** T-000/T-001 integradas; T-002 A/B1/B2/B3 comprobadas, C1/C2/D pendientes · Verificados: 7/21 · pendientes: C-02, C-03, E-01, E-02, E-03, S-01, S-02, S-03, V-02, V-03, G-03, H-01, H-02, H-03 · bloqueados: ninguno en checklist · detalle [HANDOFF.md](HANDOFF.md). BOOTSTRAP no FULL; T-003 draft. ROADMAP conserva corte anticipado 2026-10-13, 0 tareas de producto y mismo objetivo/ciclo. Auth completa solo después de D y revisión independiente posterior.

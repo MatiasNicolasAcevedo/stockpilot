@@ -35,7 +35,7 @@ Docker Desktop debe estar abierto mientras se trabaja. El JDK del host es Corret
 | Prettier / eslint-config-prettier | 3.9.10 / 10.1.8 | `client/package.json` |
 | nginx (client `runtime`) | 1.30.5 (`nginx:1.30.5-alpine`, rama estable) | `client/Dockerfile` |
 | Proveedor OIDC de pruebas | `ghcr.io/navikt/mock-oauth2-server:3.0.3`, pin corregido con autorización explícita del dueño el 2026-10-13 | `compose.auth-test.yml`; B2 Windows/contenedor y protocolo aplicación B3 (`OidcLoginIT`/`OidcFailureIT`) verificados |
-| Playwright | Pendiente (T-003) | — |
+| Playwright / Chromium runner | `@playwright/test` 1.64.0; imagen Noble misma versión por digest | `e2e/package.json`, lockfile npm y `e2e/Dockerfile` (T-003 A) |
 
 Peers y engines de las dependencias nuevas comprobados con `npm view` el 2026-10-13 contra React 19.3, Vite 8, TypeScript 6 y Node 24.21; instaladas con `npm install --save-exact`, sin `--force` ni `--legacy-peer-deps`. El lockfile conserva los bindings nativos de todas las plataformas (`@rolldown/binding-linux-x64-musl`, `lightningcss-linux-x64-musl`), por eso `npm ci` funciona igual en Windows, en `node:alpine` y en CI.
 
@@ -107,6 +107,29 @@ Comprobación B2 repetible desde la raíz: `node scripts/test-oidc-provider-stac
 Puerto estándar explícito (`https://demo.example:443`) conserva el callback de APP_PUBLIC_URL y acepta Host con o sin `:443`, que representan el mismo origen. Los proxies reconstruyen autoridad canónica y puerto efectivo; puertos ajenos siguen rechazados. No confundir HTTPS simulado con TLS real.
 
 **Protocolo B3:** el gate backend incluye `OidcLoginIT` (3.0.3 real) y `OidcFailureIT` (respuestas negativas HTTP/JWKS exclusivas de test), con Tomcat y PostgreSQL reales. Para iterar dentro del runner: `docker compose --env-file .env.example -p stockpilot-auth-protocol-it --profile verify run --rm server-tests ./mvnw -B -ntp '-Dit.test=OidcLoginIT,OidcFailureIT' verify`. Testcontainers administra proveedor/DB ficticios con puertos efímeros; configuración/discovery/iss mantienen el mismo issuer de cada flujo. El mock usa host efectivo/mapped port (TR-03); la fixture negativa usa loopback del JVM y control positivo. No modifica la topología 8090 de B2 ni requiere resolución Windows para estas IT containerizadas. Retirar únicamente red/caché del proyecto de prueba al terminar: `docker compose --env-file .env.example -p stockpilot-auth-protocol-it --profile verify down --volumes --remove-orphans`. Detalle de conducta y límites en [TESTING](TESTING.md); la UI de sesión y el navegador real se cubren con los tests del client y `scripts/test-auth-ui-smoke.mjs`. Google real sigue pendiente del dueño (S-03).
+
+## Entrada aislada T-003 A (sin credenciales Google)
+
+Desde Git Bash en raíz: `bash scripts/e2e.sh --harness`. Proyecto único validado stockpilot-e2e-<sufijo>, env-file ficticio explícito, build real/nginx/Chromium sin puertos host; origen http://localhost idéntico en browser/proxy/backend/callback. `STOCKPILOT_E2E_PROJECT` permite nombre explícito reservado; rechaza stockpilot, otra namespace y recursos preexistentes. Readiness HTTP real con deadline/discovery/JWKS y trap antes de build/up; éxito/fallo/INT/TERM/HUP retiran solo sus contenedores/red/volumen, incluyendo detenidos. Error de cleanup impide verde. Reportes exportados en e2e/artifacts/<proyecto>, locales/ignorados, pendientes de saneamiento B. Comando sin --harness sigue rojo por ausencia de B; no acredita producto/FULL.
+
+Pin comprobado 2026-10-14: [Docker oficial Playwright](https://playwright.dev/docs/docker) exige correspondencia paquete/imagen y publica Noble 1.64.0; [npm registry 1.64.0](https://registry.npmjs.org/@playwright/test/1.64.0) confirma engines Node >=20/integridad. `docker buildx imagetools inspect mcr.microsoft.com/playwright:v1.64.0-noble`: índice sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f (fijado en Dockerfile), amd64 sha256:bc72a8df40831ded821e3cbc79c318c21b44d6e51dff9fd89ace7a8249c5b462, arm64 sha256:4109b399f6d3de22a133ab935df0d7614ed0de9195d529f0ebc6255655cdb495. npm install --save-dev --save-exact generó lockfile; Chromium bundled arrancó realmente. Sin cambios de dependencias client ni navegador descargado en host.
+
+Desarrollo, una sesión/origen por vez (proveedor puerto 8090), ejemplo nginx:
+
+```bash
+bash scripts/dev-auth.sh nginx stockpilot-dev-auth-local-nginx session
+# Otra terminal, misma raíz/proyecto/modo; conservar la primera sesión abierta:
+bash scripts/dev-auth.sh nginx stockpilot-dev-auth-local-nginx restart
+bash scripts/dev-auth.sh nginx stockpilot-dev-auth-local-nginx rebuild
+bash scripts/dev-auth.sh nginx stockpilot-dev-auth-local-nginx status
+bash scripts/dev-auth.sh nginx stockpilot-dev-auth-local-nginx stop
+```
+
+nginx sirve http://127.0.0.1:5175. Vite/HMR: reemplazar modo por vite/proyecto por stockpilot-dev-auth-local-vite; URL http://127.0.0.1:5176. Usar otro sufijo si ya existe. session arranca build/db/oidc/server/proxy, mantiene volumen ficticio durante restart/rebuild y limpia exclusivamente sus recursos al cerrar con Ctrl-C/stop. Después de stop, una sesión nueva crea DB vacía. Restart/rebuild de sesión viva exige proyecto/origen correspondientes y repite readiness. Backend interno/perfil e2e explícito. No operar Compose ordinario ni stockpilot_db-data; Google real conserva fallo sin credenciales, sin fallback.
+
+Windows: navegador de este modo debe resolver **por proceso** solamente host.docker.internal a 127.0.0.1 (TR-11), conservando URL/Host/issuer; no editar hosts/DNS global. Probe Node usa lookup propio. `node scripts/test-dev-auth.mjs nginx` o vite, secuencialmente, usa Edge existente con `--host-resolver-rules=MAP host.docker.internal 127.0.0.1` y contexto efímero. Requiere `npm ci --prefix e2e --ignore-scripts` (paquete, sin browser download); no usa perfil personal. Login real/recarga, UUID/created_at de DB ficticia idénticos tras restart/rebuild/retoma; Vite modifica/restaura bind mount Windows y exige HMR sin navegación. Termina con stop propio; no acredita B-01 ordinario/Google real/B/FULL. Para navegador manual, proceso/perfil efímero dedicado con la misma regla, cerrar al acabar.
+
+Ensayos dirigidos: `bash scripts/test-e2e-lifecycle.sh`; detalles/límites en [runner](../e2e/README.md). BOOTSTRAP/CI permanecen vigentes; B/C pendientes.
 
 ## Fuentes y limitaciones
 Context7 **no estaba disponible** en T-000 ni en la implementación inicial de T-001; sí se consultó en la corrección R1, junto con la documentación oficial de nginx enlazada en TR-08. En T-001 las versiones, peers y engines del client salieron del registro npm (`npm view`), la API de las majors nuevas (MSW 3, React Router 8, jest-dom 7, Vitest 5) de sus tipos/exports instalados, y el tag de nginx de Docker Hub. Se consultaron fuentes oficiales: metadata de Maven Central (Boot, springdoc, Spotless, palantir-java-format, JaCoCo, Maven), Docker Hub (postgres, eclipse-temurin, node), [springdoc.org](https://springdoc.org/) (recomienda la última 3.x estable para Boot 4), releases de GitHub Actions resueltos con `gh api`. Los paquetes de Boot 4.1.1 (slices de test, auto-configuraciones) se comprobaron en los jars resueltos.

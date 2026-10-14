@@ -1,0 +1,4 @@
+# A negative assay only: a real service exits while Compose starts the stack.
+services:
+  server:
+    command: ["sh", "-c", "exit 42"]

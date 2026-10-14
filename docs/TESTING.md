@@ -19,7 +19,7 @@ Se ejecuta con Bash (Git Bash/WSL) desde la raíz y despacha contenedores con Co
 | `bash scripts/verify.sh --docs` | docs-check en `node:24.21.0-alpine` (servicio `docs-check`) |
 | `bash scripts/verify.sh --server` | Runner `server-tests`: `./mvnw -B -ntp clean verify` |
 | `bash scripts/verify.sh --client` | Runner `client-tests` (imagen `verify` de `client/Dockerfile`, reconstruida con `--build`): `npm run verify` = `typecheck` (`tsc -b`, incluye tests) → `lint` (cero warnings) → `format:check` → `test:ci` (Vitest + cobertura v8) → `build` |
-| `bash scripts/verify.sh --e2e` | Falla con «suite no materializada» hasta T-003 |
+| `bash scripts/verify.sh --e2e` | Falla con «suite no materializada» hasta conexión al gate en T-003 C; A/B invocan `scripts/e2e.sh` directamente |
 | `bash scripts/verify.sh --fast` | Fase actual sin E2E; solo iteración, nunca autoriza ready/merge |
 | `bash scripts/verify.sh --policy <base>` | Muestra la política (DOCS_ONLY o la fase) del diff contra `<base>`, sin ejecutar suites |
 
@@ -87,8 +87,10 @@ Prueba dirigida de R1 (T-001): con el stack local healthy, `node scripts/test-pr
 ## Trampas conocidas
 Ver [SETUP.md · Trampas conocidas](SETUP.md#trampas-conocidas) (TR-01 zona horaria del JVM, TR-03 Testcontainers desde contenedor, TR-05 `target/` compartido, TR-08 latencia del proxy con server detenido, TR-10 capturas headless a 375 px).
 
-## Contrato propuesto T-003 (todavía no materializado)
-[T-003 v1](tasks/T-003-e2e-gate-and-handoff.md) define partes A…E y criterios AC-01…12. BOOTSTRAP sigue vigente hasta C, después de materializar A/B. Playwright exacto e imagen correspondiente se verifican y fijan en A; Chromium desktop 1280/móvil 375, build real, API/DB/proveedor local, sin MSW para acreditar integración. Se requieren aislamiento, cleanup en éxito/fallo/señal, retries 0 y reportes saneados en fallos. El camino dev local explícito conserva Google sin fallback y no acredita el stack ordinario.
+## Contrato T-003 (A materializada; B…E pendientes)
+[T-003 v1](tasks/T-003-e2e-gate-and-handoff.md) define partes A…E y criterios AC-01…12. BOOTSTRAP sigue vigente hasta C, después de materializar A/B. A fija Playwright/imagen Noble 1.64.0 por digest; Chromium desktop 1280/móvil 375, build real, API/DB/proveedor local, sin MSW para acreditar integración. Se requieren aislamiento, cleanup en éxito/fallo/señal, retries 0 y reportes saneados en fallos. El camino dev local explícito conserva Google sin fallback y no acredita el stack ordinario.
+
+A: `bash scripts/e2e.sh --harness` prueba Chromium/SPA compilada/readiness real y cleanup, sin acreditar B/FULL. `bash scripts/test-e2e-lifecycle.sh` comprueba éxito, startup fallido, API detenida, TERM, runner rojo, error de cleanup y segunda ejecución con cero recursos propios. `node scripts/test-dev-auth.mjs nginx|vite` cubre entrada dev/login/recarga/restart/rebuild/retoma, Vite añade HMR sin navegación y restauración de fuente. Config/reportes locales disponibles; saneamiento y AC-06 completo pendientes B. [SETUP](SETUP.md#entrada-aislada-t-003-a-sin-credenciales-google), [runner](../e2e/README.md).
 
 C acota DOCS_ONLY a Markdown de raíz, `docs/**/*.md`, AGENTS.md/CLAUDE.md de raíz/server/client y LICENSE (solo A/M). La allowlist actual descrita arriba sigue efectiva hasta implementar y probar el cambio: Markdown bajo código y archivos no Markdown bajo docs exigirán fase técnica, junto con desconocidos/renombres/borrados/errores. La matriz del agregado prueba estados success/failure/skipped/cancelled/ausente; DRAFT sigue rechazado y el cierre de M0 exige FULL sobre el HEAD final aun si es documental. No se modifican protecciones.
 

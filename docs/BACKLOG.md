@@ -3,6 +3,8 @@ Próxima acción: T-003 ready; sesión nueva implementer de frontera para parte 
 
 Corte ROADMAP 2026-10-14: cola sin ready y camino de desarrollo sin Google; 0 tareas de producto, objetivo conservado. Contrato T-003 v1 y partes A…E; sin implementación en la sesión planner. M0 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 quedan con dueño.
 
+**Orden decidido por el dueño (2026-10-14):** después de M0 mergeada/reconciliada con FULL y CI verdes, consolidar el kit personal local; después extraer, validar y publicar el starter en su propio repo template; recién entonces iniciar Junie en StockPilot. La aptitud técnica del HANDOFF no inicia automáticamente Junie. No agregar el starter al alcance/PR de T-003 ni crear otra tarea/PR activa durante M0. Al cierre, STATUS entrega primero el prompt de consolidación del kit, luego el del starter y finalmente el de recepción Junie.
+
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004 (se refina en T-003 D, sin ready antes del cierre M0). WIP máximo: 1 tarea / 1 PR de tarea.
 
@@ -25,6 +27,7 @@ Sin implementación en vuelo; PR draft de T-003 publica planificación de su ún
 | Necesidad | Relación | Notas |
 |---|---|---|
 | Primer flujo de M1 (ciclo C1 propuesto: alta de comercio y comercio activo) | ROADMAP M1; CA-01, RN-11, RN-18, RN-21 | Spec y T-004/T-005 se refinan en T-003 para Junie Lite |
+| Consolidar kit personal y crear primer starter antes de Junie | Pedido del dueño 2026-10-14; después de M0 | Primero sesión local de optimización genérica del kit; luego tarea de extracción/validación/publicación en carpeta/repo propios, con FULL/CI y ensayo de adopción desde copia limpia. Fuera de T-003; sin ID de tarea de producto ni otro PR activo ahora. Nombre/ruta se concretan al refinar; inicio efectivo de Junie diferido hasta completar este tramo |
 | Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
 | Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |

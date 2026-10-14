@@ -32,6 +32,8 @@ El dashboard (P-07) y las mejoras visuales se ordenan después de los flujos pri
 | Próximo tramo | T-003 A stack/runner/dev aislados → B Playwright → C FULL/CI/clasificador → D spec C1 y tareas S → E evidencia/revisión/handoff, un PR secuencial y sesiones separadas. Frontera hasta M0 cerrado; C1 propuesto conserva alta de comercio/comercio activo, sin invitaciones |
 | Decisiones pendientes | P-01–P-10 y P-14 del contexto se resuelven al especificar el flujo que los necesita; ninguna bloquea M0 |
 
+**Orden posterior a M0, decidido por el dueño el 2026-10-14:** consolidar el kit local → extraer/validar/publicar starter template en repo propio → iniciar Junie. Este tramo queda fuera de T-003 y no cambia objetivo/cadencia ni criterios M0; detalle en [la decisión registrada en T-003](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--orden-posterior-a-m0--2026-10-14).
+
 ## Política de revisión del backlog y del alcance
 **Revisar resultados y backlog cada cinco tareas de producto mergeadas, al cerrar un hito o ante un cambio relevante, lo que ocurra primero.** El valor de la cadencia puede ajustarlo el dueño con evidencia; se registra aquí como único valor efectivo. No hay scheduler: quien toma la siguiente tarea comprueba primero si toca revisar.
 

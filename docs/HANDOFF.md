@@ -13,6 +13,8 @@ Registro del traspaso de la fase A (frontera) a la fase B (Junie Lite). Creado a
 
 **Reconciliación 2026-10-14:** [PR #3 MERGED](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160511394) `2026-10-14T03:51:50Z`, squash `512bfd9c6b143aa484ddce72aad64bb9484e6330`; [APROBADO R2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160479927) HEAD `a64d29c`/base `84d103c`, código probado `cac090b`. CI HEAD 38507675463 y main 38508440122 SUCCESS BOOTSTRAP. Actualización documental en rama T-003, sin nuevos criterios verificados: 9/21. B-01 ordinario/S-03 siguen pendientes del dueño y E-01 requiere disponibilidad Junie. T-003 A…D pueden avanzar aisladas; el cierre no acredita ni sustituye esas evidencias.
 
+**Inicio efectivo de Junie:** el dueño decidió el 2026-10-14 completar primero la consolidación del kit local y el starter template validado/publicado, después de cerrar M0. `LISTO_PARA_JUNIE` indica aptitud técnica; no inicia por sí solo la recepción. [Decisión y secuencia](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--orden-posterior-a-m0--2026-10-14); los 21 criterios no cambian.
+
 ## Checklist de 21 criterios
 | ID | Criterio del producto | Estado | Evidencia comprobada | Pendiente / responsable / siguiente acción |
 |---|---|---|---|---|

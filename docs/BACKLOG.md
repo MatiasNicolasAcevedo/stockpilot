@@ -1,5 +1,5 @@
 # Tablero vivo
-Próxima acción: sesión nueva implementer frontera para solo T-002 D, después de comprobar salida C2/SHA/CI, misma rama/PR draft. A/B1/B2/B3/C1/C2 verificadas y gate BOOTSTRAP verde; D pendiente. T-001 done.
+Próxima acción: T-002 D en curso (implementer frontera, inicio registrado en la tarea), misma rama/PR draft. A/B1/B2/B3/C1/C2 verificadas y gate BOOTSTRAP verde; D pendiente. T-001 done.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
@@ -12,7 +12,7 @@ Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1/C2 comprobadas; retoma D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para D; UI de sesión y gate BOOTSTRAP verdes; no revisión/merge parcial |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1/C2 comprobadas; D en curso | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para D; UI de sesión y gate BOOTSTRAP verdes; no revisión/merge parcial |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

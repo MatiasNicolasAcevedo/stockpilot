@@ -1,5 +1,7 @@
 # Tablero vivo
-Próxima acción: corregir T-002 (changes_requested, ronda 1 de 2) · implementer de frontera en sesión nueva · solo documentación (README, client/AGENTS, ARCHITECTURE, SETUP, HANDOFF B-01, tarea) · `feat/T-002-google-auth` / PR #3. T-001 done.
+Próxima acción: revisar T-002 (in_review, ronda 2 de 2, última) · reviewer de frontera en sesión nueva, distinta de la corrección R1 · `feat/T-002-google-auth` / PR #3. T-001 done.
+
+Corrección R1 2026-10-14: README (estado del login y quickstart con requisito de credenciales Google, guía de SETUP y qué se prueba sin ellas), client/AGENTS (requisito y regla de cache/mutaciones de M1), ARCHITECTURE, SETUP y la tarea alineados al código; HANDOFF B-01 vuelve a `pendiente` (9/21) porque solo se revalidó el stack aislado; mensaje final de `scripts/test-auth-proxies.mjs` actualizado sin tocar comprobaciones. Sin cambios de código de producto, contrato ni aceptación.
 
 Revisión R1 2026-10-14: gate BOOTSTRAP, smoke nginx/Vite y proxies independientes verdes sobre 67aca0e; sin defectos de conducta. Bloquea AC-10: documentación del estado intermedio y quickstart público/`client/AGENTS` que omiten el requisito de credenciales Google (el server no arranca sin ellas, a propósito).
 
@@ -16,7 +18,7 @@ Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | changes_requested | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | ninguno; 6 correcciones documentales de ronda 1, luego revisión ronda 2 |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_review | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas, corrección R1 hecha) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | ninguno; revisión ronda 2 de 2 en sesión nueva |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
@@ -38,6 +40,7 @@ Ninguna tarea ready; retomar T-002 en vuelo.
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |
 | Mutaciones de negocio y fin de sesión | Hallazgo T-002 C2; client AGENTS/ARCHITECTURE | Query no cancela el fetch de una mutación en vuelo: tras logout/expiración su `onSuccess` podría escribir cache privada. Al crear las primeras mutaciones de M1, invalidar (no `setQueryData`) o abortar con la señal de sesión, con prueba de logout en vuelo |
 | Cierre de sesión por callback OIDC cross-site | Observación no bloqueante de la revisión R1 de T-002; ADR 0002/S-001 AC-06 | El failure handler invalida la sesión ante cualquier callback fallido (B3, replay). Una navegación top-level desde otro sitio a `/login/oauth2/code/google?state=…` lleva la cookie Lax y cierra la sesión sin CSRF; impacto bajo (sin toma de cuenta). Decidir si se documenta como consecuencia aceptada en ADR 0002 o se endurece sin reabrir el replay autenticado (con su prueba), antes de un despliegue |
+| Stack de desarrollo sin credenciales Google | Hallazgo de la corrección R1 de T-002; HANDOFF B-01/S-03/E-02; T-003 | Desde T-002 el stack ordinario (perfil `google`) no arranca sin `GOOGLE_CLIENT_ID`/`SECRET`, a propósito y sin fallback. Junie y los agentes solo pueden operar stacks aislados con el proveedor local (`compose.auth-test.yml`). T-003 define el camino documentado (p. ej. el stack E2E de Playwright) y cómo se revalida B-01, sin agregar fallback al mock en el perfil real |
 | Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
 
 ## Hechas recientes

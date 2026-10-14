@@ -15,10 +15,10 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | `db` PostgreSQL 18.6 con volumen persistente y healthcheck | Materializado (T-000) |
 | `server` imagen JRE 21, health/readiness, Flyway + `validate` | Materializado (T-000) |
 | Seguridad base deny-by-default, 401/403 ProblemDetail, CSRF activo | Materializado (T-000) |
-| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio T-000 y servicio transaccional A T-002; protocolo de login pendiente B3 |
+| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio T-000; servicio transaccional y alta/recuperación tras el login OIDC en T-002 (ver Seguridad) |
 | `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
 | Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
-| Google OIDC + sesión + CSRF para SPA + logout | T-002 B1 parcial: configuración backend/slices y cookies; proveedor/proxy/protocolo/UI pendientes B2/B3/C/D |
+| Google OIDC + sesión + CSRF para SPA + logout | Materializado en T-002 (backend, proxies, proveedor OIDC local de pruebas y UI de sesión; PR #3, revisión independiente pendiente). Google real sin probar: pendiente externo del dueño (HANDOFF S-03) |
 | E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
 
 ## Backend: módulos por feature
@@ -70,7 +70,7 @@ Estructura `src/app`, `src/features/<feature>`, `src/shared/ui`, `src/shared/for
 
 Materializado en T-001:
 - `app/`: `App` (BrowserRouter), `AppProviders` (Query + tema + CssBaseline, compartido con las pruebas), `AppRoutes` (shell con rutas hijas y 404), `theme.ts` (tema único, locale `esES`), `queryClient.ts` (reintenta solo red/5xx, hasta 2 veces; nunca 4xx ni respuestas fuera de contrato).
-- `services/http.ts`: único cliente `fetch`. `credentials: 'same-origin'`; header CSRF en métodos no seguros mediante un `CsrfTokenResolver` (hoy sin token: el mecanismo lo fija T-002); 4xx/5xx → `ApiError` con `ProblemDetail` (o `null` si el cuerpo no lo es, p. ej. 502 del proxy); red caída → `NetworkError`; cuerpo vacío/no JSON/fuera de esquema → `UnexpectedResponseError`; el aborto se propaga sin envolver. Toda respuesta con cuerpo se valida con un esquema Zod: no hay `any` ni casts en la frontera.
+- `services/http.ts`: único cliente `fetch`. `credentials: 'same-origin'`; header CSRF en métodos no seguros mediante un `CsrfTokenResolver` (en T-001 sin token; T-002 lo conecta a la cookie, ver abajo); 4xx/5xx → `ApiError` con `ProblemDetail` (o `null` si el cuerpo no lo es, p. ej. 502 del proxy); red caída → `NetworkError`; cuerpo vacío/no JSON/fuera de esquema → `UnexpectedResponseError`; el aborto se propaga sin envolver. Toda respuesta con cuerpo se valida con un esquema Zod: no hay `any` ni casts en la frontera.
 - `shared/ui`: `ErrorAlert` + `errorMessage` (mensajes en español sin detalles técnicos). `shared/forms`: `FormTextField` (TextField controlado por RHF, error accesible por `aria-describedby`) y `applyServerFieldErrors` (vuelca `errors[]` del server junto a cada campo, foco al primero, el resto en `root.server`).
 - `features/system`: primera feature de referencia (api + hook de Query + componente con estados cargando/error/éxito).
 

@@ -154,7 +154,8 @@ try {
     for (const port of [5175, 5176]) await authBoundary(port);
   }
   if (!headersOnly) invalidOrigins();
-  console.log(`${headersOnly ? 'Header' : 'Proxy'} contract passed; HTTPS simulated over local HTTP, OIDC protocol/provider/B3 remain unverified.`);
+  console.log(`${headersOnly ? 'Header' : 'Proxy'} contract passed; HTTPS simulated over local HTTP. `
+    + 'OIDC protocol is out of scope here (OidcLoginIT/OidcFailureIT, test-auth-ui-smoke.mjs).');
 } finally {
   try {
     compose(['logs', '--no-color', '--tail', '30', 'server', 'client', 'client-dev']);

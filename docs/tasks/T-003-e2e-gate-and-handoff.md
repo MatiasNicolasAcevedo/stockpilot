@@ -13,7 +13,7 @@ branch: ci/T-003-e2e-gate-and-handoff
 risk: elevated
 role: implementer
 executor: frontier
-pr: null
+pr: 4
 ---
 # T-003 · E2E, gate FULL, CI requerida y traspaso
 
@@ -86,6 +86,7 @@ B-01 ordinario sigue pendiente del dueño con credenciales Google y sin borrar d
 
 ## Checkpoint de planificación · salida
 - Revisión de ciclo anticipada 2026-10-14: T-000/#1, T-001/#2 y T-002/#3 integradas; 0 tareas de producto, objetivo C1 conservado, cola sin ready resuelta con este contrato.
-- T-002 done reconciliada en el primer commit de esta rama; T-003 ready para A en sesión implementer nueva, único PR draft al primer push. No código ni CI ejecutable implementados aquí; S-002/T-004 aún no existen y se refinan en D.
+- T-002 done reconciliada en el primer commit de esta rama; T-003 ready para A en sesión implementer nueva, único [PR #4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) OPEN/draft. No código ni CI ejecutable implementados aquí; S-002/T-004 aún no existen y se refinan en D.
 - Validación real 2026-10-14: `bash scripts/verify.sh --docs` con `COMPOSE_ENV_FILES=.env.example` y `COMPOSE_PROJECT_NAME=stockpilot-t003-planner-docs`, exit 0: 36 Markdown/4 tareas/HANDOFF 9/21. `git diff --check` limpio. No gate técnico nuevo por diff documental; BOOTSTRAP vigente. Log `$TEMP/stockpilot-T003-planner-docs.log`; texto final revalidado exit 0 y red propia retirada; inspección por label sin residuales. Cleanup pendiente ninguno.
-- Próxima acción: publicación; SHA/PR/CI finales se registran tras operaciones reales, sin SHA autorreferencial. Prompt canónico único en [STATUS](../STATUS.md#prompt-de-la-siguiente-sesión).
+- Publicación: primer commit `63fc83c` publicado, PR #4 creado OPEN/draft; rama `ci/T-003-e2e-gate-and-handoff`, base `512bfd9`. HEAD inicial local/tracking/ls-remote/gh coinciden; T-002 reconciliada en ese primer commit. Este checkpoint agrega solo PR real/retoma. CI final y SHA publicados en comentario tras el último push, sin SHA autorreferencial. Kit genérico mejorado solo local/excluido, sin datos del producto.
+- Próxima acción: docs-check del checkpoint, commit explícito/push, comprobar HEAD/CI y dejar A para sesión nueva. Prompt canónico único en [STATUS](../STATUS.md#prompt-de-la-siguiente-sesión).

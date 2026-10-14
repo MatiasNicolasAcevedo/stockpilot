@@ -1,5 +1,5 @@
 # Tablero vivo
-Próxima acción: T-003 ready; sesión nueva implementer de frontera para parte A (stack/runner/desarrollo aislados), misma rama y PR draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
+Próxima acción: T-003 ready; sesión nueva implementer de frontera para parte A (stack/runner/desarrollo aislados), misma rama y PR #4 OPEN/draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
 
 Corte ROADMAP 2026-10-14: cola sin ready y camino de desarrollo sin Google; 0 tareas de producto, objetivo conservado. Contrato T-003 v1 y partes A…E; sin implementación en la sesión planner. M0 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 quedan con dueño.
 
@@ -15,7 +15,7 @@ Sin implementación en vuelo; PR draft de T-003 publica planificación de su ún
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | ready | E2E/FULL y primer contrato/handoff; empezar solo A | `ci/T-003-e2e-gate-and-handoff` / draft al primer push | A…D ejecutables; E exige B-01/E-01 del dueño y reconciliar S-03 conforme a HANDOFF |
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | ready | E2E/FULL y primer contrato/handoff; empezar solo A | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | A…D ejecutables; E exige B-01/E-01 del dueño y reconciliar S-03 conforme a HANDOFF |
 
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |

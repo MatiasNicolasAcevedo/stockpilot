@@ -1,0 +1,35 @@
+# ONLY isolated fictitious auth tests. Use --env-file scripts/fixtures/auth-test.env.example and -p <unique>.
+# Provider pin corrected to 3.0.3 by the owner (T-002 B2); application protocol remains B3.
+services:
+  db:
+    ports: !reset []
+    environment:
+      POSTGRES_DB: stockpilot_auth_test
+      POSTGRES_USER: stockpilot_auth_test
+      POSTGRES_PASSWORD: fictitious-auth-test-only
+  server:
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/stockpilot_auth_test
+      SPRING_DATASOURCE_USERNAME: stockpilot_auth_test
+      SPRING_DATASOURCE_PASSWORD: fictitious-auth-test-only
+      SPRING_PROFILES_ACTIVE: e2e
+      GOOGLE_CLIENT_ID: ""
+      GOOGLE_CLIENT_SECRET: ""
+      stockpilot.oidc.local-issuer: http://host.docker.internal:${LOCAL_OIDC_PORT:-8090}/default
+      stockpilot.oidc.local-client-id: stockpilot-test
+      stockpilot.oidc.local-client-secret: fictitious-test-only
+  oidc:
+    profiles: ["oidc"]
+    image: ghcr.io/navikt/mock-oauth2-server:3.0.3
+    hostname: host.docker.internal
+    environment:
+      SERVER_PORT: ${LOCAL_OIDC_PORT:-8090}
+      JSON_CONFIG_PATH: /config/oidc.json
+    volumes:
+      - ./scripts/fixtures/oidc.json:/config/oidc.json:ro
+    ports:
+      - "127.0.0.1:${LOCAL_OIDC_PORT:-8090}:${LOCAL_OIDC_PORT:-8090}"
+    networks:
+      default:
+        aliases: ["host.docker.internal"]
+    # Readiness is checked by the protocol probe from both sides, no assumed tools inside this image.

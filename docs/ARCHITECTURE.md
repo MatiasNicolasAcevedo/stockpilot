@@ -15,10 +15,10 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | `db` PostgreSQL 18.6 con volumen persistente y healthcheck | Materializado (T-000) |
 | `server` imagen JRE 21, health/readiness, Flyway + `validate` | Materializado (T-000) |
 | Seguridad base deny-by-default, 401/403 ProblemDetail, CSRF activo | Materializado (T-000) |
-| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio (T-000); alta al iniciar sesión en T-002 |
+| Identidad local `app_user` (issuer, subject) | Materializado: esquema/repositorio T-000; servicio transaccional y alta/recuperación tras el login OIDC en T-002 (ver Seguridad) |
 | `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
 | Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
-| Google OIDC + sesión + CSRF para SPA + logout | Propuesto (T-002, con ADR de sesión/CSRF) |
+| Google OIDC + sesión + CSRF para SPA + logout | Materializado en T-002 (backend, proxies, proveedor OIDC local de pruebas y UI de sesión; PR #3, revisión independiente pendiente). Google real sin probar: pendiente externo del dueño (HANDOFF S-03) |
 | E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
 
 ## Backend: módulos por feature
@@ -57,19 +57,29 @@ Reglas de límites: sin ciclos; una feature usa a otra a través de su servicio 
 - Doble confirmación (P-09): clave de idempotencia generada por el cliente por intento de venta, única por comercio; reintentar devuelve la misma venta.
 
 ## Seguridad
-- Materializado: todo requiere autenticación salvo `/actuator/health/**` y `GET /api/v1/system/info`; formulario y Basic deshabilitados; rechazos como ProblemDetail (`SecurityExceptionHandler`); CSRF activo; sin usuarios en memoria.
-- Propuesto (T-002): OAuth2 Login con Google (scopes `openid profile email`), sesión backend con cookie `HttpOnly`, `SameSite=Lax`, `Secure` en HTTPS; CSRF cookie→header para la SPA con renovación tras login/logout; `/api/v1/auth/me` devuelve un DTO sin credenciales; logout POST que invalida la sesión. Proveedor OIDC local solo en perfiles de prueba.
+Contrato [S-001 v1](specs/S-001-auth-google.md) y [ADR 0002](adr/0002-google-oidc-session-csrf-and-proxy.md), materializado en T-002 (A…D; revisión independiente pendiente):
+- **Rutas:** health y GET system/info/csrf públicos; inicio `/oauth2/authorization/google` y callback `/login/oauth2/code/google` GET exactos. GET me y GET `/logout` (405) requieren sesión; POST `/logout` exige CSRF. Todo lo demás denegado (incluidos `/v3/api-docs` y swagger-ui): una sesión no concede permisos comerciales. Formulario/Basic/Bearer deshabilitados; 401/403 como ProblemDetail sin redirects para API.
+- **Identidad y sesión:** OAuth2 Login de Spring (`openid profile email`); tras la validación de Spring, `IdentityService` crea/recupera `app_user` por issuer/subject exactos (concurrencia recuperada por la constraint) y el principal lleva solo el UUID local. Sesión en memoria 30 min, `JSESSIONID` HttpOnly/SameSite=Lax/Secure según origen, cambio de ID al login, fallo del callback invalida la sesión previa; destinos fijos `/` y `/login?error=authentication`. me devuelve id/displayName/email/emailVerified, sin tokens/issuer/subject/roles.
+- **CSRF:** `csrf.spa()` con cookie `XSRF-TOKEN` legible y header `X-XSRF-TOKEN` exclusivamente (sin query); GET `/api/v1/auth/csrf` 204 la materializa. Login y logout la renuevan.
+- **Origen y proxies:** `APP_PUBLIC_URL` validado fija callback/cookies. nginx y Vite descartan todo `Forwarded`/`X-Forwarded-*` entrante, reconstruyen host/proto/port desde ese origen y for desde el peer, y rechazan Host ajeno; el server usa forwarding `framework`, queda interno y un guard compara el request reconstruido antes de efectos auth (400 seguro). El diagnóstico directo usa forwarding `none`.
+- **Perfiles:** `google` (default) exige credenciales sin fallback; `test`/`e2e` registran el proveedor local bajo la registration `google`; perfiles mezclados fallan al arrancar.
+- **OpenAPI:** springdoc genera desde el código me/csrf/GET y POST logout con esquemas `sessionCookie` (`JSESSIONID`) y `csrfHeader` (`X-XSRF-TOKEN`) (`security/AuthOpenApi`, anotaciones de `AuthController`). El documento no se publica: `OpenApiContractIT` lo genera por el bean de springdoc y verifica que la ruta HTTP siga denegada.
 
 ## Frontend
 Estructura `src/app`, `src/features/<feature>`, `src/shared/ui`, `src/shared/forms`, `src/services/http.ts`, `src/test`. Material UI con tema único, TanStack Query para datos remotos, React Hook Form + Zod para formularios de negocio, React Router en modo declarativo. Reglas en [client/AGENTS.md](../client/AGENTS.md).
 
 Materializado en T-001:
 - `app/`: `App` (BrowserRouter), `AppProviders` (Query + tema + CssBaseline, compartido con las pruebas), `AppRoutes` (shell con rutas hijas y 404), `theme.ts` (tema único, locale `esES`), `queryClient.ts` (reintenta solo red/5xx, hasta 2 veces; nunca 4xx ni respuestas fuera de contrato).
-- `services/http.ts`: único cliente `fetch`. `credentials: 'same-origin'`; header CSRF en métodos no seguros mediante un `CsrfTokenResolver` (hoy sin token: el mecanismo lo fija T-002); 4xx/5xx → `ApiError` con `ProblemDetail` (o `null` si el cuerpo no lo es, p. ej. 502 del proxy); red caída → `NetworkError`; cuerpo vacío/no JSON/fuera de esquema → `UnexpectedResponseError`; el aborto se propaga sin envolver. Toda respuesta con cuerpo se valida con un esquema Zod: no hay `any` ni casts en la frontera.
+- `services/http.ts`: único cliente `fetch`. `credentials: 'same-origin'`; header CSRF en métodos no seguros mediante un `CsrfTokenResolver` (en T-001 sin token; T-002 lo conecta a la cookie, ver abajo); 4xx/5xx → `ApiError` con `ProblemDetail` (o `null` si el cuerpo no lo es, p. ej. 502 del proxy); red caída → `NetworkError`; cuerpo vacío/no JSON/fuera de esquema → `UnexpectedResponseError`; el aborto se propaga sin envolver. Toda respuesta con cuerpo se valida con un esquema Zod: no hay `any` ni casts en la frontera.
 - `shared/ui`: `ErrorAlert` + `errorMessage` (mensajes en español sin detalles técnicos). `shared/forms`: `FormTextField` (TextField controlado por RHF, error accesible por `aria-describedby`) y `applyServerFieldErrors` (vuelca `errors[]` del server junto a cada campo, foco al primero, el resto en `root.server`).
 - `features/system`: primera feature de referencia (api + hook de Query + componente con estados cargando/error/éxito).
 
-Operación: el contenedor `client` (target `runtime`) sirve el build con nginx y reenvía `/api/`, `/oauth2/`, `/login/oauth2/code/` y `/logout` a `server:8080` conservando el `Host` del navegador y agregando `X-Forwarded-*`; resuelve `server` por el DNS de Docker en cada petición (sobrevive a la recreación del server). `client-dev` (perfil `dev`) ofrece Vite con HMR y el mismo proxy. Detalle en [SETUP.md](SETUP.md).
+Materializado en T-002 (sesión):
+- `services/csrf.ts` lee la cookie `XSRF-TOKEN` vigente en cada mutación; `services/http.ts` envía su valor en `X-XSRF-TOKEN` solo en mutaciones same-origin y publica cada 401 en `services/sessionEvents.ts` antes de rechazar, sin reintento.
+- `features/auth/`: `api.ts` (Zod de me, me 401 = visitante, `renewCsrf`, `withCsrfRenewal` que pide reintento explícito, `logout`), hooks de sesión/CSRF/logout y `AuthSessionProvider`, único intérprete del canal de 401: con usuario es expiración (cancela consultas, elimina la cache Query que no es `['auth', …]` y las mutaciones, mensaje fijo, sin redirección). Logout cancela, limpia, renueva CSRF y navega a `/login`. Si la revalidación trae otra identidad, la cache privada se descarta antes de publicarla. `AppShell` remonta las rutas con key por identidad. `LoginPage` usa un enlace de navegación completa al inicio OIDC.
+- Regla para las features de M1: datos privados en queries fuera del prefijo `auth`; mutaciones que invaliden en lugar de escribir la cache (ver BACKLOG).
+
+Operación: el contenedor `client` (target `runtime`) sirve el build con nginx y reenvía `/api/`, `/oauth2/`, `/login/oauth2/code/` y `/logout` a `server:8080` con Host/forwarding reconstruidos desde `APP_PUBLIC_URL` (ver Seguridad); resuelve `server` por el DNS de Docker en cada petición (sobrevive a la recreación del server). `/login` y el resto caen en el fallback de la SPA. `client-dev` (perfil `dev`) ofrece Vite con HMR y la misma frontera. Detalle en [SETUP.md](SETUP.md).
 
 ## Pruebas y operación
 Niveles, gate y políticas en [TESTING.md](TESTING.md); comandos y versiones en [SETUP.md](SETUP.md).
@@ -78,4 +88,4 @@ Niveles, gate y políticas en [TESTING.md](TESTING.md); comandos y versiones en 
 | ADR | Decisión | Estado |
 |---|---|---|
 | [0001](adr/0001-base-tecnica-y-alineacion-del-scaffold.md) | Base técnica, Java 21 sobre el scaffold, imágenes fijadas, UUID v7, formato y cobertura | Aceptada |
-| 0002 | Sesión, cookie y CSRF para la SPA | Pendiente (T-002) |
+| [0002](adr/0002-google-oidc-session-csrf-and-proxy.md) | Google OIDC, sesión, cookie/CSRF y frontera del proxy | Aceptada; implementada en T-002 (PR #3, revisión independiente pendiente) |

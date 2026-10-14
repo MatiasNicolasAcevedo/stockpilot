@@ -7,7 +7,9 @@ Base materializada en T-001 sobre el scaffold Vite `react-ts` (React 19, Vite 8,
 Gate client: `bash scripts/verify.sh --client` desde la raíz (runner client-tests). Equivale a `npm run verify`:
 `typecheck` (`tsc -b`, incluye tests) · `lint` (cero warnings) · `format:check` · `test:ci` (cobertura) · `build`.
 Iteración en el host: `npm ci`, `npm test`, `npm run format`. Dependencias nuevas solo con `npm install --save-exact`.
-Stack: `docker compose up -d --build --wait` → http://127.0.0.1:5173; HMR opcional con el perfil `dev` (docs/SETUP.md).
+Stack: `docker compose up -d --build --wait` → http://127.0.0.1:5173 exige `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` reales en `.env`
+(perfil `google`, sin fallback; no leerlos ni imprimirlos); HMR opcional con el perfil `dev` (docs/SETUP.md).
+Sin credenciales: gate client y `node scripts/test-auth-ui-smoke.mjs [--vite]` (stack aislado con proveedor OIDC local).
 Proxy de `/api/`, `/oauth2/`, `/login/oauth2/code/`, `/logout`: mantener iguales `nginx.conf` y `vite.config.ts`.
 
 ## Estructura
@@ -23,6 +25,9 @@ Un solo cliente `fetch` centralizado: cookies de sesión, header CSRF, ProblemDe
 `fetch` no rechaza por 4xx/5xx: el cliente los convierte en errores tipados.
 TanStack Query para datos del servidor: keys estables, invalidación tras mutaciones, sin reintentos para 401/403/validación,
 cancelar y limpiar cache privada al logout o cambio de comercio activo. No duplicar ese cache en otro store ni persistirlo.
+Datos privados en query keys fuera del prefijo `['auth', …]` (el logout/expiración conserva solo ese prefijo).
+Mutaciones de negocio invalidan queries en lugar de escribir la cache (`setQueryData`): una mutación en vuelo no se
+cancela al cerrar sesión; las primeras de M1 agregan una prueba de logout en vuelo (docs/BACKLOG.md).
 Formularios de negocio con React Hook Form + Zod + resolvers; errores de campo de cliente y servidor junto al campo.
 Material UI con un tema único; labels y roles accesibles, foco tras errores, uso por teclado y layout usable a 375 px.
 Estados explícitos: cargando, vacío, error de red/servidor, validación, éxito y sin permiso; nunca éxito si no se guardó.

@@ -1,4 +1,5 @@
 import { HttpResponse } from 'msw'
+import type { AuthUser } from '../features/auth/api'
 import type { SystemInfo } from '../features/system/api'
 import type { FieldError, ProblemDetail } from '../services/http'
 
@@ -6,6 +7,17 @@ import type { FieldError, ProblemDetail } from '../services/http'
 
 export function buildSystemInfo(overrides: Partial<SystemInfo> = {}): SystemInfo {
   return { name: 'StockPilot', version: '0.0.1-TEST', ...overrides }
+}
+
+/** Forma exacta de `GET /api/v1/auth/me` (server: security/AuthMeResponse). */
+export function buildAuthUser(overrides: Partial<AuthUser> = {}): AuthUser {
+  return {
+    id: '01900000-0000-7000-8000-000000000001',
+    displayName: 'Persona Demo',
+    email: 'persona@example.com',
+    emailVerified: true,
+    ...overrides,
+  }
 }
 
 export function buildProblem(

@@ -2,24 +2,26 @@
 
 Aplicación web multiempresa para pequeños comercios de distintos rubros: cada comercio administra sus productos y existencias, incorpora empleados por invitación y registra ventas simples con un único medio de pago, conservando el historial de movimientos y sin acceso cruzado entre comercios. Es un proyecto demostrativo de portfolio; todos los datos de ejemplo son ficticios.
 
-> **Estado:** en preparación técnica (hito M0). Hoy existen la base del backend (PostgreSQL + Flyway, seguridad deny-by-default, pruebas con Testcontainers), la base del frontend (shell en español que consulta el backend, con sus patrones y pruebas) y la gobernanza del repositorio. El login con Google y los flujos de negocio todavía **no** están implementados. Avance en [docs/STATUS.md](docs/STATUS.md).
+> **Estado:** en preparación técnica (hito M0). Hoy existen la base del backend (PostgreSQL + Flyway, seguridad deny-by-default, pruebas con Testcontainers), la base del frontend (shell en español que consulta el backend, con sus patrones y pruebas) y la gobernanza del repositorio. El login con Google OpenID Connect (sesión en el backend, CSRF y cierre de sesión) está implementado y probado con un proveedor OIDC local; todavía no se probó con credenciales de Google reales. Los flujos de negocio todavía **no** están implementados. Avance en [docs/STATUS.md](docs/STATUS.md).
 
 ## Stack
 - **Backend:** Java 21, Spring Boot 4.1 (MVC, Data JPA, Validation, Security, OAuth2 Client, Actuator), Flyway, PostgreSQL 18.
 - **Frontend:** React 19 + TypeScript + Vite, Material UI, TanStack Query, React Router, React Hook Form + Zod; servido por nginx como origen único con proxy al backend.
-- **Identidad:** Google OpenID Connect con sesión en el backend y CSRF (en preparación).
+- **Identidad:** Google OpenID Connect con sesión en el backend y CSRF; proveedor OIDC local solo para pruebas.
 - **Operación y pruebas:** Docker Compose, JUnit + Testcontainers, Vitest + Testing Library + MSW, Playwright (en preparación), GitHub Actions.
 
 ## Requisitos
 Docker Desktop (o Docker Engine) con Compose V2 y Git Bash/WSL para los scripts. No hace falta instalar Java, Maven, Node ni PostgreSQL para levantar o probar: todo corre en contenedores. Detalle y versiones en [docs/SETUP.md](docs/SETUP.md).
 
 ## Levantar
+El stack ordinario usa el perfil `google` y **requiere credenciales OAuth propias**: copiar `.env.example` a `.env` (ignorado por Git) y completar `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` según la [guía de SETUP](docs/SETUP.md#guía-del-dueño-credenciales-google-reales-s-03). Sin ellas el server no arranca, a propósito: no hay fallback al proveedor de pruebas.
 ```bash
-docker compose up -d --build --wait            # db + server + client
+docker compose up -d --build --wait            # db + server + client (con .env completo)
 # abrir http://127.0.0.1:5173 en el navegador (SPA; /api va por el mismo origen)
 curl http://127.0.0.1:5173/api/v1/system/info   # {"name":"StockPilot","version":"..."}
 docker compose down                             # conserva los datos de desarrollo
 ```
+Sin credenciales Google se puede ejecutar todo lo de [Probar](#probar), que usa bases y proveedores de prueba efímeros, y el recorrido de sesión en navegador real contra un stack aislado con el proveedor OIDC local: `node scripts/test-auth-ui-smoke.mjs` (requiere Windows con Microsoft Edge; detalle en [docs/TESTING.md](docs/TESTING.md)).
 
 ## Probar
 ```bash

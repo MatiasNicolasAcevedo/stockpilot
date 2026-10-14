@@ -26,6 +26,7 @@ public class AppUser {
     @Column(nullable = false, updatable = false)
     private String subject;
 
+    @Column(length = 320)
     private String email;
 
     @Column(name = "email_verified", nullable = false)
@@ -55,6 +56,13 @@ public class AppUser {
 
     public UUID getId() {
         return id;
+    }
+
+    void updateProfile(String email, boolean emailVerified, String displayName, Instant now) {
+        this.email = email;
+        this.emailVerified = emailVerified;
+        this.displayName = displayName;
+        this.updatedAt = now;
     }
 
     public String getIssuer() {

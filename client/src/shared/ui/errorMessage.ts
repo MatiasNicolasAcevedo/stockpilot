@@ -1,7 +1,12 @@
+import { CsrfRenewalRequiredError } from '../../features/auth/api'
 import { ApiError, NetworkError, UnexpectedResponseError } from '../../services/http'
 
 /** Mensaje comprensible para el usuario a partir de cualquier error de una petición. Nunca muestra detalles técnicos. */
 export function errorMessage(error: unknown): string {
+  if (error instanceof CsrfRenewalRequiredError) {
+    // El token ya se renovó pero la operación no se reenvió: quien la pidió decide reintentar.
+    return 'La operación fue rechazada y no se aplicó. Volvé a intentarla.'
+  }
   if (error instanceof NetworkError) {
     return 'No se pudo conectar con el servidor. Revisá tu conexión e intentá de nuevo.'
   }

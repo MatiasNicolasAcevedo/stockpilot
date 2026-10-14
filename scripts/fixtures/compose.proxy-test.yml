@@ -1,0 +1,17 @@
+# Header-observation fixture only, not an auth substitute; used by test-auth-proxies.mjs.
+services:
+  server:
+    build: !reset null
+    image: node:24.21.0-alpine
+    environment: !reset {}
+    depends_on: !reset {}
+    working_dir: /fixture
+    command: ["node", "proxy-echo.mjs"]
+    volumes: !override
+      - ./scripts/fixtures/proxy-echo.mjs:/fixture/proxy-echo.mjs:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 1s
+      timeout: 3s
+      retries: 10
+      start_period: 1s

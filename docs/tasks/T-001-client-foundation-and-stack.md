@@ -1,6 +1,6 @@
 ---
 id: T-001
-status: mergeable
+status: done
 priority: P0
 size: L
 milestone: M0
@@ -125,4 +125,8 @@ Política de gate: BOOTSTRAP (docs + server + client). Gate completo local: `bas
 - Logs locales `$TEMP/stockpilot-review2-T001-{build,proxy,gate,ui}.log`; cleanup completado, stack healthy y volumen conservado. Prompt canónico único en STATUS; publicación/CI final/merge se registran en comentarios del PR para evitar SHA autorreferencial.
 
 ## Resultado
-**Mergeable tras revisión independiente ronda 2 de 2, favorable.** R1 resuelto y regresión real reejecutada; UI/Reintentar, contratos y persistencia comprobados. Gate BOOTSTRAP local verde; la aprobación se publica solo tras CI del HEAD documental final. SHA revisado/base, CI y eventual confirmación MERGED quedan en PR #2. La próxima sesión reconcilia el cierre confirmado en tarea/STATUS/BACKLOG con el primer commit de su rama, según merger; T-002 sigue draft hasta contrato refinado.
+**Done: merge remoto confirmado y cierre reconciliado el 2026-10-13.** PR #2 MERGED `2026-10-13T18:06:01Z`, squash `84d103cd4c6b1c58f45f6272354ef49c918bce06`, padre/base `9f061f55f99e614e36f8317150881ed9408a8c96`. [APROBADO ronda 2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2#issuecomment-6151971467) sobre HEAD final `b1cfff045d6a918ea8dc18d60451ef447e1a7a74` (código probado `1895966`, único cambio posterior documental). [CI HEAD 38443725709](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38443725709) y [CI main 38444010437](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38444010437), COMPLETED SUCCESS, BOOTSTRAP. [Confirmación del merger](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2#issuecomment-6152013361).
+
+R1 resuelto y regresión independiente: 504 en 1003,173 ms (IP resuelta), 502 en 1005,310 ms (DNS frío), recuperación 200. UI/Reintentar, contratos, gate y persistencia comprobados por revisión; no se repiten ni se atribuyen a la sesión planner. No hubo tercera ronda ni commits en rama mergeada.
+
+Reconciliación: sesión nueva planner de frontera, Codex API/GPT-6 declarado, runtime exacto y esfuerzo no expuestos; gh confirmó state/HEAD/base/merge y CI, main local/remoto `84d103c`, árbol limpio sin heredados/PR abierto. Impacto documental solamente, en el primer commit de `feat/T-002-google-auth`: tarea/STATUS/BACKLOG/HANDOFF. T-002 se refina a ready con S-001/ADR 0002; sin código de auth. M0 continúa NO_LISTO, BOOTSTRAP no es FULL.

@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
+import { CsrfRenewalRequiredError } from '../../features/auth/api'
 import { ApiError, NetworkError, UnexpectedResponseError } from '../../services/http'
 import { errorMessage } from './errorMessage'
 
 describe('errorMessage', () => {
   it.each([
+    [new CsrfRenewalRequiredError(new ApiError(403, null)), 'no se aplicó. Volvé a intentarla.'],
     [new NetworkError(new TypeError('failed')), 'No se pudo conectar con el servidor'],
     [new ApiError(401, null), 'Tu sesión no está activa'],
     [new ApiError(403, null), 'No tenés permiso'],

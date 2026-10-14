@@ -1,6 +1,8 @@
 # Configuración común. Valores por entorno llegan por variables (ver .env.example y docs/SETUP.md);
 # el datasource lo aportan SPRING_DATASOURCE_* en Compose o @ServiceConnection en pruebas.
 spring:
+  profiles:
+    default: google
   application:
     name: stockpilot-server
   autoconfigure:
@@ -25,6 +27,19 @@ stockpilot:
   version: "@project.version@"
 
 server:
+  # No host publication in ordinary Compose; nginx/Vite remove incoming forwarding metadata.
+  # Direct loopback diagnostics MUST override this to none (compose.diagnostic.yml).
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      timeout: 30m
+      tracking-modes: cookie
+      cookie:
+        name: JSESSIONID
+        path: /
+        http-only: true
+        same-site: lax
+        # Secure is derived from validated APP_PUBLIC_URL by OidcConfiguration.
   error:
     include-stacktrace: never
     include-message: never

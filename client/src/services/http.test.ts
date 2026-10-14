@@ -1,9 +1,11 @@
 import { http as mock, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { problemResponse, validationProblemResponse } from '../test/factories'
 import { server } from '../test/msw/server'
-import { ApiError, createHttpClient, NetworkError, UnexpectedResponseError } from './http'
+import { createCookieCsrfTokenResolver } from './csrf'
+import { ApiError, createHttpClient, http, NetworkError, UnexpectedResponseError } from './http'
+import { sessionEvents } from './sessionEvents'
 
 const itemSchema = z.object({ id: z.string(), quantity: z.number().int() })
 const PATH = '/api/v1/test/items'
@@ -152,5 +154,143 @@ describe('createHttpClient', () => {
     await expect(createHttpClient().requestVoid(PATH, { method: 'POST' })).rejects.toMatchObject({
       status: 403,
     })
+  })
+})
+
+describe('transporte CSRF por cookie', () => {
+  function recordCsrfHeaders() {
+    const seen: Array<[string, string | null]> = []
+    const record = ({ request }: { request: Request }) => {
+      seen.push([request.method, request.headers.get('X-XSRF-TOKEN')])
+      return request.method === 'GET'
+        ? HttpResponse.json({ id: 'd-4', quantity: 2 })
+        : new HttpResponse(null, { status: 204 })
+    }
+    server.use(
+      mock.get(PATH, record),
+      mock.post(PATH, record),
+      mock.put(PATH, record),
+      mock.patch(PATH, record),
+      mock.delete(PATH, record),
+    )
+    return seen
+  }
+
+  it('envía en cada mutación el valor vigente de la cookie y nunca en GET', async () => {
+    const seen = recordCsrfHeaders()
+    const client = createHttpClient({ csrfToken: createCookieCsrfTokenResolver() })
+
+    document.cookie = 'XSRF-TOKEN=csrf-ficticio-1; Path=/'
+    await client.request(PATH, itemSchema)
+    await client.requestVoid(PATH, { method: 'POST' })
+    document.cookie = 'XSRF-TOKEN=csrf-ficticio-2; Path=/'
+    await client.requestVoid(PATH, { method: 'PUT' })
+    await client.requestVoid(PATH, { method: 'PATCH' })
+    await client.requestVoid(PATH, { method: 'DELETE' })
+    document.cookie = 'XSRF-TOKEN=; Max-Age=0; Path=/'
+    await client.requestVoid(PATH, { method: 'POST' })
+
+    expect(seen).toEqual([
+      ['GET', null],
+      ['POST', 'csrf-ficticio-1'],
+      ['PUT', 'csrf-ficticio-2'],
+      ['PATCH', 'csrf-ficticio-2'],
+      ['DELETE', 'csrf-ficticio-2'],
+      ['POST', null],
+    ])
+  })
+
+  it('no entrega el token a otro origen, pero sí a una URL absoluta del mismo origen', async () => {
+    const foreign = 'https://otro.example/api/v1/test/items'
+    let foreignHeader: string | null = 'sin-request'
+    server.use(
+      mock.post(foreign, ({ request }) => {
+        foreignHeader = request.headers.get('X-XSRF-TOKEN')
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+    const seen = recordCsrfHeaders()
+    const resolver = vi.fn(() => ({ headerName: 'X-XSRF-TOKEN', token: 'csrf-ficticio' }))
+    const client = createHttpClient({ csrfToken: resolver })
+
+    await client.requestVoid(foreign, { method: 'POST' })
+    expect(foreignHeader).toBeNull()
+    expect(resolver).not.toHaveBeenCalled()
+
+    await client.requestVoid(`${window.location.origin}${PATH}`, { method: 'POST' })
+    expect(seen).toEqual([['POST', 'csrf-ficticio']])
+  })
+})
+
+describe('401 y canal de sesión', () => {
+  it('notifica cada 401 una vez y rechaza con ApiError sin reintentar', async () => {
+    let requests = 0
+    server.use(
+      mock.post(PATH, () => {
+        requests += 1
+        return problemResponse(401, { detail: 'Se requiere iniciar sesión.' })
+      }),
+    )
+    const onUnauthorized = vi.fn()
+
+    const error = await createHttpClient({ onUnauthorized })
+      .requestVoid(PATH, { method: 'POST' })
+      .catch((e: unknown) => e)
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect(error).toMatchObject({ status: 401, message: 'Se requiere iniciar sesión.' })
+    expect(requests).toBe(1)
+    expect(onUnauthorized).toHaveBeenCalledTimes(1)
+    expect(onUnauthorized).toHaveBeenCalledWith({ path: PATH, method: 'POST' })
+  })
+
+  it.each([
+    [
+      '403',
+      () => problemResponse(403, { detail: 'No tenés permiso para realizar esta operación.' }),
+    ],
+    ['500', () => problemResponse(500)],
+    ['502 no JSON', () => new HttpResponse('Bad Gateway', { status: 502 })],
+    ['red', () => HttpResponse.error()],
+  ])('%s no se presenta como sesión terminada ni se reenvía', async (_, respond) => {
+    let requests = 0
+    server.use(
+      mock.post(PATH, () => {
+        requests += 1
+        return respond()
+      }),
+    )
+    const onUnauthorized = vi.fn()
+
+    await expect(
+      createHttpClient({ onUnauthorized }).requestVoid(PATH, { method: 'POST' }),
+    ).rejects.toBeInstanceOf(Error)
+
+    expect(requests).toBe(1)
+    expect(onUnauthorized).not.toHaveBeenCalled()
+  })
+
+  it('la instancia de la app usa la cookie vigente y publica los 401 en sessionEvents', async () => {
+    const seen: Array<string | null> = []
+    server.use(
+      mock.post(PATH, ({ request }) => {
+        seen.push(request.headers.get('X-XSRF-TOKEN'))
+        return new HttpResponse(null, { status: 204 })
+      }),
+      mock.get(PATH, () => problemResponse(401, { detail: 'Se requiere iniciar sesión.' })),
+    )
+    const listener = vi.fn()
+    const unsubscribe = sessionEvents.onUnauthorized(listener)
+
+    try {
+      document.cookie = 'XSRF-TOKEN=csrf-ficticio-app; Path=/'
+      await http.requestVoid(PATH, { method: 'POST' })
+      await expect(http.request(PATH, itemSchema)).rejects.toMatchObject({ status: 401 })
+    } finally {
+      unsubscribe()
+    }
+
+    expect(seen).toEqual(['csrf-ficticio-app'])
+    expect(listener).toHaveBeenCalledWith({ path: PATH, method: 'GET' })
   })
 })

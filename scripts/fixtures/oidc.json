@@ -1,0 +1,22 @@
+{
+  "interactiveLogin": false,
+  "tokenCallbacks": [
+    {
+      "issuerId": "default",
+      "tokenExpiry": 120,
+      "requestMappings": [
+        {
+          "requestParam": "code",
+          "match": "*",
+          "claims": {
+            "sub": "stockpilot-fictitious-person",
+            "aud": ["stockpilot-test"],
+            "name": "Persona Demo",
+            "email": "persona@example.com",
+            "email_verified": true
+          }
+        }
+      ]
+    }
+  ]
+}

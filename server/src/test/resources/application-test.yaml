@@ -1,0 +1,7 @@
+# Fictitious configuration; no network calls during startup/slices. Provider networking is B2/B3.
+APP_PUBLIC_URL: http://127.0.0.1:5173
+stockpilot:
+  oidc:
+    local-issuer: http://host.docker.internal:8090/default
+    local-client-id: stockpilot-test
+    local-client-secret: fictitious-test-only

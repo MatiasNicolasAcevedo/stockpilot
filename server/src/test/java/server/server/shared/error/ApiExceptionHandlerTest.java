@@ -14,21 +14,49 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import server.server.identity.IdentityService;
 import server.server.security.SecurityConfig;
 
 /** T1-04 (backend): errores de validación del body como ProblemDetail con {@code errors[{field, message}]}. */
+@ActiveProfiles("test")
 @WebMvcTest(ApiExceptionHandlerTest.ValidationProbeController.class)
-@Import({SecurityConfig.class, ApiExceptionHandlerTest.ValidationProbeController.class})
+@Import({
+    SecurityConfig.class,
+    ApiExceptionHandlerTest.ValidationProbeController.class,
+    ApiExceptionHandlerTest.ProbeSecurity.class
+})
 class ApiExceptionHandlerTest {
 
+    /** Isolated test-only route; production remains deny-by-default for commercial APIs. */
+    @TestConfiguration(proxyBeanMethods = false)
+    static class ProbeSecurity {
+        @Bean
+        @Order(0)
+        SecurityFilterChain validationProbeChain(HttpSecurity http) throws Exception {
+            return http.securityMatcher(PATH)
+                    .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                    .build();
+        }
+    }
+
     private static final String PATH = "/api/v1/test/validation-probe";
+
+    @MockitoBean
+    private IdentityService identityService;
 
     @Autowired
     private MockMvc mockMvc;

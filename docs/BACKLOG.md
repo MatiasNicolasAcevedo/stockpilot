@@ -1,16 +1,16 @@
 # Tablero vivo
-Próxima acción: implementer frontera ejecuta solo T-002 C1, salida B3 b653bbd/CI publicada, misma rama/PR draft. A/B1/B2/B3 verificadas por HTTP real y gate BOOTSTRAP; C1/C2/D pendientes. T-001 done.
+Próxima acción: sesión nueva implementer frontera para solo T-002 C2, después de comprobar salida C1/SHA/CI, misma rama/PR draft. A/B1/B2/B3/C1 verificadas y gate BOOTSTRAP verde; C2/D pendientes. T-001 done.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
-Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 3.0.3 y fixture negativa HTTP/JWKS test con control positivo. Login/recarga/fijación/CSRF/logout/DB y state/nonce/issuer/aud/firma/expiración/cancelación/replays/errores comprobados, recuperación sin alta/auth inválida. Dos arreglos mínimos con regresiones rojas/verde y mutación sessionFixation roja/restaurada. Gate BOOTSTRAP exit 0: 77 unit/slices + 47 IT backend, 35 client tests/tsc/lint/formato/build/docs. Cleanup efímero completo; SHA/CI finales en comentario del PR #3 tras push. C1/C2/D pendientes; no auth completa/revisión/merge parcial.
+Salida C1 2026-10-13: transporte client de auth sobre el cliente HTTP único: cookie XSRF-TOKEN vigente por petición, X-XSRF-TOKEN solo en mutaciones same-origin, 401 al canal sessionEvents sin reintento, 403/red/5xx sin logout ni reenvío, renovación CSRF con reintento explícito y Zod de me nullable; hooks de sesión/logout sin efectos de UI. 41 tests nuevos (76 client) y 7 mutaciones rojas/restauradas; gate BOOTSTRAP local verde. La misma sesión publicó B3 heredada sin cambios (b653bbd). UI/cache C2 y aceptación D pendientes; no auth completa/revisión/merge parcial.
 
-Salida B2 2026-10-13: pin autorizado 3.0.3 y trazabilidad S-001 v1/ADR 0002/tarea, fixture compatible, probe desde Windows/Node containerizado y discovery en Edge Windows/backend real. Windows requiere resolución por proceso al loopback, sin hosts globales ni validaciones relajadas. Gate BOOTSTRAP exit 0: 76 unit/slices + 29 IT backend, 35 client tests/typecheck/lint/formato/build/docs. Cleanup efímero completo; SHA/publicación/CI del cierre en comentario PR #3. Protocolo de aplicación B3 pendiente, M0 NO_LISTO 7/21.
+Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 3.0.3 y fixture negativa HTTP/JWKS test con control positivo. Login/recarga/fijación/CSRF/logout/DB y state/nonce/issuer/aud/firma/expiración/cancelación/replays/errores comprobados, recuperación sin alta/auth inválida. Dos arreglos mínimos con regresiones rojas/verde y mutación sessionFixation roja/restaurada. Gate BOOTSTRAP exit 0: 77 unit/slices + 47 IT backend, 35 client tests/tsc/lint/formato/build/docs. Cleanup efímero completo; SHA/CI finales en comentario del PR #3 tras push. C1/C2/D pendientes; no auth completa/revisión/merge parcial.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3 comprobadas; C1 en ejecución, C2/D pendientes | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para C1; protocolo y gate BOOTSTRAP verdes; no revisión/merge parcial |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1 comprobadas; retoma C2, D pendiente | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para C2; transporte y gate BOOTSTRAP verdes; no revisión/merge parcial |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

@@ -1,9 +1,12 @@
 import { z } from 'zod'
+import { createCookieCsrfTokenResolver } from './csrf'
+import { sessionEvents, type UnauthorizedEvent } from './sessionEvents'
 
 /**
  * Único cliente HTTP de la SPA. El navegador habla solo con su origen (el contenedor client reenvía /api al server),
  * así que la cookie de sesión viaja con `credentials: 'same-origin'` y no hay CORS. `fetch` no rechaza por 4xx/5xx:
- * aquí se convierten en errores tipados. Toda respuesta con cuerpo se valida con un esquema Zod.
+ * aquí se convierten en errores tipados. Toda respuesta con cuerpo se valida con un esquema Zod. Ninguna petición se
+ * reintenta ni se reenvía desde aquí.
  */
 
 export const fieldErrorSchema = z.object({ field: z.string(), message: z.string() })
@@ -60,8 +63,8 @@ export interface CsrfToken {
 }
 
 /**
- * Punto de extensión del token CSRF para métodos que cambian estado. T-002 fija el mecanismo (ADR 0002) y configura
- * aquí cómo leerlo; mientras tanto no se envía ningún header y el server responde 403 a esas peticiones.
+ * Token CSRF para métodos que cambian estado, resuelto en cada petición (la app usa la cookie vigente, services/csrf).
+ * null: no se envía header y el server responde 403.
  */
 export type CsrfTokenResolver = () => CsrfToken | null
 
@@ -77,6 +80,8 @@ export interface RequestOptions {
 
 export interface HttpClientOptions {
   csrfToken?: CsrfTokenResolver
+  /** Se invoca en cada 401, antes de rechazar con ApiError. Canal explícito de sesión (services/sessionEvents). */
+  onUnauthorized?: (event: UnauthorizedEvent) => void
   fetch?: typeof fetch
 }
 
@@ -109,7 +114,8 @@ export function createHttpClient(options: HttpClientOptions = {}): HttpClient {
       headers.set('Content-Type', 'application/json')
       payload = JSON.stringify(body)
     }
-    if (!SAFE_METHODS.has(method)) {
+    // El token solo viaja a este origen: una URL absoluta ajena nunca lo recibe.
+    if (!SAFE_METHODS.has(method) && isSameOrigin(path)) {
       const csrf = csrfToken()
       if (csrf) headers.set(csrf.headerName, csrf.token)
     }
@@ -127,7 +133,10 @@ export function createHttpClient(options: HttpClientOptions = {}): HttpClient {
       if (signal?.aborted) throw error
       throw new NetworkError(error)
     }
-    if (!response.ok) throw new ApiError(response.status, await readProblem(response, signal))
+    if (!response.ok) {
+      if (response.status === 401) options.onUnauthorized?.({ path, method })
+      throw new ApiError(response.status, await readProblem(response, signal))
+    }
     return response
   }
 
@@ -171,5 +180,16 @@ async function readProblem(
   }
 }
 
-/** Instancia de la aplicación. T-002 agrega aquí `csrfToken` según el mecanismo de sesión acordado. */
-export const http = createHttpClient()
+function isSameOrigin(path: string): boolean {
+  try {
+    return new URL(path, globalThis.location.href).origin === globalThis.location.origin
+  } catch {
+    return false
+  }
+}
+
+/** Instancia de la aplicación: CSRF desde la cookie vigente y cada 401 publicado en `sessionEvents`. */
+export const http = createHttpClient({
+  csrfToken: createCookieCsrfTokenResolver(),
+  onUnauthorized: (event) => sessionEvents.notifyUnauthorized(event),
+})

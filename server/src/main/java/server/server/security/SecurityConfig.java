@@ -75,6 +75,11 @@ public class SecurityConfig {
                             response.setHeader(HttpHeaders.LOCATION, "/");
                         })
                         .failureHandler((request, response, failure) -> {
+                            // A failed/replayed callback must not retain an earlier authenticated session.
+                            var session = request.getSession(false);
+                            if (session != null) {
+                                session.invalidate();
+                            }
                             response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store");
                             response.setStatus(302);
                             response.setHeader(HttpHeaders.LOCATION, "/login?error=authentication");

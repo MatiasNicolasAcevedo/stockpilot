@@ -77,6 +77,18 @@ class LocalOidcUserServiceTest {
     }
 
     @Test
+    void malformedUserInfoFailureIsSanitizedWithoutResolvingAnIdentity() {
+        var request = request();
+        when(delegate.loadUser(request)).thenThrow(new IllegalArgumentException("sensitive-provider-detail"));
+        assertThatThrownBy(() -> service.loadUser(request))
+                .isInstanceOfSatisfying(OAuth2AuthenticationException.class, failure -> {
+                    assertThat(failure.getError().getErrorCode()).isEqualTo("invalid_user_info_response");
+                    assertThat(failure).hasMessage("No se pudo iniciar sesión.").hasNoCause();
+                });
+        verifyNoInteractions(identities);
+    }
+
+    @Test
     void absentProfileAttributesRemainNullableWithoutBlockingLogin() {
         var request = request();
         when(delegate.loadUser(request))

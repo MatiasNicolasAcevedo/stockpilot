@@ -29,7 +29,16 @@ public class LocalOidcUserService implements OAuth2UserService<OidcUserRequest, 
 
     @Override
     public OidcUser loadUser(OidcUserRequest request) throws OAuth2AuthenticationException {
-        OidcUser validated = delegate.loadUser(request);
+        OidcUser validated;
+        try {
+            validated = delegate.loadUser(request);
+        } catch (OAuth2AuthenticationException failure) {
+            throw failure;
+        } catch (RuntimeException failure) {
+            // Malformed UserInfo can throw before Spring wraps it as an authentication failure.
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error("invalid_user_info_response"), "No se pudo iniciar sesión.");
+        }
         try {
             var token = request.getIdToken();
             var user = identities.resolve(new IdentityProfile(

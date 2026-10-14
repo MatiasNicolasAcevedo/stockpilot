@@ -1,5 +1,5 @@
 # Tablero vivo
-Próxima acción: sesión nueva implementer frontera para T-002 B3, misma rama/PR draft, después de comprobar salida B2 completa/SHA/CI. Pin 3.0.3 corregido con autorización del dueño; proveedor/capacidades/topología Windows/backend y gate BOOTSTRAP verificados. T-001 done.
+Próxima acción: implementer frontera ejecuta solo T-002 B3, misma rama/PR draft, con salida B2 completa/SHA/CI reconciliados. Pin 3.0.3 corregido con autorización del dueño; proveedor/capacidades/topología Windows/backend y gate BOOTSTRAP verificados. T-001 done.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 

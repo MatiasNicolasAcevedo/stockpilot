@@ -1,10 +1,10 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 B2 completada · Codex API basado en GPT-6; runtime exacto/esfuerzo no expuestos/verificables, sin selección simulada ni otra sesión/modelo/delegación.
+Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 B3 en ejecución · Codex API basado en GPT-6; runtime exacto/esfuerzo no expuestos/verificables, sin selección simulada ni otra sesión/modelo/delegación.
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Dueño abre sesión nueva implementer frontera para T-002 B3, después de comprobar salida B2/SHA/CI; misma tarea/rama/PR draft |
+| Acción | Implementer frontera ejecuta solo B3; B2/SHA/CI reconciliados, misma tarea/rama/PR draft |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
 | Estado | `in_progress` |
 | Ejecutor | Frontera · implementer B3; continuidad POR_SESION, dueño abre retoma |

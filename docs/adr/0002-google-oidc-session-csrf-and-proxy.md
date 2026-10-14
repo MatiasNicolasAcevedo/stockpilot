@@ -1,6 +1,6 @@
 # ADR 0002 · Google OIDC, sesión, CSRF y frontera del proxy
 
-- **Estado:** aceptada como contrato · 2026-10-13 · T-002, planner de frontera. A/B1/B2 implementadas/probadas; protocolo aplicación B3, frontend C1/C2 y aceptación D pendientes.
+- **Estado:** aceptada como contrato · 2026-10-13 · T-002, planner de frontera. Implementación completa A…D en PR #3 (aclaración de estado 2026-10-13, T-002 D; decisión sin cambios): evidencia por parte en la tarea, revisión independiente y merge pendientes. Aclaración compatible: OpenAPI se genera desde el código pero no se publica (`/v3/api-docs` sigue denegado).
 - **Contexto:** [PROJECT_CONTEXT §3](../../PROJECT_CONTEXT.md#3-usuarios-y-acceso), §8–§9; [S-001 v1](../specs/S-001-auth-google.md), prerrequisito F-01–F-04. No cambia objetivo ni permisos comerciales.
 
 ## Contexto

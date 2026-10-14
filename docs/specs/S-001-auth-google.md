@@ -58,7 +58,7 @@ Logout: deshabilitar botón mientras pendiente, cancelar requests de usuario y e
 Usar `app_user` y constraint única de V1; ninguna nueva tabla comercial o token persistido. Actualizar atributos y `updated_at` con Clock UTC, conservar `id/issuer/subject/created_at`. Probar alta repetida/concurrente sobre PostgreSQL real. No borrar usuarios al logout. Sin migración prevista; si cambia el esquema, justificar dentro de esta tarea con prueba desde DB vacía y existente, sin tocar V1 publicada. Reversión de código de auth conserva identidades; no elimina volumen ni datos. OpenAPI documenta me/csrf y seguridad cookie/CSRF sin ejemplo de credencial real.
 
 ## Criterios de aceptación
-Archivos previstos, aún inexistentes; toda la evidencia ejecutable está pendiente. Los nombres pueden adaptarse a paquetes reales conservando la conducta probada.
+Aclaración de estado (2026-10-13, T-002 D; criterios sin cambios): todos los AC tienen evidencia ejecutable en PR #3, registrada por parte en la [tarea](../tasks/T-002-google-auth.md#aceptación-y-pruebas); revisión independiente pendiente. Nombres reales: `AuthSession.test.tsx`/`AppRoutes.test.tsx`/`csrf.test.ts` (client), `OidcLoginIT`/`OidcFailureIT`/`PublicOriginIT`/`OidcProfileTest`/`OpenApiContractIT` (server), smoke `scripts/test-auth-ui-smoke.mjs`. OpenAPI (AC-10) se genera desde el código y se verifica sin publicar `/v3/api-docs`, que sigue denegado. AC-10 deja Google real como pendiente externo explícito del dueño (S-03).
 
 | ID | Dado / cuando / entonces | CA del contexto | Nivel / archivo previsto | Parte T-002 |
 |---|---|---|---|---|

@@ -1,5 +1,7 @@
 # Tablero vivo
-Próxima acción: T-002 D en curso (implementer frontera, inicio registrado en la tarea), misma rama/PR draft. A/B1/B2/B3/C1/C2 verificadas y gate BOOTSTRAP verde; D pendiente. T-001 done.
+Próxima acción: revisar T-002 (in_review) · reviewer de frontera en sesión distinta de toda la implementación (recomendado GPT-6.1 Sol / Codex) · `feat/T-002-google-auth` / PR #3. T-001 done.
+
+Salida D 2026-10-13: smoke en Edge real por nginx y Vite contra el proveedor 3.0.3 (login por teclado, recarga, expiración sin bucle, logout, cancelación y callback huérfano; 1280/375 sin overflow, capturas en docs/evidence/T-002), OpenAPI de auth generado desde el código y verificado sin publicar `/v3/api-docs`, guía Google real en SETUP y documentación/HANDOFF alineados (10/21). Gate BOOTSTRAP local verde. Google real S-03 externo con dueño.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
 
@@ -12,7 +14,7 @@ Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1/C2 comprobadas; D en curso | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para D; UI de sesión y gate BOOTSTRAP verdes; no revisión/merge parcial |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_review | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | ninguno; revisión independiente pendiente |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

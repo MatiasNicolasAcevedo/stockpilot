@@ -1,6 +1,6 @@
 ---
 id: T-003
-status: ready
+status: in_progress
 priority: P0
 size: L
 milestone: M0
@@ -99,3 +99,10 @@ B-01 ordinario sigue pendiente del dueño con credenciales Google y sin borrar d
 - El kit conserva instrucciones genéricas/formulario vacío, sin datos de StockPilot y fuera de Git. La extracción toma el SHA del cierre M0; neutraliza marca/dominio/IDs/URLs/estado, incorpora inicialización y documentación de adopción. Se refina allí la feature de referencia ya descrita en el kit; no se implementa en StockPilot como atajo.
 - Próxima sesión sigue siendo T-003 A. Al cierre M0, STATUS debe entregar primero el prompt de consolidación local, después el de extracción del starter, y solo tras comprobar su publicación/validación el de recepción Junie. Nombre/ruta del starter se concretan al preparar esa tarea, no se inventan ahora.
 - Validación real de esta aclaración: `bash scripts/verify.sh --docs` conjunto en contenedor exit 0 (36 Markdown/4 tareas/HANDOFF 9/21), diff-check limpio; mismo PR #4 draft, sin código. Log `$TEMP/stockpilot-T003-owner-sequence-docs.log`; red del proyecto documental `stockpilot-t003-owner-sequence-docs` retirada, cleanup pendiente ninguno; sin otros repositorios/stack/datos persistentes. Próxima acción: commit/push explícitos, comprobar HEAD/CI del draft; SHA final y run en comentario de salida.
+
+## Checkpoint A · inicio · 2026-10-14
+- Implementer frontera en sesión nueva desde raíz; Codex API basado en GPT-6 según identidad declarada. Runtime exacto/esfuerzo efectivo no expuestos; no se simula GPT-6.1 Sol/high ni se abre otra sesión/modelo/delegación.
+- Árbol inicial limpio, sin heredados. HEAD local/remoto/PR #4 cd03ad58200ddd6c1e848b126dc7e8c40433b291; base main 512bfd9c6b143aa484ddce72aad64bb9484e6330. #3 MERGED; #4 único OPEN/draft. CI main 38508440122 SUCCESS BOOTSTRAP; CI #4 38510268984 docs/classify SUCCESS, server/client SKIPPED y verify-required FAILURE intencional DRAFT confirmado en log. Planificación publicada y prompt coinciden.
+- Impacto efectivo antes de editar A: runner/config/lockfile e2e, overlays Compose, scripts e2e/dev-auth y biblioteca de ciclo/readiness, probes dirigidos A y documentación. Backend/producto/contratos S-001/permisos/migraciones/UI conservados; solo stack efímero ficticio con red/volumen propios y backend interno. Ensayo HMR modifica/restaura temporalmente fuente existente. Sin CI/clasificador/FULL (C), recorridos B, negocio D ni cierre E. AUTONOMY/protecciones intactas.
+- Pin comprobado npm registry y documentación oficial: @playwright/test 1.64.0 (Node >=20), imagen mcr.microsoft.com/playwright:v1.64.0-noble, índice sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f; amd64 bc72a8df40831ded821e3cbc79c318c21b44d6e51dff9fd89ace7a8249c5b462. npm instala lockfile; imagen por tag+digest.
+- Próxima acción: docs-check conjunto y publicación de transición; después implementar A. Antes de builds/gate/ensayos largos: logs en $TEMP/stockpilot-T003-A-*.log; cleanup solo proyectos stockpilot-t003-a-* y stockpilot-dev-auth-* creados aquí. No operar stockpilot ni stockpilot_db-data. M0 NO_LISTO 9/21; dueño conserva B-01/S-03/E-01 y orden kit/starter antes de Junie.

@@ -1,7 +1,7 @@
 # Tablero vivo
-Próxima acción: T-003 ready; sesión nueva implementer de frontera para parte A (stack/runner/desarrollo aislados), misma rama y PR #4 OPEN/draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
+Próxima acción: T-003 in_progress; implementer de frontera trabajando parte A (stack/runner/desarrollo aislados), misma rama y PR #4 OPEN/draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
 
-Corte ROADMAP 2026-10-14: cola sin ready y camino de desarrollo sin Google; 0 tareas de producto, objetivo conservado. Contrato T-003 v1 y partes A…E; sin implementación en la sesión planner. M0 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 quedan con dueño.
+Corte ROADMAP 2026-10-14: cola sin ready y camino de desarrollo sin Google; 0 tareas de producto, objetivo conservado. Contrato T-003 v1 y partes A…E; implementación A en sesión nueva, B…E pendientes. M0 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 quedan con dueño.
 
 **Orden decidido por el dueño (2026-10-14):** después de M0 mergeada/reconciliada con FULL y CI verdes, consolidar el kit personal local; después extraer, validar y publicar el starter en su propio repo template; recién entonces iniciar Junie en StockPilot. La aptitud técnica del HANDOFF no inicia automáticamente Junie. No agregar el starter al alcance/PR de T-003 ni crear otra tarea/PR activa durante M0. Al cierre, STATUS entrega primero el prompt de consolidación del kit, luego el del starter y finalmente el de recepción Junie.
 
@@ -12,12 +12,11 @@ Próximo ID libre: T-004 (se refina en T-003 D, sin ready antes del cierre M0). 
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
 
-Sin implementación en vuelo; PR draft de T-003 publica planificación de su única tarea ready.
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | E2E/FULL y primer contrato/handoff; empezar solo A | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | A…D ejecutables; E exige B-01/E-01 del dueño y reconciliar S-03 conforme a HANDOFF |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | ready | E2E/FULL y primer contrato/handoff; empezar solo A | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | A…D ejecutables; E exige B-01/E-01 del dueño y reconciliar S-03 conforme a HANDOFF |
 
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |

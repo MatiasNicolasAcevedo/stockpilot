@@ -1,18 +1,18 @@
 # Estado del proyecto
-Actualizado: 2026-10-14 (UTC-3) · planner frontera en sesión nueva · Codex API basado en GPT-6 según identidad declarada; identificador runtime exacto/esfuerzo efectivo no expuestos. GPT-6.1 Sol/high recomendados no se simulan; sin otra sesión/modelo/delegación.
+Actualizado: 2026-10-14 (UTC-3) · implementer frontera A en sesión nueva · Codex API basado en GPT-6 según identidad declarada; identificador runtime exacto/esfuerzo efectivo no expuestos. GPT-6.1 Sol/high recomendados no se simulan; sin otra sesión/modelo/delegación.
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
 | Acción | Sesión nueva implementer frontera: T-003 parte A exclusivamente |
 | Tarea y contrato | T-003 · [tasks/T-003-e2e-gate-and-handoff.md](tasks/T-003-e2e-gate-and-handoff.md), contrato técnico v1 inline; S-001 v1/ADR 0002 conservados |
-| Estado | `ready` |
+| Estado | `in_progress` |
 | Ejecutor | Frontera · implementer en sesión nueva; Junie no habilitada |
 | Rama / PR | `ci/T-003-e2e-gate-and-handoff` · [PR #4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) OPEN/draft, único PR de tarea |
 | Hecho remoto comprobado | #3 MERGED `2026-10-14T03:51:50Z` → `512bfd9c6b143aa484ddce72aad64bb9484e6330`; R2 APROBADO HEAD `a64d29c`/base `84d103c`, código probado `cac090b`; CI HEAD 38507675463 y main 38508440122 SUCCESS BOOTSTRAP. Inicio local/main/remoto coincide; sin PRs abiertos al inicio |
 | Bloqueo | Ninguno para A…D. Cierre E exige B-01 ordinario y disponibilidad Junie E-01 del dueño; S-03 se reconcilia según su criterio vigente, con Google real a cargo del dueño; no cambiar criterios para declarar listo |
 
-**M0:** T-000/T-001/T-002 integradas; T-003 refinada ready, sin implementación · Verificados: 9/21 · pendientes: B-01, C-02, C-03, E-01, E-02, S-03, V-02, V-03, G-03, H-01, H-02, H-03 · bloqueados: ninguno en checklist · [HANDOFF](HANDOFF.md) NO_LISTO. BOOTSTRAP no FULL. Corte ROADMAP 2026-10-14: cola sin ready y cambio relevante del camino dev; 0 tareas de producto, objetivo/cadencia conservados.
+**M0:** T-000/T-001/T-002 integradas; T-003 en implementación A · Verificados: 9/21 · pendientes: B-01, C-02, C-03, E-01, E-02, S-03, V-02, V-03, G-03, H-01, H-02, H-03 · bloqueados: ninguno en checklist · [HANDOFF](HANDOFF.md) NO_LISTO. BOOTSTRAP no FULL. Corte ROADMAP 2026-10-14: cola sin ready y cambio relevante del camino dev; 0 tareas de producto, objetivo/cadencia conservados.
 
 **Orden decidido por el dueño (2026-10-14):** después de M0 mergeada/reconciliada con FULL y CI verdes, consolidar el kit personal local; después extraer, validar y publicar el starter en su propio repo template; recién entonces iniciar Junie en StockPilot. La aptitud técnica del HANDOFF no inicia automáticamente Junie. No agregar el starter al alcance/PR de T-003 ni crear otra tarea/PR activa durante M0. Al cierre, STATUS entrega primero el prompt de consolidación del kit, luego el del starter y finalmente el de recepción Junie.
 
@@ -38,7 +38,7 @@ Cierre T-002 reconciliado en primer commit de rama T-003: done y revisión indep
 Logs documentales `$TEMP/stockpilot-T003-planner-docs.log`; red documental del proyecto stockpilot-t003-planner-docs retirada y sin residuales; cleanup pendiente ninguno. Sin secretos/config real, stack ordinario, volúmenes persistentes ni tests técnicos nuevos. Próximo comando de trabajo: inicio/reconciliación de A en sesión nueva; primer commit 63fc83c publicado en PR #4 OPEN/draft; checkpoint final de PR/retoma publicado después. SHA/CI finales en comentario de salida; próxima sesión reconsulta hechos remotos.
 
 ## Últimas sesiones
-- 2026-10-14 · planner T-003 + reconciliación T-002 · Codex API basado en GPT-6, runtime exacto/esfuerzo no expuestos; MERGED #3/CI comprobados, contrato técnico v1 y división A…E, corte ROADMAP. T-003 ready para A en sesión nueva, sin código; M0 NO_LISTO 9/21.
+- 2026-10-14 · planner T-003 + reconciliación T-002 · Codex API basado en GPT-6, runtime exacto/esfuerzo no expuestos; MERGED #3/CI comprobados, contrato técnico v1 y división A…E, corte ROADMAP. T-003 in_progress, parte A en esta sesión, sin código; M0 NO_LISTO 9/21.
 - 2026-10-14 · revisión T-002 ronda 2 → merger elegible del mismo PR · reviewer frontera, Opus 5.5/Claude Code, esfuerzo no expuesto, sesión distinta de la corrección R1, R1 e implementación (Sol/Codex recomendado no disponible); 6 bloqueantes R1 resueltos, gate BOOTSTRAP y proxies independientes verdes sobre cac090b. T-002 mergeable; SHA/CI/veredicto/merge en PR #3.
 - 2026-10-14 · corrección R1 de T-002 · implementer frontera, Opus 5.5/Claude Code, esfuerzo no expuesto, sesión distinta de la revisión R1; 6 bloqueantes documentales y opcionales b/c corregidos, B-01 a pendiente (9/21), gate BOOTSTRAP y proxies verdes. T-002 in_review, ronda 2 de 2 en sesión nueva; SHA/CI en PR #3.
 - 2026-10-14 · revisión T-002 ronda 1 · reviewer frontera, Opus 5.5/Claude Code, esfuerzo no expuesto, sesión distinta de A…D (Sol/Codex recomendado no disponible); gate/smokes/proxies independientes verdes sobre 67aca0e, 6 bloqueantes documentales (AC-10). T-002 changes_requested, retoma implementer en sesión nueva; SHA/CI/veredicto en PR #3.

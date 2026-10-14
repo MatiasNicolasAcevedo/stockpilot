@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw'
 import { AUTH_CSRF_PATH, AUTH_ME_PATH, LOGOUT_PATH, type AuthUser } from '../../features/auth/api'
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '../../services/csrf'
 import { problemResponse } from '../factories'
+import { server } from './server'
 
 const NO_STORE = { 'Cache-Control': 'no-store' }
 
@@ -81,4 +82,11 @@ export function createAuthBackend(initial: Partial<AuthBackendState> = {}) {
       state.user = null
     },
   }
+}
+
+/** Crea el backend de auth y registra sus handlers para el test actual (setup.ts los descarta al terminar). */
+export function installAuthBackend(...args: Parameters<typeof createAuthBackend>) {
+  const backend = createAuthBackend(...args)
+  server.use(...backend.handlers)
+  return backend
 }

@@ -1,7 +1,9 @@
 # Tablero vivo
-Próxima acción: T-002 C2 en curso (sesión implementer frontera, inicio registrado en la tarea), misma rama/PR draft. A/B1/B2/B3/C1 verificadas y gate BOOTSTRAP verde; C2/D pendientes. T-001 done.
+Próxima acción: sesión nueva implementer frontera para solo T-002 D, después de comprobar salida C2/SHA/CI, misma rama/PR draft. A/B1/B2/B3/C1/C2 verificadas y gate BOOTSTRAP verde; D pendiente. T-001 done.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
 Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
+
+Salida C2 2026-10-13: UI de sesión y cache del client sobre el transporte C1: /login con navegación completa al inicio OIDC y mensaje fijo de fallo, shell con usuario/visitante, CSRF antes de habilitar mutaciones, expiración por 401 con limpieza de cache privada sin reintento ni redirección, logout con errores/reintento, remonte por identidad y dos identidades consecutivas aisladas. 24 tests nuevos (100 client) y 9 mutaciones rojas/restauradas; gate BOOTSTRAP local verde. Aceptación/navegador/documentación D pendientes; no auth completa/revisión/merge parcial.
 
 Salida C1 2026-10-13: transporte client de auth sobre el cliente HTTP único: cookie XSRF-TOKEN vigente por petición, X-XSRF-TOKEN solo en mutaciones same-origin, 401 al canal sessionEvents sin reintento, 403/red/5xx sin logout ni reenvío, renovación CSRF con reintento explícito y Zod de me nullable; hooks de sesión/logout sin efectos de UI. 41 tests nuevos (76 client) y 7 mutaciones rojas/restauradas; gate BOOTSTRAP local verde. La misma sesión publicó B3 heredada sin cambios (b653bbd). UI/cache C2 y aceptación D pendientes; no auth completa/revisión/merge parcial.
 
@@ -10,7 +12,7 @@ Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1 comprobadas; C2 en curso, D pendiente | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para C2; transporte y gate BOOTSTRAP verdes; no revisión/merge parcial |
+| 3 | [T-002](tasks/T-002-google-auth.md) | in_progress | A/B1/B2/B3/C1/C2 comprobadas; retoma D | `feat/T-002-google-auth` / [#3 draft](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ninguno para D; UI de sesión y gate BOOTSTRAP verdes; no revisión/merge parcial |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
@@ -30,6 +32,7 @@ Ninguna tarea ready; retomar T-002 en vuelo.
 | Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
 | Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |
+| Mutaciones de negocio y fin de sesión | Hallazgo T-002 C2; client AGENTS/ARCHITECTURE | Query no cancela el fetch de una mutación en vuelo: tras logout/expiración su `onSuccess` podría escribir cache privada. Al crear las primeras mutaciones de M1, invalidar (no `setQueryData`) o abortar con la señal de sesión, con prueba de logout en vuelo |
 | Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
 
 ## Hechas recientes

@@ -4,6 +4,8 @@ import { ApiError, http } from '../../services/http'
 export const AUTH_ME_PATH = '/api/v1/auth/me'
 export const AUTH_CSRF_PATH = '/api/v1/auth/csrf'
 export const LOGOUT_PATH = '/logout'
+/** Inicio OIDC: navegación completa del navegador (no fetch), para que el backend haga todo el intercambio. */
+export const GOOGLE_LOGIN_PATH = '/oauth2/authorization/google'
 
 /**
  * Contrato de `GET /api/v1/auth/me` (server: security/AuthMeResponse). `displayName` y `email` llegan siempre, pero
@@ -18,8 +20,11 @@ export const authUserSchema = z.object({
 
 export type AuthUser = z.infer<typeof authUserSchema>
 
+/** Todo lo de este prefijo describe la sesión, no datos privados: sobrevive a la limpieza de cache al salir. */
 export const authQueryKeys = {
+  all: ['auth'] as const,
   session: ['auth', 'session'] as const,
+  csrf: ['auth', 'csrf'] as const,
 }
 
 /**

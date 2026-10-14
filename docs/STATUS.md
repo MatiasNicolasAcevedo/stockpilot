@@ -1,10 +1,10 @@
 # Estado del proyecto
-Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 C1 completada (y publicación B3 pendiente cerrada) · Opus 5.5 en Claude Code; esfuerzo efectivo no expuesto, sin selección simulada ni otra sesión/modelo/delegación.
+Actualizado: 2026-10-13 (UTC-3) · implementer frontera T-002 C2 en curso (inicio registrado) · Opus 5.5 en Claude Code; esfuerzo efectivo no expuesto, sin selección simulada ni otra sesión/modelo/delegación.
 
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Dueño abre sesión nueva implementer frontera para completar solo C2, después de comprobar salida C1/SHA/CI; misma tarea/rama/PR draft |
+| Acción | C2 en curso en la sesión implementer abierta por el dueño (impacto y archivos en la tarea). Si se interrumpe, retomar la misma C2 con el prompt de abajo; misma tarea/rama/PR draft |
 | Tarea y contrato | T-002 · [tasks/T-002-google-auth.md](tasks/T-002-google-auth.md) · [S-001 v1](specs/S-001-auth-google.md) |
 | Estado | `in_progress` |
 | Ejecutor | Frontera · implementer C2; continuidad POR_SESION, dueño abre retoma |

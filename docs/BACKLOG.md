@@ -1,5 +1,7 @@
 # Tablero vivo
-Próxima acción: revisar T-002 (in_review, ronda 2 de 2, última) · reviewer de frontera en sesión nueva, distinta de la corrección R1 · `feat/T-002-google-auth` / PR #3. T-001 done.
+Próxima acción: T-002 mergeable tras la revisión ronda 2 de 2 favorable; publicar veredicto con CI del HEAD final y continuar merger elegible del PR #3. Si MERGED, la próxima sesión reconcilia el cierre y refina T-003 (draft). T-001 done.
+
+Revisión R2 2026-10-14: los 6 bloqueantes documentales de R1 resueltos y contrastados con el código; opcionales b/c correctos. Gate BOOTSTRAP (77 + 51 server, 100 client) y proxies independientes verdes sobre cac090b. Sin cambios de código de producto, contrato ni aceptación.
 
 Corrección R1 2026-10-14: README (estado del login y quickstart con requisito de credenciales Google, guía de SETUP y qué se prueba sin ellas), client/AGENTS (requisito y regla de cache/mutaciones de M1), ARCHITECTURE, SETUP y la tarea alineados al código; HANDOFF B-01 vuelve a `pendiente` (9/21) porque solo se revalidó el stack aislado; mensaje final de `scripts/test-auth-proxies.mjs` actualizado sin tocar comprobaciones. Sin cambios de código de producto, contrato ni aceptación.
 
@@ -18,7 +20,7 @@ Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | in_review | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas, corrección R1 hecha) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | ninguno; revisión ronda 2 de 2 en sesión nueva |
+| 3 | [T-002](tasks/T-002-google-auth.md) | mergeable | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas, corrección R1 hecha) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ronda 2 favorable; exigir veredicto y CI del HEAD final antes del merge; confirmación MERGED en el PR |
 
 ## Listas — orden de ejecución
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

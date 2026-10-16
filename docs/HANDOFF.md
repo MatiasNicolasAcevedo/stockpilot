@@ -2,18 +2,20 @@
 
 Registro del traspaso de la fase A (frontera) a la fase B (Junie Lite). Creado al iniciar M0 (T-000, 2026-10-12) y actualizado por cada tarea de preparación. **Documentación lista y ejecución lista son estados distintos:** un criterio se marca `verificado` solo con evidencia real (comando/run, resultado, fecha, alcance o commit; documento y acuerdo; consulta a GitHub).
 
+**Límite del dueño · 2026-10-16:** StockPilot se detiene antes de iniciar Junie, después de completar/verificar la base técnica y de consolidar kit y validar/publicar starter genérico fuera de este PR. Esta decisión sustituye la secuencia de inicio de Junie del 2026-10-14. [Detalle vigente en T-003](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--límite-de-continuidad--2026-10-16). El checklist v1 inferior se conserva como evidencia histórica: 9/21, NO_LISTO, sin marcar nuevos criterios por cambiar el objetivo. En D se debe refinar una revisión explícita para el cierre técnico y adopción, trazando los criterios comerciales/recepción sustituidos y su evidencia; se revisará independientemente. No iniciar Junie ni crear negocio para completar esos criterios históricos.
+
 ## Veredicto vigente
 - **Veredicto:** `NO_LISTO` — M0 en curso; T-001 integrada (PR #2 `84d103c`); autenticación T-002 integrada (PR #3 MERGED `512bfd9`, revisión independiente R2 APROBADO); E2E/gate FULL y cierre pendientes. 9/21 verificados: B-01 volvió a `pendiente` en la corrección R1 porque el stack ordinario cambió y solo se revalidó el aislado.
-- **Contexto usado:** PROJECT_CONTEXT.md v1.1 (2026-10-12).
+- **Contexto usado:** PROJECT_CONTEXT.md v1.2 (2026-10-16); evidencia técnica previa sobre v1.1 conservada.
 - **Continuidad:** `POR_SESION` — el dueño abre cada sesión con el prompt de [STATUS.md](STATUS.md#prompt-de-la-siguiente-sesión). No hay dispatcher instalado ni probado.
 - **Merge:** `AUTOMATICO_ELEGIBLE`: protecciones completas desde el 2026-10-12 (G-01) y primer merge real comprobado (PR #1, `9f061f5`, G-02).
-- **Primera tarea de Junie Lite:** se define en T-003 (spec del primer flujo y T-004).
+- **Primera tarea de Junie Lite:** retirada para StockPilot por decisión del dueño. En otro proyecto se deriva de su propio contexto después de adoptar el starter; no crear S-002/T-004 comerciales aquí.
 
 **Reconciliación 2026-10-13:** gh confirma PR #2 MERGED `2026-10-13T18:06:01Z`, squash `84d103cd4c6b1c58f45f6272354ef49c918bce06`; [APROBADO ronda 2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2#issuecomment-6151971467) HEAD `b1cfff045d6a918ea8dc18d60451ef447e1a7a74`/base `9f061f55f99e614e36f8317150881ed9408a8c96`. [CI HEAD](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38443725709) y [CI main](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38444010437) SUCCESS BOOTSTRAP. Planner reconcilia documentos en primer commit de rama T-002; no repite pruebas técnicas de la revisión ni marca nuevos criterios verificados. S-001/ADR 0002 publicados como contrato; S-01/S-02 requieren ejecución, S-03 Google real sigue externo con dueño.
 
 **Reconciliación 2026-10-14:** [PR #3 MERGED](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160511394) `2026-10-14T03:51:50Z`, squash `512bfd9c6b143aa484ddce72aad64bb9484e6330`; [APROBADO R2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160479927) HEAD `a64d29c`/base `84d103c`, código probado `cac090b`. CI HEAD 38507675463 y main 38508440122 SUCCESS BOOTSTRAP. Actualización documental en rama T-003, sin nuevos criterios verificados: 9/21. B-01 ordinario/S-03 siguen pendientes del dueño y E-01 requiere disponibilidad Junie. T-003 A…D pueden avanzar aisladas; el cierre no acredita ni sustituye esas evidencias.
 
-**Inicio efectivo de Junie:** el dueño decidió el 2026-10-14 completar primero la consolidación del kit local y el starter template validado/publicado, después de cerrar M0. `LISTO_PARA_JUNIE` indica aptitud técnica; no inicia por sí solo la recepción. [Decisión y secuencia](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--orden-posterior-a-m0--2026-10-14); los 21 criterios no cambian.
+**Secuencia anterior (2026-10-14, sustituida):** completar kit/starter y después iniciar Junie. La decisión del 2026-10-16 elimina ese inicio en StockPilot. El veredicto técnico nunca autoriza por sí solo continuar el producto.
 
 ## Checklist de 21 criterios
 | ID | Criterio del producto | Estado | Evidencia comprobada | Pendiente / responsable / siguiente acción |
@@ -47,4 +49,4 @@ Registro del traspaso de la fase A (frontera) a la fase B (Junie Lite). Creado a
 | Disponibilidad de Junie Lite en AIR | Dueño: abrir AIR en esta raíz y confirmar que Junie Lite está seleccionable | Necesario para el traspaso | Recepción de Junie | Confirmación registrada en E-01 |
 
 ## Prompt de recepción de Junie Lite
-Se escribe en T-003, con la primera tarea real.
+No se genera para StockPilot. STATUS mantiene el único prompt vigente de continuidad técnica; al terminar kit/starter debe indicar la detención antes de Junie. La adopción en un proyecto nuevo tendrá su propio contexto, tarea y prompt.

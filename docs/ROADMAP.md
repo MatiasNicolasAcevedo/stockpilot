@@ -2,13 +2,15 @@
 
 Hitos por resultados y dependencias, sin fechas inventadas. Intención y aceptación del producto: [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md). Cola y estado de tareas: [BACKLOG.md](BACKLOG.md).
 
+**Decisión vigente · 2026-10-16:** el dueño retira la continuidad del producto porque informa que el nombre ya existe. Se termina la base técnica, se consolida kit y se extrae/valida/publica starter genérico; después se registra StockPilot detenido antes de iniciar Junie. No se renombra/archiva ni se cambian ajustes del repo automáticamente. [Alcance y evidencia exigida](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--límite-de-continuidad--2026-10-16). Los hitos comerciales inferiores quedan históricos suspendidos.
+
 ## Hitos
 | Hito | Objetivo | Criterio de salida | Ejecutor | Estado |
 |---|---|---|---|---|
-| M0 · Base verificable | Conservar scaffolds y dejar la base lista para Junie Lite | Contexto trazado; arquitectura y Google OIDC (local) probados; unitarios/typecheck/integración; Playwright con OIDC local; CI requerida; HANDOFF con 21 criterios verificados y merges confirmados | Frontera | En curso: T-000/T-001 integradas; T-002 integrada; T-003 ready, contrato técnico y partes A…E refinados |
-| M1 · Primer flujo útil | Una funcionalidad vertical completa (ciclo C1) | Criterios de su spec cumplidos, persistencia, UI con estados/errores, E2E desktop/móvil, umbrales de cobertura activos | Junie Lite | Propuesto |
-| M2 · MVP | Los cuatro flujos F-01–F-04 del contexto | CA-01–CA-19 cubiertos con pruebas, permisos y aislamiento probados, demo con datos ficticios y README probado | Junie Lite (frontera para lo fundacional) | Propuesto |
-| M3 · Mantenimiento | Cambios pequeños y calidad sostenible | Regresiones cubiertas, dependencias atendidas por riesgo, backlog sin bloqueos olvidados, gate verde | Junie Lite | Futuro |
+| M0 · Base verificable | Conservar scaffolds y completar la base técnica para extracción | Stack conectado desde copia limpia; auth local; unitarios/typecheck/integración; Playwright real; FULL local/CI; Swagger utilizable; revisión/merges confirmados. D refina explícitamente cierre y checklist v1, sin declarar 21/21 desde el cambio de objetivo | Frontera | En curso: T-000…T-002 integradas; T-003 A publicada, B pendiente; HANDOFF v1 NO_LISTO 9/21 |
+| M1 · Primer flujo útil (histórico) | Una funcionalidad vertical completa (ciclo C1) | Spec, persistencia, UI, E2E desktop/móvil y cobertura | Junie Lite (plan anterior) | Suspendido por dueño 2026-10-16; sin spec/tarea nueva |
+| M2 · MVP (histórico) | Los cuatro flujos F-01–F-04 del contexto | CA-01–CA-19 y demo de negocio | Junie Lite (plan anterior) | Suspendido por dueño 2026-10-16 |
+| M3 · Mantenimiento de producto (histórico) | Calidad del producto comercial | Regresiones y backlog comercial | Junie Lite (plan anterior) | Suspendido por dueño 2026-10-16 |
 
 ### M0 en cuatro tareas/PRs de frontera
 | Tarea | Resultado | Depende de |
@@ -16,23 +18,23 @@ Hitos por resultados y dependencias, sin fechas inventadas. Intención y aceptac
 | [T-000](tasks/T-000-governance-and-server-foundation.md) | Gobierno, repo/ruleset, CI BOOTSTRAP + base server PostgreSQL/Flyway/Testcontainers | Scaffolds y credenciales Git |
 | [T-001](tasks/T-001-client-foundation-and-stack.md) | Base client y stack Compose db/server/client con llamada real | T-000 |
 | [T-002](tasks/T-002-google-auth.md) | Google OIDC, sesión, CSRF, identidad local y permisos base | T-001 |
-| [T-003](tasks/T-003-e2e-gate-and-handoff.md) | E2E + gate FULL + CI requerida + spec del primer flujo + traspaso | T-002 |
+| [T-003](tasks/T-003-e2e-gate-and-handoff.md) | E2E + FULL/CI + cierre técnico documentado para extracción; D revisa contrato/checklist y Swagger | T-002 |
 
-El dashboard (P-07) y las mejoras visuales se ordenan después de los flujos principales y no los retrasan.
+Dashboard y mejoras comerciales quedan suspendidos con M1…M3.
 
 ## Ciclo de producto
 | Campo | Valor |
 |---|---|
 | Ciclo/hito actual | Ninguno de producto todavía: M0 es preparación y no cuenta para el ciclo |
-| Primer ciclo propuesto | **C1 · M1 — Alta de comercio y comercio activo** (F-01 parcial): crear comercio y quedar como Administrador (CA-01, RN-18), listar y seleccionar comercios propios con rol por comercio (RN-11, RN-21) y denegar acceso a no miembros (CA-13 y CA-19 en lo aplicable). Ordenado por el contexto §5 («identificar comercio y miembros» primero). Se confirma al redactar su spec en T-003; invitaciones, catálogo, inventario, ventas y anulación siguen en M2 |
-| Alcance y salida | Se fija en la spec del primer flujo (T-003) |
+| Primer ciclo propuesto | C1 alta de comercio/comercio activo queda histórico suspendido por el dueño el 2026-10-16; no generar spec/tareas comerciales ni iniciar Junie en StockPilot |
+| Alcance y salida | Base técnica verificable para extracción; nuevo contexto de app y primer flujo solo en proyecto futuro desde el starter |
 | Cadencia efectiva | 5 tareas de producto mergeadas (`counts_for_cycle: true`), además del cierre de hito o un disparador anticipado, lo que ocurra primero |
-| Último corte revisado | 2026-10-14, corte anticipado de preparación: T-000 PR #1 `9f061f5`, T-001 PR #2 `84d103c`, T-002 PR #3 `512bfd9` confirmados; 0 tareas de producto mergeadas |
-| Balance de la revisión | Cola sin ready y dependencia de desarrollo sin Google activan corte anticipado. T-002 auth/protocolo/UI integrados tras R2 APROBADO, CI HEAD/main BOOTSTRAP verde; M0 NO_LISTO 9/21, E2E/FULL, primer contrato y recepción Junie pendientes. B-01 ordinario/S-03 con dueño; sin beneficio de producto/usuarios observado. Se absorben en T-003 el camino local explícito y allowlist DOCS_ONLY, sin ampliar objetivo. Corte previo 2026-10-13 en checkpoint planner de T-002 y PR #3 |
-| Próximo tramo | T-003 A stack/runner/dev aislados → B Playwright → C FULL/CI/clasificador → D spec C1 y tareas S → E evidencia/revisión/handoff, un PR secuencial y sesiones separadas. Frontera hasta M0 cerrado; C1 propuesto conserva alta de comercio/comercio activo, sin invitaciones |
-| Decisiones pendientes | P-01–P-10 y P-14 del contexto se resuelven al especificar el flujo que los necesita; ninguna bloquea M0 |
+| Último corte revisado | 2026-10-16, cambio de objetivo pedido por dueño: mismos merges #1 `9f061f5`, #2 `84d103c`, #3 `512bfd9`; main CI 38508440122 SUCCESS BOOTSTRAP. A publicada en #4 draft HEAD 02af4f0, suites draft verdes y agregado rechazado intencional; 0 tareas de producto mergeadas |
+| Balance de la revisión | Continuidad comercial retirada; base/kit/starter autorizados. Sin nuevos tests ni criterios acreditados: HANDOFF v1 NO_LISTO 9/21, B/C pendientes. Se conserva aceptación técnica A/B/C y S-001; D debe revisar explícitamente contrato de cierre/checklist y smoke Swagger antes de E. B-01 ordinario/S-03/E-01 conservan estado/responsable histórico; no operar stack del dueño |
+| Próximo tramo | B Playwright → C FULL/CI/clasificador → D cierre técnico/adopción/Swagger → E evidencia/revisión independiente/merge reconciliado → kit local → starter propio validado/publicado → registrar detención de StockPilot antes de Junie. Un PR activo y sesiones separadas; kit/starter fuera de T-003 |
+| Decisiones pendientes | D concreta contrato de cierre técnico/checklist y acceso seguro de Swagger; nombre/ruta del starter en su tarea posterior. P-01…P-10/P-14 de negocio quedan históricos suspendidos |
 
-**Orden posterior a M0, decidido por el dueño el 2026-10-14:** consolidar el kit local → extraer/validar/publicar starter template en repo propio → iniciar Junie. Este tramo queda fuera de T-003 y no cambia objetivo/cadencia ni criterios M0; detalle en [la decisión registrada en T-003](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--orden-posterior-a-m0--2026-10-14).
+**Orden posterior a M0 vigente (2026-10-16):** kit local → starter genérico validado/publicado en repo propio → constancia de detención antes de Junie, sin prompt de recepción en StockPilot. El starter requiere ensayo desde copia limpia con contexto de app ficticia distinta, stack/API/DB conectados, tests/E2E y Swagger, sin dependencias del kit ni dominio comercial heredado. Cada proyecto futuro define qué crear en su contexto y deriva su primera tarea; no se promete compatibilidad universal. Sustituye el orden del 2026-10-14; no abre otra tarea/PR ahora.
 
 ## Política de revisión del backlog y del alcance
 **Revisar resultados y backlog cada cinco tareas de producto mergeadas, al cerrar un hito o ante un cambio relevante, lo que ocurra primero.** El valor de la cadencia puede ajustarlo el dueño con evidencia; se registra aquí como único valor efectivo. No hay scheduler: quien toma la siguiente tarea comprueba primero si toca revisar.

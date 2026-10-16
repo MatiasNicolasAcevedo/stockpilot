@@ -1,18 +1,18 @@
 # Tablero vivo
 Próxima acción: T-003 in_progress; A entregada; sesión nueva implementer de frontera para B (recorridos reales/saneamiento), misma rama y PR #4 OPEN/draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
 
-Corte ROADMAP 2026-10-14: cola sin ready y camino de desarrollo sin Google; 0 tareas de producto, objetivo conservado. Contrato T-003 v1 y partes A…E; A implementada/verificada, B…E pendientes. M0 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 quedan con dueño.
+Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado; A publicada, B/C pendientes, D revisará explícitamente cierre técnico/checklist antes de E. HANDOFF v1 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 conservan su estado histórico con dueño.
 
-**Orden decidido por el dueño (2026-10-14):** después de M0 mergeada/reconciliada con FULL y CI verdes, consolidar el kit personal local; después extraer, validar y publicar el starter en su propio repo template; recién entonces iniciar Junie en StockPilot. La aptitud técnica del HANDOFF no inicia automáticamente Junie. No agregar el starter al alcance/PR de T-003 ni crear otra tarea/PR activa durante M0. Al cierre, STATUS entrega primero el prompt de consolidación del kit, luego el del starter y finalmente el de recepción Junie.
+**Límite del dueño (2026-10-16, sustituye el orden del 2026-10-14):** base técnica funcionando/conectada, tests/E2E, FULL/CI y Swagger/OpenAPI utilizable → M0 revisada/mergeada/reconciliada → consolidar kit local → extraer/validar/publicar starter genérico en repo propio → **StockPilot detenido antes de iniciar Junie**. Sin S-002/T-004 comerciales ni M1…M3. D debe refinar cierre técnico/adopción, smoke Swagger y revisión explícita del checklist histórico; A/B/C y S-001 se conservan. No marcar 21/21 por cambiar objetivo ni iniciar recepción. Kit/starter fuera de T-003, sin otra tarea/PR activa ahora. El dueño informa que el nombre ya existe; no archivar/renombrar ni cambiar ajustes automáticamente.
 
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
-Próximo ID libre: T-004 (se refina en T-003 D, sin ready antes del cierre M0). WIP máximo: 1 tarea / 1 PR de tarea.
+Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
 
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | E2E/FULL y primer contrato/handoff; A completa, retomar solo B | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | A…D ejecutables; E exige B-01/E-01 del dueño y reconciliar S-03 conforme a HANDOFF |
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | Base E2E/FULL; A completa, retomar solo B; D replantea cierre técnico/adopción sin negocio | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | B/C ejecutables; D revisión explícita del cierre/checklist; B-01/S-03/E-01 conservan estado histórico y responsables hasta esa revisión |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
@@ -25,10 +25,11 @@ Próximo ID libre: T-004 (se refina en T-003 D, sin ready antes del cierre M0). 
 ## Por refinar
 | Necesidad | Relación | Notas |
 |---|---|---|
-| Primer flujo de M1 (ciclo C1 propuesto: alta de comercio y comercio activo) | ROADMAP M1; CA-01, RN-11, RN-18, RN-21 | Spec y T-004/T-005 se refinan en T-003 para Junie Lite |
-| Consolidar kit personal y crear primer starter antes de Junie | Pedido del dueño 2026-10-14; después de M0 | Primero sesión local de optimización genérica del kit; luego tarea de extracción/validación/publicación en carpeta/repo propios, con FULL/CI y ensayo de adopción desde copia limpia. Fuera de T-003; sin ID de tarea de producto ni otro PR activo ahora. Nombre/ruta se concretan al refinar; inicio efectivo de Junie diferido hasta completar este tramo |
-| Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
-| Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
+| Primer flujo M1 y resto del negocio StockPilot | Contexto histórico; continuidad retirada por dueño 2026-10-16 | No refinar S-002 ni T-004/T-005 comerciales; no tomar implementación M1…M3 ni iniciar Junie en este repo |
+| Cierre técnico y Swagger utilizable | Pedido del dueño 2026-10-16; T-003 D/E | Replantear contrato de cierre/adopción y checklist con trazabilidad y revisión independiente, sin rebajar A/B/C ni declarar criterios cumplidos. Refinar smoke Swagger UI → OpenAPI → llamada pública simple real; acceso permitido/denegado según contrato, sin apertura de seguridad implícita en B/C |
+| Consolidar kit personal y crear primer starter; detener StockPilot | Pedido del dueño 2026-10-16; después de M0 | Primero consolidación genérica local; luego extracción/validación/publicación en carpeta/repo propios, FULL/CI y ensayo desde copia limpia: contexto de app ficticia distinta, instalar/levantar/probar/detener/retomar, stack conectado, E2E y Swagger. Fuera de T-003; sin otro PR activo ahora. Nombre/ruta se concretan al refinar. Registrar detención antes de Junie y no emitir prompt de recepción aquí |
+| Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2 histórico; F-01–F-04 | Suspendido por decisión del dueño 2026-10-16; no tomar tareas |
+| Dashboard básico (P-07) | Deseable histórico | Suspendido junto al negocio |
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |
 | Mutaciones de negocio y fin de sesión | Hallazgo T-002 C2; client AGENTS/ARCHITECTURE | Query no cancela el fetch de una mutación en vuelo: tras logout/expiración su `onSuccess` podría escribir cache privada. Al crear las primeras mutaciones de M1, invalidar (no `setQueryData`) o abortar con la señal de sesión, con prueba de logout en vuelo |
 | Cierre de sesión por callback OIDC cross-site | Observación no bloqueante de la revisión R1 de T-002; ADR 0002/S-001 AC-06 | El failure handler invalida la sesión ante cualquier callback fallido (B3, replay). Una navegación top-level desde otro sitio a `/login/oauth2/code/google?state=…` lleva la cookie Lax y cierra la sesión sin CSRF; impacto bajo (sin toma de cuenta). Decidir si se documenta como consecuencia aceptada en ADR 0002 o se endurece sin reabrir el replay autenticado (con su prueba), antes de un despliegue |

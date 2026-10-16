@@ -1,6 +1,8 @@
 # StockPilot · Brief operativo
 
-Índice breve derivado de [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md) (contexto v1.1). El contexto es la fuente de intención; este brief no lo reemplaza ni repite sus reglas.
+Índice breve derivado de [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md) (contexto v1.2). El contexto es la fuente de intención; este brief no lo reemplaza ni repite sus reglas.
+
+**Objetivo vigente desde el 2026-10-16:** terminar la base técnica comprobada (stack conectado, tests unitarios/integración/E2E, FULL/CI y Swagger/OpenAPI utilizable), consolidar kit y extraer/validar/publicar un starter genérico en repo propio. Detener StockPilot antes de iniciar Junie. El dueño informa que el nombre ya existe y retira la continuidad del producto; no se prepara ni implementa el primer flujo comercial. La definición inferior conserva el contexto histórico. [Decisión y alcance de cierre](tasks/T-003-e2e-gate-and-handoff.md#decisión-del-dueño--límite-de-continuidad--2026-10-16).
 
 ## Objetivo
 Aplicación web multiempresa para pequeños comercios de cualquier rubro: cada comercio administra productos y existencias, incorpora empleados por invitación y registra ventas simples con un único medio de pago, con historial trazable y sin acceso cruzado entre comercios. Proyecto demostrativo de portfolio, uso local/demo ([contexto §1–§2](../PROJECT_CONTEXT.md#1-identificación)).

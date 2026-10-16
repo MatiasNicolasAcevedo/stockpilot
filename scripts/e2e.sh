@@ -6,6 +6,12 @@ isolated_init
 [[ $# -le 1 && ( $# == 0 || "$1" == --harness || "$1" == --runner-failure ) ]] || {
   echo 'Usage: e2e.sh [--harness|--runner-failure]' >&2; exit 2;
 }
+if [[ $# == 0 ]]; then
+  # Product mode: host Node 24 runs the closed lifecycle/DB control (run-e2e.mjs). Fail before any build or resource.
+  node -e 'process.exit(Number(process.versions.node.split(".")[0]) >= 24 ? 0 : 1)' 2>/dev/null || {
+    echo 'e2e.sh: product mode requires Node >= 24 on the host (scripts/run-e2e.mjs)' >&2; exit 2;
+  }
+fi
 PROJECT="${STOCKPILOT_E2E_PROJECT:-stockpilot-e2e-$(date +%s)-$$-$RANDOM}"
 validate_project "$PROJECT"
 [[ "$PROJECT" == stockpilot-e2e-* ]] || exit 2
@@ -26,6 +32,8 @@ elif [[ "${1:-}" == --runner-failure ]]; then
   # Infrastructure assay only: explicit container failure, never product evidence.
   compose run --rm --no-deps e2e node -e 'process.exit(42)'
 else
+  # Prove this exact image's sanitizer (canaries, fail-closed refusal) before trusting any report it exports.
+  compose run --rm --no-deps e2e python3 harness/test_sanitize.py
   node scripts/run-e2e.mjs "${COMPOSE_ARGS[@]}" &
   COMPOSE_PID=$!
   code=0

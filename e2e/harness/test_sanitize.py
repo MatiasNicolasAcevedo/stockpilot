@@ -53,4 +53,31 @@ with tempfile.TemporaryDirectory() as directory:
         raise AssertionError('Audit accepted a sensitive value')
     except ValueError:
         pass
-print('Sanitizer negative canary assay passed; failure preserved')
+
+# Fail closed: an export whose own allowed fields carry an actual trace secret is refused and nothing is published,
+# so CI can upload sanitized/ only when the audit passed.
+with tempfile.TemporaryDirectory() as directory:
+    root = Path(directory)
+    case = root / 'test-results' / 'leaky-case'
+    case.mkdir(parents=True)
+    secret = 'ACTUAL_SESSION_VALUE_0123456789'
+    (root / 'junit.xml').write_text(f'<testsuites><testsuite><testcase name="leak {secret}" time="1"/></testsuite></testsuites>')
+    with zipfile.ZipFile(case / 'trace.zip', 'w') as trace:
+        trace.writestr('0-trace.trace', '')
+        trace.writestr('0-trace.network', json.dumps({'type': 'resource-snapshot', 'snapshot': {
+            'request': {'url': 'http://localhost/', 'headers': [{'name': 'Cookie', 'value': f'JSESSIONID={secret}'}]},
+            'response': {'headers': []}}}))
+    try:
+        export(root)
+        raise AssertionError('Export published a leaking report')
+    except ValueError:
+        pass
+    assert not (root / 'sanitized').exists(), 'Refused export left shareable files behind'
+    assert not (root / 'sanitized.partial').exists(), 'Refused export left staging files behind'
+    assert (case / 'trace.zip').exists(), 'Raw local artifacts must stay untouched'
+
+# Infrastructure failure before Playwright reports: nothing to publish.
+with tempfile.TemporaryDirectory() as directory:
+    export(Path(directory))
+    assert not (Path(directory) / 'sanitized').exists()
+print('Sanitizer negative canary assay passed; failure preserved; refused exports publish nothing')

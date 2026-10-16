@@ -1,4 +1,5 @@
 # A negative assay only: a real service exits while Compose starts the stack.
+# entrypoint (not command): the server image's ENTRYPOINT would otherwise receive the command as java arguments.
 services:
   server:
-    command: ["sh", "-c", "exit 42"]
+    entrypoint: ["sh", "-c", "exit 42"]

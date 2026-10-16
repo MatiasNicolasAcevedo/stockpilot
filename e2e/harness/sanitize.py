@@ -8,7 +8,6 @@ The sanitized trace is an action timeline, not a replacement for the raw local d
 import html
 import json
 import shutil
-import re
 import zipfile
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -53,17 +52,33 @@ def audit(root, destination):
 
 
 def export(root):
+    """Fail closed: build in a staging directory, audit it and only then publish it as sanitized/.
+
+    sanitized/ exists only after a passing audit, so CI may upload it; a refused or interrupted export publishes
+    nothing. Both directories are this exporter's derived output; raw artifacts are never touched.
+    """
     destination = root / 'sanitized'
-    destination.mkdir(exist_ok=True)
-    # Re-export is deterministic; remove only our numbered exports, never recurse or touch raw files.
-    for previous in destination.iterdir():
-        if previous.is_file() and re.fullmatch(r'(trace-\d+\.zip|screenshot-\d+\.png)', previous.name):
-            previous.unlink()
+    staging = root / 'sanitized.partial'
+    for previous in (staging, destination):
+        if previous.exists():
+            shutil.rmtree(previous)
     source = root / 'junit.xml'
     if not source.exists():
         # A runner infrastructure failure may occur before Playwright writes reports.
         print('No JUnit available; no sanitized product report exported')
         return
+    staging.mkdir()
+    try:
+        summary = write_export(root, source, staging)
+        audit(root, staging)
+        staging.rename(destination)
+    except BaseException:
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    print(summary)
+
+
+def write_export(root, source, destination):
     original = ET.parse(source).getroot()
     projects = {id(case): suite.get('hostname', 'unspecified') for suite in original.iter('testsuite') for case in suite.findall('testcase')}
     report = ET.Element('testsuites')
@@ -130,8 +145,7 @@ def export(root):
             links.append(f'<li><a href="{name}">{html.escape(manifest.parent.name)} — screenshot</a></li>')
     page = destination / 'index.html'
     page.write_text(page.read_text(encoding='utf-8').replace('</html>', '<ul>' + ''.join(links) + '</ul></html>'), encoding='utf-8')
-    audit(root, destination)
-    print(f'Sanitized export: tests={len(rows)} failures={failures} action-traces={trace_count}; raw artifacts remain local')
+    return f'Sanitized export: tests={len(rows)} failures={failures} action-traces={trace_count}; raw artifacts remain local'
 
 
 if __name__ == '__main__':

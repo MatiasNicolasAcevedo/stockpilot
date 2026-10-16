@@ -4,9 +4,10 @@ set -euo pipefail
 args=("$@")
 case "${STOCKPILOT_A_FAULT:-}" in
   startup)
+    # Relative to the repo root (e2e.sh's cwd): an MSYS absolute path is not a valid docker.exe path on Windows.
     for i in "${!args[@]}"; do
       if [[ "${args[$i]}" == up ]]; then
-        args=("${args[@]:0:$i}" -f "$STOCKPILOT_A_ROOT/scripts/fixtures/compose.e2e-startup-failure.yml" "${args[@]:$i}")
+        args=("${args[@]:0:$i}" -f scripts/fixtures/compose.e2e-startup-failure.yml "${args[@]:$i}")
         break
       fi
     done ;;

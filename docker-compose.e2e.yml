@@ -10,6 +10,8 @@ services:
       APP_PUBLIC_URL: http://localhost
   oidc:
     ports: !reset []
+    volumes: !override
+      - ${STOCKPILOT_E2E_ARTIFACTS:?script supplies a fresh directory}/control/oidc.json:/config/oidc.json:ro
   e2e:
     profiles: ["e2e"]
     build:

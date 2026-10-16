@@ -23,13 +23,14 @@ case "${1:-}" in
   '') scenarios=(success startup readiness signal startup-signal runner cleanup success-again) ;;
   --guards-only) scenarios=() ;;
   --startup-signal-only) scenarios=(startup-signal) ;;
+  --runner-only) scenarios=(runner) ;;
   *) exit 2 ;;
 esac
 for scenario in "${scenarios[@]}"; do
   export STOCKPILOT_E2E_PROJECT="stockpilot-e2e-a-$scenario-$$"
   export STOCKPILOT_A_FAULT="$scenario"
   options=(--harness)
-  [[ "$scenario" != runner ]] || options=()
+  [[ "$scenario" != runner ]] || options=(--runner-failure)
   code=0
   if [[ "$scenario" == startup-signal ]]; then
     bash scripts/e2e.sh --harness > "${TMPDIR:-/tmp}/stockpilot-T003-A-$scenario.log" 2>&1 &
@@ -47,6 +48,7 @@ for scenario in "${scenarios[@]}"; do
   case "$scenario" in
     success|success-again) [[ "$code" == 0 ]] ;;
     signal|startup-signal) [[ "$code" == 143 ]] ;;
+    runner) [[ "$code" == 42 ]] ;;
     *) [[ "$code" != 0 ]] ;;
   esac
   check_empty

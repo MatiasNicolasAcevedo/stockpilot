@@ -1,7 +1,9 @@
 # Tablero vivo
-Próxima acción: T-003 in_progress; A entregada; sesión nueva implementer de frontera para B (recorridos reales/saneamiento), misma rama y PR #4 OPEN/draft de planificación. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
+Checkpoint 2026-10-16: B completa, matriz real 10/10 (1280/375) y BOOTSTRAP verdes; assert rojo 2/2 y restauración, reportes saneados/auditados y canarios, runner explícito exit42/cero recursos/guardias. Inicio local=PR `7703f24`, mismo #4 OPEN/draft; SHA/CI de publicación en comentario del PR. C…E pendientes; sin FULL ni cambiar HANDOFF 9/21 ni habilitar Junie.
 
-Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado; A publicada, B/C pendientes, D revisará explícitamente cierre técnico/checklist antes de E. HANDOFF v1 NO_LISTO 9/21, BOOTSTRAP no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 conservan su estado histórico con dueño.
+Próxima acción: T-003 in_progress; A/B entregadas; sesión nueva implementer de frontera solo C (FULL/CI/clasificador), misma rama y PR #4 OPEN/draft. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
+
+Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado; A/B completas, C pendiente, D revisará explícitamente cierre técnico/checklist antes de E. HANDOFF v1 NO_LISTO 9/21, BOOTSTRAP y B dirigido no FULL, Junie no habilitada. B-01 ordinario/S-03 Google real y disponibilidad E-01 conservan su estado histórico con dueño.
 
 **Límite del dueño (2026-10-16, sustituye el orden del 2026-10-14):** base técnica funcionando/conectada, tests/E2E, FULL/CI y Swagger/OpenAPI utilizable → M0 revisada/mergeada/reconciliada → consolidar kit local → extraer/validar/publicar starter genérico en repo propio → **StockPilot detenido antes de iniciar Junie**. Sin S-002/T-004 comerciales ni M1…M3. D debe refinar cierre técnico/adopción, smoke Swagger y revisión explícita del checklist histórico; A/B/C y S-001 se conservan. No marcar 21/21 por cambiar objetivo ni iniciar recepción. Kit/starter fuera de T-003, sin otra tarea/PR activa ahora. El dueño informa que el nombre ya existe; no archivar/renombrar ni cambiar ajustes automáticamente.
 
@@ -12,7 +14,7 @@ Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
 
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | Base E2E/FULL; A completa, retomar solo B; D replantea cierre técnico/adopción sin negocio | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | B/C ejecutables; D revisión explícita del cierre/checklist; B-01/S-03/E-01 conservan estado histórico y responsables hasta esa revisión |
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | Base E2E/FULL; A/B completas, retomar solo C; D replantea cierre técnico/adopción sin negocio | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | C ejecutable; D revisión explícita del cierre/checklist; B-01/S-03/E-01 conservan estado histórico y responsables hasta esa revisión |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

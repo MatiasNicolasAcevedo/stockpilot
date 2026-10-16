@@ -10,7 +10,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   outputDir: '/artifacts/test-results',
   reporter: [
-    ['line'],
+    ['./harness/safe-reporter.ts'],
     ['html', { outputFolder: '/artifacts/playwright-report', open: 'never' }],
     ['junit', { outputFile: '/artifacts/junit.xml' }],
   ],

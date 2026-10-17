@@ -19,7 +19,7 @@ navegador ──► client (SPA + proxy) ──► server (Spring MVC, Security,
 | `client` (nginx) como origen único con proxy a `server`; SPA con Router, MUI, Query, cliente HTTP y formularios de referencia | Materializado (T-001) |
 | Endpoint público de referencia `GET /api/v1/system/info` y ProblemDetail de validación con `errors[]` | Materializado (T-001) |
 | Google OIDC + sesión + CSRF para SPA + logout | Materializado en T-002 (backend, proxies, proveedor OIDC local de pruebas y UI de sesión; PR #3 MERGED `512bfd9`, revisión independiente R2 APROBADO). Google real sin probar: pendiente externo del dueño (HANDOFF S-03) |
-| E2E Playwright con OIDC local y gate FULL | Propuesto (T-003) |
+| E2E Playwright con OIDC local y gate FULL | Materializado en T-003 A/B/C; Swagger en D2. Evidencia local y CI draft en sus checkpoints; cierre E y revisión independiente antes del merge |
 
 ## Backend: módulos por feature
 Paquete raíz generado `server.server` (se conserva; renombrarlo no aporta valor de producto). Cada feature agrupa API, caso de uso y persistencia; se separa en `web/`, `application/`, `persistence/` (y `domain/`) cuando crece.
@@ -89,6 +89,7 @@ Niveles, gate y políticas en [TESTING.md](TESTING.md); comandos y versiones en 
 |---|---|---|
 | [0001](adr/0001-base-tecnica-y-alineacion-del-scaffold.md) | Base técnica, Java 21 sobre el scaffold, imágenes fijadas, UUID v7, formato y cobertura | Aceptada |
 | [0002](adr/0002-google-oidc-session-csrf-and-proxy.md) | Google OIDC, sesión, cookie/CSRF y frontera del proxy | Aceptada; implementada, revisada en R2 e integrada en T-002 (PR #3 → `512bfd9`) |
+| [0003](adr/0003-openapi-swagger-opt-in.md) | OpenAPI/Swagger opt-in loopback y solo GET bajo `/api/docs/` | Aceptada como contrato en D1 e implementada en D2; aceptación independiente pendiente en la revisión de T-003 |
 
-## Camino aislado propuesto en T-003
-El stack ordinario conserva el perfil Google y exige credenciales privadas, sin fallback. T-003 A materializa un runner Chromium/Playwright en contenedor sobre build real/nginx/API/PostgreSQL/proveedor OIDC local con proyecto, red y volumen propios; origen/issuer coherentes en toda la red. También documenta una entrada explícita de desarrollo aislado (nginx/Vite) sin credenciales Google y resolución Windows por proceso cuando corresponda. Sin rutas de test productivas ni acceso al volumen ordinario. Sigue propuesto: no acredita B-01 ni S-03. Contrato, división y matriz en [T-003](tasks/T-003-e2e-gate-and-handoff.md).
+## Camino aislado materializado en T-003
+El stack ordinario conserva el perfil Google y exige credenciales privadas, sin fallback. T-003 A materializa un runner Chromium/Playwright en contenedor sobre build real/nginx/API/PostgreSQL/proveedor OIDC local con proyecto, red y volumen propios; origen/issuer coherentes en toda la red. La entrada explícita de desarrollo aislado (nginx/Vite) permite login, recarga, restart/rebuild/retoma con datos ficticios estables; Vite verifica HMR real y Windows aplica resolución por proceso cuando corresponde. B aporta cinco casos por viewport (1280/375), C conecta FULL/CI y D2 agrega Swagger desktop. Sin rutas de test productivas ni acceso al volumen ordinario. E revalida desde clon limpio; esta evidencia aislada corresponde a B-01 v2 y no acredita Google real ni el stack ordinario (S-03, acción del dueño). Contrato, división y matriz en [T-003](tasks/T-003-e2e-gate-and-handoff.md).

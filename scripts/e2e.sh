@@ -16,6 +16,11 @@ PROJECT="${STOCKPILOT_E2E_PROJECT:-stockpilot-e2e-$(date +%s)-$$-$RANDOM}"
 validate_project "$PROJECT"
 [[ "$PROJECT" == stockpilot-e2e-* ]] || exit 2
 export STOCKPILOT_E2E_ARTIFACTS="$ROOT/e2e/artifacts/$PROJECT"
+# Git Bash maps Windows TEMP to /tmp; Docker must bind the native host path,
+# shared with the Windows Node controller, rather than a different Linux /tmp.
+if command -v cygpath >/dev/null 2>&1; then
+  export STOCKPILOT_E2E_ARTIFACTS="$(cygpath -m "$STOCKPILOT_E2E_ARTIFACTS")"
+fi
 export APP_PUBLIC_URL=http://localhost
 COMPOSE_ARGS=(compose --env-file scripts/fixtures/e2e.env.example -p "$PROJECT"
   -f docker-compose.yml -f compose.auth-test.yml -f docker-compose.e2e.yml --profile oidc --profile e2e)

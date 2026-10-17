@@ -99,7 +99,7 @@ Prueba dirigida de R1 (T-001): con el stack local healthy, `node scripts/test-pr
 - Probar el commit que se entrega; capturar el exit code del proceso real, no de una tubería posterior.
 
 ## Trampas conocidas
-Ver [SETUP.md · Trampas conocidas](SETUP.md#trampas-conocidas) (TR-01 zona horaria del JVM, TR-03 Testcontainers desde contenedor, TR-05 `target/` compartido, TR-08 latencia del proxy con server detenido, TR-10 capturas headless a 375 px).
+Ver [SETUP.md · Trampas conocidas](SETUP.md#trampas-conocidas) (TR-01 zona horaria del JVM, TR-03 Testcontainers desde contenedor, TR-05 `target/` compartido, TR-08 latencia del proxy con server detenido, TR-10 capturas headless a 375 px, TR-12 ruta nativa del bind mount E2E al clonar en TEMP de Windows).
 
 ## Contrato T-003 (A/B/C/D1/D2 materializadas; E pendiente)
 [T-003 v1](tasks/T-003-e2e-gate-and-handoff.md) define partes A…E y criterios AC-01…12. A fija Playwright/imagen Noble 1.64.0 por digest; Chromium desktop 1280/móvil 375, build real, API/DB/proveedor local, sin MSW para acreditar integración. Se requieren aislamiento, cleanup en éxito/fallo/señal, retries 0 y reportes saneados en fallos. El camino dev local explícito conserva Google sin fallback y no acredita el stack ordinario. Desde C la fase es FULL; las ejecuciones BOOTSTRAP y dirigidas de A/B conservan su alcance y no acreditan FULL.

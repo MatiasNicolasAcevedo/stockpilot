@@ -1,7 +1,7 @@
 # Tablero vivo
-Checkpoint 2026-10-16: E (implementer de frontera, Codex API basado en GPT-6; exacto/esfuerzo no expuestos, sin selección/delegación). Inicio D2 publicado 0eca42f y CI 38989835363 reconciliados: suites SUCCESS, agregado FAILURE intencional DRAFT; main 512bfd9/CI 38508440122 SUCCESS. Inventario actualizado; clon D2 bajo TEMP reveló TR-12, ruta IPC /tmp de Git Bash corregida mínimamente con sonda real roja→verde. FULL candidato exit0 (81+60 backend,100 client,11 E2E), dev-auth nginx exit0 y cleanup propio completos. HEAD final, clon limpio, FULL/dev-auth y CI ready se registran tras ejecutarse en comentario E del PR; este commit no los anticipa.
+Checkpoint 2026-10-17: revisión T-003 ronda 1 (reviewer de frontera, Opus 5.5/Claude Code, sesión distinta de A…E). Precondición del prompt reconciliada (HEAD/PR c3118f2, base 512bfd9, CI FULL 38996463201 seis checks SUCCESS, comentario E). Diff completo revisado; FULL independiente exit 0 y dev-auth nginx exit 0 desde clon limpio en TEMP (TR-12 comprobado), cleanup cero recursos. Contrato v2, AC-11 v2, adopción genérica y ADR 0003 aceptados; HANDOFF v2 reconciliado en revisión a 20/22 (H-03/G-03 pendientes, NO_LISTO). Favorable → mergeable; SHA/CI del HEAD documental, veredicto y merge en PR #4.
 
-Próxima acción: T-003 in_review; revisión independiente de frontera en sesión nueva con la precondición del prompt de STATUS y el comentario final E cumplidos; misma rama y PR #4, único activo. Puede continuar como merger del mismo PR según AUTONOMY, nunca revisión propia del implementer. Sin siguiente tarea, negocio ni Junie. HANDOFF v2 snapshot NO_LISTO 11/22; v1 congelado NO_LISTO 9/21. T-002 done: #3 MERGED 512bfd9 con R2/CI comprobados.
+Próxima acción: T-003 mergeable; publicar veredicto APROBADO tras revalidar el HEAD documental (clon limpio FULL/dev-auth y CI FULL) y merger del mismo PR #4 según AUTONOMY. Después, sesión nueva de reconciliación documental en PR propio con el próximo ID libre no comercial (T-004) y prompt del kit. Sin negocio ni Junie. HANDOFF v2 snapshot NO_LISTO 11/22, evidencia aceptada en revisión 20/22; v1 congelado NO_LISTO 9/21.
 
 Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado y cumplido; D1 registró el contrato v2 y el checklist v2 (AC-11/AC-12 v1 sustituidos sin cumplirse, AC-13 nuevo), sujetos a la revisión independiente de E. HANDOFF v2 NO_LISTO 11/22 (snapshot E anterior a las pruebas del HEAD final; evidencia ejecutada en comentario del PR); E-01 sin disponibilidad Junie y parte ordinaria de B-01 trasladada a S-03 con acción del dueño.
 
@@ -14,7 +14,7 @@ Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
 
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_review | A/B/C/D1/D2 y evidencia E; inventario y regresión TEMP corregida, FULL candidato 11/11 y dev-auth nginx verdes. Revisión independiente solo tras evidencia final del SHA publicado | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4), ready/CI final en comentario E | Aceptación v2/cierre/merge pendientes; S-03 acción externa del dueño |
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | mergeable | A/B/C/D1/D2/E completas; revisión ronda 1 favorable con FULL/dev-auth independientes en clon limpio; merge elegible del mismo PR | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4), ready | Veredicto final tras CI FULL del HEAD documental; S-03 acción externa del dueño |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

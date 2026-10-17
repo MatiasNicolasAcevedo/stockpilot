@@ -1,52 +1,46 @@
 # Tablero vivo
-Próxima acción: T-002 mergeable tras la revisión ronda 2 de 2 favorable; publicar veredicto con CI del HEAD final y continuar merger elegible del PR #3. Si MERGED, la próxima sesión reconcilia el cierre y refina T-003 (draft). T-001 done.
+Checkpoint 2026-10-17: revisión T-003 ronda 1 (reviewer de frontera, Opus 5.5/Claude Code, sesión distinta de A…E). Precondición del prompt reconciliada (HEAD/PR c3118f2, base 512bfd9, CI FULL 38996463201 seis checks SUCCESS, comentario E). Diff completo revisado; FULL independiente exit 0 y dev-auth nginx exit 0 desde clon limpio en TEMP (TR-12 comprobado), cleanup cero recursos. Contrato v2, AC-11 v2, adopción genérica y ADR 0003 aceptados; HANDOFF v2 reconciliado en revisión a 20/22 (H-03/G-03 pendientes, NO_LISTO). Favorable → mergeable; SHA/CI del HEAD documental, veredicto y merge en PR #4.
 
-Revisión R2 2026-10-14: los 6 bloqueantes documentales de R1 resueltos y contrastados con el código; opcionales b/c correctos. Gate BOOTSTRAP (77 + 51 server, 100 client) y proxies independientes verdes sobre cac090b. Sin cambios de código de producto, contrato ni aceptación.
+Próxima acción: T-003 mergeable; publicar veredicto APROBADO tras revalidar el HEAD documental (clon limpio FULL/dev-auth y CI FULL) y merger del mismo PR #4 según AUTONOMY. Después, sesión nueva de reconciliación documental en PR propio con el próximo ID libre no comercial (T-004) y prompt del kit. Sin negocio ni Junie. HANDOFF v2 snapshot NO_LISTO 11/22, evidencia aceptada en revisión 20/22; v1 congelado NO_LISTO 9/21.
 
-Corrección R1 2026-10-14: README (estado del login y quickstart con requisito de credenciales Google, guía de SETUP y qué se prueba sin ellas), client/AGENTS (requisito y regla de cache/mutaciones de M1), ARCHITECTURE, SETUP y la tarea alineados al código; HANDOFF B-01 vuelve a `pendiente` (9/21) porque solo se revalidó el stack aislado; mensaje final de `scripts/test-auth-proxies.mjs` actualizado sin tocar comprobaciones. Sin cambios de código de producto, contrato ni aceptación.
+Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado y cumplido; D1 registró el contrato v2 y el checklist v2 (AC-11/AC-12 v1 sustituidos sin cumplirse, AC-13 nuevo), sujetos a la revisión independiente de E. HANDOFF v2 NO_LISTO 11/22 (snapshot E anterior a las pruebas del HEAD final; evidencia ejecutada en comentario del PR); E-01 sin disponibilidad Junie y parte ordinaria de B-01 trasladada a S-03 con acción del dueño.
 
-Revisión R1 2026-10-14: gate BOOTSTRAP, smoke nginx/Vite y proxies independientes verdes sobre 67aca0e; sin defectos de conducta. Bloquea AC-10: documentación del estado intermedio y quickstart público/`client/AGENTS` que omiten el requisito de credenciales Google (el server no arranca sin ellas, a propósito).
+**Límite del dueño (2026-10-16, sustituye el orden del 2026-10-14):** base técnica funcionando/conectada, tests/E2E, FULL/CI y Swagger/OpenAPI utilizable → M0 revisada/mergeada/reconciliada → consolidar kit local → extraer/validar/publicar starter genérico en repo propio → **StockPilot detenido antes de iniciar Junie**. Sin S-002/T-004 comerciales ni M1…M3. D1 refinó cierre técnico/adopción y revisión explícita del checklist histórico; D2 implementa el smoke Swagger según ADR 0003; A/B/C y S-001 se conservan. No marcar 21/21 por cambiar objetivo ni iniciar recepción. Kit/starter fuera de T-003, sin otra tarea/PR activa ahora. El dueño informa que el nombre ya existe; no archivar/renombrar ni cambiar ajustes automáticamente.
 
-Salida D 2026-10-13: smoke en Edge real por nginx y Vite contra el proveedor 3.0.3 (login por teclado, recarga, expiración sin bucle, logout, cancelación y callback huérfano; 1280/375 sin overflow, capturas en docs/evidence/T-002), OpenAPI de auth generado desde el código y verificado sin publicar `/v3/api-docs`, guía Google real en SETUP y documentación/HANDOFF alineados (10/21). Gate BOOTSTRAP local verde. Google real S-03 externo con dueño.
 Prompt canónico: [STATUS → siguiente sesión](STATUS.md#prompt-de-la-siguiente-sesión).
-Próximo ID libre: T-004. WIP máximo: 1 tarea / 1 PR de tarea.
-
-Salida C2 2026-10-13: UI de sesión y cache del client sobre el transporte C1: /login con navegación completa al inicio OIDC y mensaje fijo de fallo, shell con usuario/visitante, CSRF antes de habilitar mutaciones, expiración por 401 con limpieza de cache privada sin reintento ni redirección, logout con errores/reintento, remonte por identidad y dos identidades consecutivas aisladas. 24 tests nuevos (100 client) y 9 mutaciones rojas/restauradas; gate BOOTSTRAP local verde. Aceptación/navegador/documentación D pendientes; no auth completa/revisión/merge parcial.
-
-Salida C1 2026-10-13: transporte client de auth sobre el cliente HTTP único: cookie XSRF-TOKEN vigente por petición, X-XSRF-TOKEN solo en mutaciones same-origin, 401 al canal sessionEvents sin reintento, 403/red/5xx sin logout ni reenvío, renovación CSRF con reintento explícito y Zod de me nullable; hooks de sesión/logout sin efectos de UI. 41 tests nuevos (76 client) y 7 mutaciones rojas/restauradas; gate BOOTSTRAP local verde. La misma sesión publicó B3 heredada sin cambios (b653bbd). UI/cache C2 y aceptación D pendientes; no auth completa/revisión/merge parcial.
-
-Salida B3 2026-10-13: 18 IT HTTP reales con Spring/Tomcat/PostgreSQL, proveedor 3.0.3 y fixture negativa HTTP/JWKS test con control positivo. Login/recarga/fijación/CSRF/logout/DB y state/nonce/issuer/aud/firma/expiración/cancelación/replays/errores comprobados, recuperación sin alta/auth inválida. Dos arreglos mínimos con regresiones rojas/verde y mutación sessionFixation roja/restaurada. Gate BOOTSTRAP exit 0: 77 unit/slices + 47 IT backend, 35 client tests/tsc/lint/formato/build/docs. Cleanup efímero completo; SHA/CI finales en comentario del PR #3 tras push. C1/C2/D pendientes; no auth completa/revisión/merge parcial.
+Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 1 tarea / 1 PR de tarea.
 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 3 | [T-002](tasks/T-002-google-auth.md) | mergeable | Google OIDC, sesión/CSRF, proxies y UI de sesión (A…D comprobadas, corrección R1 hecha) | `feat/T-002-google-auth` / [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) | Ronda 2 favorable; exigir veredicto y CI del HEAD final antes del merge; confirmación MERGED en el PR |
 
-## Listas — orden de ejecución
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | mergeable | A/B/C/D1/D2/E completas; revisión ronda 1 favorable con FULL/dev-auth independientes en clon limpio; merge elegible del mismo PR | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4), ready | Veredicto final tras CI FULL del HEAD documental; S-03 acción externa del dueño |
+
+## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-
-Ninguna tarea ready; retomar T-002 en vuelo.
 
 ## Bloqueadas
 | Orden | ID | Estado | Dependencia / causa | Rol que resuelve | Condición de desbloqueo |
 |---|---|---|---|---|---|
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | draft | T-002; contrato por refinar | planner (frontera) | T-002 mergeada y contrato refinado |
 
 ## Por refinar
 | Necesidad | Relación | Notas |
 |---|---|---|
-| Primer flujo de M1 (ciclo C1 propuesto: alta de comercio y comercio activo) | ROADMAP M1; CA-01, RN-11, RN-18, RN-21 | Spec y T-004/T-005 se refinan en T-003 para Junie Lite |
-| Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2; F-01–F-04 | Se refina por tramos tras cada revisión de ciclo; no generar casilleros anticipados |
-| Dashboard básico (P-07) | Deseable simplificable | Solo después de los flujos principales |
+| Primer flujo M1 y resto del negocio StockPilot | Contexto histórico; continuidad retirada por dueño 2026-10-16 | No refinar S-002 ni T-004/T-005 comerciales; no tomar implementación M1…M3 ni iniciar Junie en este repo |
+| Cierre técnico y Swagger utilizable | Pedido del dueño 2026-10-16; T-003 D/E | Refinado en D1 (contrato v2, checklist v2, ADR 0003) e implementado en D2 (2026-10-16): opt-in local bajo `/api/docs/`, solo GET, smoke de navegador system/info 200 y me 401, FULL local. Evidencia en clon limpio/CI FULL y revisión independiente en E; se quita de la cola al mergear T-003 |
+| Consolidar kit personal y crear primer starter; detener StockPilot | Pedido del dueño 2026-10-16; después de M0 | Primero consolidación genérica local; luego extracción/validación/publicación en carpeta/repo propios, FULL/CI y ensayo desde copia limpia: contexto de app ficticia distinta, instalar/levantar/probar/detener/retomar, stack conectado, E2E y Swagger. Fuera de T-003; sin otro PR activo ahora. Nombre/ruta se concretan al refinar. Registrar detención antes de Junie y no emitir prompt de recepción aquí |
+| Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2 histórico; F-01–F-04 | Suspendido por decisión del dueño 2026-10-16; no tomar tareas |
+| Dashboard básico (P-07) | Deseable histórico | Suspendido junto al negocio |
 | Tamaño del bundle del client (539 kB, aviso de Vite > 500 kB) | Rendimiento; hallazgo de T-001 | MUI + Router + Query + Zod en un solo chunk. Code-splitting por ruta (`lazy`) cuando existan pantallas de M1; no subir `chunkSizeWarningLimit` para ocultarlo |
 | Mutaciones de negocio y fin de sesión | Hallazgo T-002 C2; client AGENTS/ARCHITECTURE | Query no cancela el fetch de una mutación en vuelo: tras logout/expiración su `onSuccess` podría escribir cache privada. Al crear las primeras mutaciones de M1, invalidar (no `setQueryData`) o abortar con la señal de sesión, con prueba de logout en vuelo |
 | Cierre de sesión por callback OIDC cross-site | Observación no bloqueante de la revisión R1 de T-002; ADR 0002/S-001 AC-06 | El failure handler invalida la sesión ante cualquier callback fallido (B3, replay). Una navegación top-level desde otro sitio a `/login/oauth2/code/google?state=…` lleva la cookie Lax y cierra la sesión sin CSRF; impacto bajo (sin toma de cuenta). Decidir si se documenta como consecuencia aceptada en ADR 0002 o se endurece sin reabrir el replay autenticado (con su prueba), antes de un despliegue |
-| Stack de desarrollo sin credenciales Google | Hallazgo de la corrección R1 de T-002; HANDOFF B-01/S-03/E-02; T-003 | Desde T-002 el stack ordinario (perfil `google`) no arranca sin `GOOGLE_CLIENT_ID`/`SECRET`, a propósito y sin fallback. Junie y los agentes solo pueden operar stacks aislados con el proveedor local (`compose.auth-test.yml`). T-003 define el camino documentado (p. ej. el stack E2E de Playwright) y cómo se revalida B-01, sin agregar fallback al mock en el perfil real |
-| Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Hoy acepta cualquier `*.md`, también bajo `server/src` o `client/src`. Riesgo bajo; se puede limitar a raíz, `docs/` y `AGENTS/CLAUDE` con el gate técnico, dentro de una tarea de CI (candidato: T-003) |
+| Stack de desarrollo sin credenciales Google | Hallazgo de la corrección R1 de T-002; HANDOFF B-01/S-03/E-02; T-003 | Desde T-002 el stack ordinario (perfil `google`) no arranca sin `GOOGLE_CLIENT_ID`/`SECRET`, a propósito y sin fallback. Junie y los agentes solo pueden operar stacks aislados con el proveedor local (`compose.auth-test.yml`). Absorbido en T-003 A/AC-10: entrada dev local explícita nginx/Vite con proyecto/datos ficticios y cleanup, sin fallback al mock en el perfil real. Resuelto A con nginx/Vite y HMR/restart/rebuild/retoma probados; B-01 ordinario se revalida con dueño, sin sustituirlo por E2E |
+| Acotar la allowlist DOCS_ONLY del clasificador | CI; revisión de T-000 | Resuelto en T-003 C/AC-08 (2026-10-16): Markdown raíz/`docs/**/*.md`/AGENTS-CLAUDE conocidos/LICENSE, solo regulares A/M, `--raw -z`; rojo previo de la allowlist anterior y matriz de 37 casos. Se quita de la cola al mergear T-003 |
 
 ## Hechas recientes
 | ID | Estado | Resultado | PR / merge |
 |---|---|---|---|
+| [T-002](tasks/T-002-google-auth.md) | done | OIDC/sesión/CSRF/proxies/UI integrados; R2 APROBADO, cierre reconciliado en primer commit T-003 | [#3](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3) → `512bfd9` (2026-10-14), CI HEAD/main BOOTSTRAP verde |
 | [T-001](tasks/T-001-client-foundation-and-stack.md) | done | Client + stack integrados; R1 cerrado por ronda 2; cierre reconciliado en rama T-002 | [#2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/2) → `84d103c` (2026-10-13), CI HEAD/main BOOTSTRAP verde |
 | [T-000](tasks/T-000-governance-and-server-foundation.md) | done | Gobierno del repo + base server PostgreSQL/Flyway | [#1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/1) → `9f061f5` (2026-10-13), CI de `main` verde |

@@ -1,6 +1,6 @@
 ---
 id: T-002
-status: mergeable
+status: done
 priority: P0
 size: L
 milestone: M0
@@ -16,6 +16,11 @@ executor: frontier
 pr: 3
 ---
 # T-002 · Google OIDC, sesión, CSRF e identidad local
+
+## Reconciliación post-merge · 2026-10-14
+- Planner frontera en sesión nueva: Codex API basado en GPT-6; identificador runtime exacto/esfuerzo efectivo no expuestos. Sin nueva revisión, implementación, delegación ni cambio de modelo. Cierre reconciliado en primer commit de rama T-003, nunca en la rama mergeada.
+- gh confirma PR #3 MERGED `2026-10-14T03:51:50Z`, squash `512bfd9c6b143aa484ddce72aad64bb9484e6330`; [APROBADO R2](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160479927) sobre HEAD `a64d29cc883d0292e3910a079d1089e6c21cf2c3` y base `84d103cd4c6b1c58f45f6272354ef49c918bce06`, código probado `cac090be87a2337889758fc4f809d945ba0f1a99`. [Cierre confirmado](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/3#issuecomment-6160511394); CI HEAD 38507675463 y [main 38508440122](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/38508440122) SUCCESS en las cinco suites BOOTSTRAP. Local main y remoto coinciden con el squash, árbol inicial limpio, ningún PR abierto.
+- Estado done; históricos de R1/R2 se conservan abajo. HANDOFF S-01/S-02 y filas OIDC/ADR/TESTING reconciliadas; B-01 ordinario y S-03 real siguen pendientes del dueño. M0 NO_LISTO 9/21 y BOOTSTRAP no FULL. No se repite gate técnico en esta reconciliación documental; docs-check conjunto se registra en T-003. Próxima tarea T-003, prompt vigente solo STATUS.
 
 ## Checkpoint de revisión · ronda 2 de 2 · favorable → mergeable · 2026-10-14
 - Rol: reviewer de frontera en sesión nueva desde la raíz, distinta de la corrección R1, de la revisión R1 y de toda la implementación. Opus 5.5 (`claude-opus-5-5`) en Claude Code (extensión VS Code); el runtime no expone el esfuerzo efectivo. GPT-6.1 Sol/Codex (modelo cruzado recomendado) no estaba disponible en esta sesión; no se simuló selección ni se lanzó otra sesión/modelo/delegación. Nota de independencia: R1, su corrección y C1/C2/D también fueron Opus 5.5 en otras sesiones; AUTONOMY recomienda, no exige, el modelo cruzado.

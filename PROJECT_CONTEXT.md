@@ -1,8 +1,10 @@
 # PROJECT_CONTEXT.md · StockPilot
 
 **Producto:** StockPilot  
-**Versión del contexto:** 1.1 (2026-10-12; cambios en §12)  
-**Estado:** **MVP aceptado por el dueño del producto**; preparación técnica M0 en curso (estado vivo en `docs/STATUS.md`).  
+**Versión del contexto:** 1.2 (2026-10-16; cambios en §12)
+
+**Estado:** **Continuidad del producto retirada por el dueño**; se completa la base técnica, kit y starter genérico y se detiene StockPilot antes de iniciar Junie (estado vivo en `docs/STATUS.md`). Los flujos/RN/CA inferiores conservan el contexto histórico, sin autorizar trabajo comercial nuevo.
+
 **Fecha de aprobación:** no registrada; no se asigna una fecha por inferencia.  
 **Ubicación:** `PROJECT_CONTEXT.md` en la raíz del repositorio `MatiasNicolasAcevedo/stockpilot`, fuera del kit local `plantilla/`.
 
@@ -396,6 +398,7 @@ Los siguientes criterios describen resultados observables del **MVP aceptado**. 
 | **1.0 / fecha de aprobación no registrada** | §5 / visión posterior | Pagos combinados registrados exclusivamente para una fase posterior; el MVP mantiene un único medio de pago por venta. | **Decisión de visión posterior confirmada**, implementación no autorizada | Evaluar solo tras observar necesidades del MVP |
 | **1.0 / fecha de aprobación no registrada** | §1, §7, §9 | Se descarta el uso de Claude Design/Artifacts para evitar complejidad; el diseño se define/refina directamente con agentes en React/Material UI y revisión visual. | **Confirmado** | Calidad visual a validar durante implementación, sin exigir prototipo externo |
 | **1.1 / 2026-10-12** | Cabecera, §1, §6 (invitación), §10, §11 (P-11, P-12, P-14) | Revisión de preparación (T-000, Opus 5.5 / Claude Code): ubicación real del archivo; repo `MatiasNicolasAcevedo/stockpilot` y titular MIT confirmados por el dueño en la sesión de preparación; referencia al inventario técnico vivo en `docs/` en lugar de duplicarlo; P-11 resuelto, P-12 actualizado; P-14 nuevo para aclarar una redacción ambigua de estados de invitación. Sin cambios de alcance, reglas RN, flujos ni criterios CA. | Repo/titular **confirmados por el dueño**; P-14 **propuesto** | P-14 se valida al especificar invitaciones |
+| **1.2 / 2026-10-16** | Cabecera; continuidad de §1, §5, §9–§11 | El dueño informa que el nombre ya existe y decide frenar StockPilot antes del inicio de Junie. Autoriza completar la base funcionando/conectada, tests incluidos E2E y Swagger, consolidar kit y extraer/validar/publicar starter genérico para definir una app nueva y comenzar desde esa base. F-01…F-04, RN y CA quedan históricos; no se renombra ni se continúa el MVP. | **Pedido explícito del dueño**; sin evaluación jurídica de la marca | T-003 B/C conservan contrato técnico; D replantea explícitamente cierre/adopción y smoke Swagger; E evidencia/revisión/merge. Kit/starter fuera de T-003, después de M0 reconciliada; registrar detención antes de Junie. S-001 v1/ADR 0002 intactos; no se acredita ninguna prueba nueva por esta decisión |
 
 Las próximas revisiones de intención deben registrarse aquí con su aceptación real y su efecto sobre flujos, reglas y criterios. Ajustes menores de trabajo dentro de un objetivo van al ROADMAP/BACKLOG cuando existan, sin introducirlos en este documento. El historial de cambios del kit genérico sigue separado del historial de StockPilot.
 

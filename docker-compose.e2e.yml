@@ -1,0 +1,30 @@
+# Overlay over docker-compose.yml + compose.auth-test.yml. No host ports.
+# Loopback origin stays valid under S-001: browser shares only the client's network namespace.
+services:
+  server:
+    environment:
+      APP_PUBLIC_URL: http://localhost
+      # Explicit opt-in (ADR 0003): Swagger UI and document under /api/docs/ for swagger.spec.ts.
+      STOCKPILOT_API_DOCS_ENABLED: "true"
+  client:
+    ports: !reset []
+    environment:
+      APP_PUBLIC_URL: http://localhost
+  oidc:
+    ports: !reset []
+    volumes: !override
+      - ${STOCKPILOT_E2E_ARTIFACTS:?script supplies a fresh directory}/control/oidc.json:/config/oidc.json:ro
+  e2e:
+    profiles: ["e2e"]
+    build:
+      context: ./e2e
+    init: true
+    shm_size: 1gb
+    network_mode: service:client
+    environment:
+      LOCAL_OIDC_PORT: "8090"
+    volumes:
+      - ${STOCKPILOT_E2E_ARTIFACTS:?script supplies a fresh directory}:/artifacts
+    depends_on:
+      client:
+        condition: service_healthy

@@ -21,13 +21,14 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 /** Session authentication grants access only to the current identity, not future commercial resources. */
 @Configuration(proxyBeanMethods = false)
-@Import({OidcConfiguration.class, LocalOidcUserService.class})
+@Import({OidcConfiguration.class, LocalOidcUserService.class, ApiDocsConfiguration.class})
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             PublicOrigin origin,
+            ApiDocsAccess apiDocs,
             LocalOidcUserService oidcUsers,
             ClientRegistrationRepository registrations,
             @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver)
@@ -36,19 +37,26 @@ public class SecurityConfig {
         csrfCookies.setCookiePath("/");
         csrfCookies.setCookieCustomizer(cookie -> cookie.sameSite("Lax").secure(origin.secure()));
         http.addFilterBefore(new PublicOriginFilter(origin), CsrfFilter.class)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/health", "/actuator/health/**")
-                        .permitAll()
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/v1/system/info",
-                                "/api/v1/auth/csrf",
-                                "/oauth2/authorization/google",
-                                "/login/oauth2/code/google")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/auth/me", "/logout")
-                        .authenticated()
-                        .anyRequest()
-                        .denyAll())
+                .authorizeHttpRequests(auth -> {
+                    if (apiDocs.enabled()) {
+                        // ADR 0003 opt-in: anonymous GET of the exact documentation routes; nothing else changes.
+                        auth.requestMatchers(HttpMethod.GET, ApiDocsAccess.PATHS)
+                                .permitAll();
+                    }
+                    auth.requestMatchers("/actuator/health", "/actuator/health/**")
+                            .permitAll()
+                            .requestMatchers(
+                                    HttpMethod.GET,
+                                    "/api/v1/system/info",
+                                    "/api/v1/auth/csrf",
+                                    "/oauth2/authorization/google",
+                                    "/login/oauth2/code/google")
+                            .permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/auth/me", "/logout")
+                            .authenticated()
+                            .anyRequest()
+                            .denyAll();
+                })
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .requestCache(cache -> cache.requestCache(new NullRequestCache()))

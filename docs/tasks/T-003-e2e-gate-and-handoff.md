@@ -1,6 +1,6 @@
 ---
 id: T-003
-status: mergeable
+status: done
 priority: P0
 size: L
 milestone: M0
@@ -16,6 +16,11 @@ executor: frontier
 pr: 4
 ---
 # T-003 · E2E, gate FULL, CI requerida y traspaso
+
+## Reconciliación post-merge · 2026-10-17
+- Planner/implementer documental de frontera en sesión nueva (T-004): Opus 5.5 (`claude-opus-5-5`)/Claude Code, esfuerzo efectivo no expuesto. Sin nueva revisión, implementación, delegación ni cambio de modelo. Cierre reconciliado en el primer commit de la rama de [T-004](T-004-m0-closure-reconciliation.md), nunca en la rama mergeada.
+- gh confirma PR #4 MERGED `2026-10-17T04:01:59Z`, squash `8cbdaab6a3f3f24e7c14704c9a5a86b0eaca4460`; [APROBADO ronda 1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229387823) sobre HEAD `819ce26cde7b60e956dae58503d0359f351c0e80` y base `512bfd9c6b143aa484ddce72aad64bb9484e6330`, código revisado `c3118f21552983e94ffac4f4f0c1185a1b7e9779`. [Cierre del merger](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229454621); CI FULL del HEAD 39000342996 y [main 39001033419](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/39001033419) SUCCESS en los seis checks. Local main y remoto coinciden con el squash, árbol inicial limpio, ningún PR abierto.
+- AC-12 v2 cumplido: revisión en sesión distinta, merge confirmado y HANDOFF v2 `CIERRE_TECNICO_VERIFICADO` 22/22 tras MERGED + CI FULL de main (reconciliación T-004). Sin prompt Junie; orden kit → starter → constancia en STATUS. Observaciones no bloqueantes de la revisión: (i) resuelta en T-004; (ii) ruleset `require_extra_approval_for_unattributed_changes` y (iii) versión de npm del host quedan registradas sin acción (configuración del dueño / sin efecto en lockfiles ni pins).
 
 ## Checkpoint de revisión · ronda 1 · favorable → mergeable · 2026-10-17
 - Rol: reviewer de frontera en sesión nueva desde la raíz, distinta de A/B/C/D1/D2/E y de toda implementación. Opus 5.5 (`claude-opus-5-5`) en Claude Code (app de escritorio); esfuerzo efectivo no expuesto (settings xhigh; high recomendado no simulado). E fue implementada con Codex/GPT-6, así que revisa el otro modelo. Sin otra sesión/modelo/delegación.
@@ -274,7 +279,7 @@ Dentro de A, primero fijar versión exacta de `@playwright/test` comprobada cont
 | AC-11 | S-002 C1 con RN/CA trazadas, contratos y migración prevista, permisos/propiedad/errores/375 px, tests por criterio; T-004 pequeña ejecutable solo después del cierre, sin ampliar F-01 a invitaciones | docs-check + revisión de spec/tareas en D | **Sustituido en D1 (2026-10-16), no cumplido:** negocio suspendido por el dueño; ver AC-11 v2 |
 | AC-12 | HANDOFF conserva evidencia real y responsables externos; revisión de T-003 en sesión distinta, merge elegible confirmado; 21/21 y prompt completo con raíz/tarea/spec/branch/rol/comandos/límites antes de habilitar Junie | HANDOFF, gh CI/PR, docs-check conjunto | **Sustituido en D1 (2026-10-16), no cumplido:** StockPilot se detiene antes de Junie; ver AC-12 v2 |
 | AC-11 v2 | Contrato v2 de cierre técnico y adopción; HANDOFF v2 con trazabilidad 1:1 de los 21 criterios v1 (conservado/ajustado/sustituido/nuevo, evidencia exigida y responsable) y ADR 0003; sin marcar criterios cumplidos ni cambiar AC-01…10 | docs-check v2 con rojos dirigidos + revisión independiente en E | D1 registrado y validado por docs-check; aceptación en la revisión E |
-| AC-12 v2 | HANDOFF v2 reconciliado con evidencia real (FULL en clon limpio y CI FULL del HEAD final con PR ready), pendientes externos explícitos con responsable; revisión en sesión distinta y merge confirmado; `CIERRE_TECNICO_VERIFICADO` solo tras MERGED + CI de main; sin prompt Junie; orden kit → starter → constancia | HANDOFF/STATUS, gh CI/PR, docs-check | Pendiente E + merger |
+| AC-12 v2 | HANDOFF v2 reconciliado con evidencia real (FULL en clon limpio y CI FULL del HEAD final con PR ready), pendientes externos explícitos con responsable; revisión en sesión distinta y merge confirmado; `CIERRE_TECNICO_VERIFICADO` solo tras MERGED + CI de main; sin prompt Junie; orden kit → starter → constancia | HANDOFF/STATUS, gh CI/PR, docs-check | Verificado: APROBADO ronda 1 (sesión distinta), PR #4 MERGED `8cbdaab` 2026-10-17, CI FULL de main 39001033419; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` en la reconciliación T-004 |
 | AC-13 | Swagger/OpenAPI según ADR 0003: apagado por defecto (401), opt-in solo con origen loopback, solo GET en rutas `/api/docs/` exactas; navegador real carga UI y documento por el origen público y ejecuta system/info 200 y me sin sesión 401; IT apagado/encendido, rojos previos y mutaciones | unitarios/IT de la propiedad y del acceso, `e2e/tests/swagger.spec.ts`, FULL | D2 verificado localmente (2026-10-16): rutas reales por HTTP dentro de `/api/docs/`; rojo previo IT encendido 4/7; `ApiDocsAccessTest` 4, `ApiDocsDisabledIT` 2, `OpenApiContractIT` 4, `ApiDocsEnabledIT` 7; 4 mutaciones rojas/restauradas; E2E 11/11 con Swagger desktop y rojo dirigido con export saneado; dev-auth nginx con navegador real; FULL local exit 0. CI del HEAD publicado en comentario del PR; aceptación en la revisión de E |
 
 A/B tienen BOOTSTRAP y ensayos dirigidos reales verdes y C activó FULL tras materializar E2E (FULL local real registrado en checkpoint C); D1 registró el contrato v2; D2 implementó ADR 0003 (checkpoints D2); E pendiente. No acreditar AC de implementación desde el texto; no retries arbitrarios, bypass, tests deshabilitados ni umbrales reducidos.

@@ -2,13 +2,13 @@
 
 Aplicación web multiempresa para pequeños comercios de distintos rubros: cada comercio administra sus productos y existencias, incorpora empleados por invitación y registra ventas simples con un único medio de pago, conservando el historial de movimientos y sin acceso cruzado entre comercios. Es un proyecto demostrativo de portfolio; todos los datos de ejemplo son ficticios.
 
-> **Estado:** en preparación técnica (hito M0). Hoy existen la base del backend (PostgreSQL + Flyway, seguridad deny-by-default, pruebas con Testcontainers), la base del frontend (shell en español que consulta el backend, con sus patrones y pruebas) y la gobernanza del repositorio. El login con Google OpenID Connect (sesión en el backend, CSRF y cierre de sesión) está implementado y probado con un proveedor OIDC local; todavía no se probó con credenciales de Google reales. Los flujos de negocio todavía **no** están implementados. Avance en [docs/STATUS.md](docs/STATUS.md).
+> **Estado:** base técnica (hito M0) cerrada y verificada el 2026-10-17; el producto no continúa por decisión del dueño, que registrará su detención después de extraer un starter genérico, sin desarrollo de negocio. Existen la base del backend (PostgreSQL + Flyway, seguridad deny-by-default, pruebas con Testcontainers), la base del frontend (shell en español que consulta el backend, con sus patrones y pruebas), el login con Google OpenID Connect (sesión en el backend, CSRF y cierre de sesión) probado con un proveedor OIDC local, E2E con Playwright, gate FULL en CI y Swagger/OpenAPI opt-in local. Todavía no se probó con credenciales de Google reales. Los flujos de negocio **no** están implementados. Avance en [docs/STATUS.md](docs/STATUS.md).
 
 ## Stack
 - **Backend:** Java 21, Spring Boot 4.1 (MVC, Data JPA, Validation, Security, OAuth2 Client, Actuator), Flyway, PostgreSQL 18.
 - **Frontend:** React 19 + TypeScript + Vite, Material UI, TanStack Query, React Router, React Hook Form + Zod; servido por nginx como origen único con proxy al backend.
 - **Identidad:** Google OpenID Connect con sesión en el backend y CSRF; proveedor OIDC local solo para pruebas.
-- **Operación y pruebas:** Docker Compose, JUnit + Testcontainers, Vitest + Testing Library + MSW, Playwright (en preparación), GitHub Actions.
+- **Operación y pruebas:** Docker Compose, JUnit + Testcontainers, Vitest + Testing Library + MSW, Playwright, GitHub Actions.
 
 ## Requisitos
 Docker Desktop (o Docker Engine) con Compose V2 y Git Bash/WSL para los scripts. No hace falta instalar Java, Maven, Node ni PostgreSQL para levantar o probar: todo corre en contenedores. Detalle y versiones en [docs/SETUP.md](docs/SETUP.md).

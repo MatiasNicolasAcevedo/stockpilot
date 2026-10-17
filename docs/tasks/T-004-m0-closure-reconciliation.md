@@ -1,6 +1,6 @@
 ---
 id: T-004
-status: in_progress
+status: in_review
 priority: P0
 size: S
 milestone: M0
@@ -11,9 +11,9 @@ spec_version: null
 depends_on: [T-003]
 branch: docs/T-004-m0-closure-reconciliation
 risk: standard
-role: implementer
+role: reviewer
 executor: frontier
-pr: null
+pr: 5
 ---
 # T-004 · Reconciliación del cierre técnico de M0
 
@@ -54,8 +54,9 @@ Política de gate: el diff es solo Markdown de la allowlist, así que la CI apli
 - Hecho: impacto registrado antes de editar; T-003 `done`; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` con evidencia de la revisión ronda 1, G-03 (MERGED + CI FULL de main) y H-03 (cierre del merger + prompt del kit); observaciones no bloqueantes (i) resueltas, (ii)/(iii) registradas sin acción en T-003; BACKLOG con T-004 en vuelo, T-003 en hechas y tres ítems resueltos retirados; corte ROADMAP; STATUS con prompt único A/B.
 - Archivos propios: esta tarea, T-003, STATUS, BACKLOG, HANDOFF, ROADMAP, ARCHITECTURE, ADR 0003, AGENTS raíz y README. Sin cambios heredados. Kit sin cambios en esta sesión (la consolidación es la próxima tarea fuera del repo).
 - Pruebas: `node scripts/docs-check.mjs` OK (39 Markdown, 5 tareas, v1 9/21, v2 22/22). `bash scripts/verify.sh --docs` con `COMPOSE_ENV_FILES=.env.example` y proyecto `stockpilot-t004-docs` exit 0; red propia retirada, cero contenedores/redes/volúmenes por label. Log `$TEMP/stockpilot-T004-docs.log`.
-- Pendiente: commit de rutas explícitas, push, PR draft; política del diff contra main; FULL local en clon limpio del HEAD publicado (cierre de M0 siempre FULL según TESTING, aunque la CI clasifique el diff como DOCS_ONLY); ready tras la CI draft; CI del HEAD final con `verify-required` SUCCESS; comentario de publicación con SHA/base/resultados.
+- Publicación: commit `108ced8` publicado (staged explícito, `git ls-files -- plantilla` vacío, `git diff --cached --check` limpio); `bash scripts/verify.sh --policy main` → `DOCS_ONLY` (10 archivos, solo documentación permitida). [PR #5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5) creado OPEN/draft, único PR abierto. Este segundo commit solo agrega PR real y la transición a `in_review`.
+- Pendiente (fuera de este commit, sin anticipar resultados de su propio SHA): clonar el HEAD publicado en `$TEMP/stockpilot-T004-final` (sin kit ni `.env`) y ejecutar FULL con `COMPOSE_ENV_FILES=.env.example`, `COMPOSE_PROJECT_NAME=stockpilot-t004-final-gate`, `STOCKPILOT_SERVER_TESTS=container`, `STOCKPILOT_E2E_PROJECT=stockpilot-e2e-t004-final` (log `$TEMP/stockpilot-T004-final-full.log`); cleanup por traps/labels y tags solo propios. Esperar la CI draft terminada, `gh pr ready 5` y CI del HEAD ready con `verify-required` SUCCESS (DOCS_ONLY). SHA/base/exit codes/run en comentario de publicación del PR, sin otro commit; si hubiera otro commit, repetir clon/FULL/CI.
 - Bloqueos: ninguno.
-- Rama / PR: `docs/T-004-m0-closure-reconciliation` · PR pendiente de crear.
-- Último commit conocido: `8cbdaab` (base main).
-- Próximo comando: `git add` explícito de los diez archivos, commit y push.
+- Rama / PR: `docs/T-004-m0-closure-reconciliation` · [PR #5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5), draft hasta completar FULL y CI; luego ready.
+- Último commit conocido: `108ced8` (primer commit de la rama; base `8cbdaab`).
+- Próximo comando: FULL en clon limpio del HEAD publicado; después ready y CI. Revisión en sesión distinta con el prompt único de STATUS (caso A).

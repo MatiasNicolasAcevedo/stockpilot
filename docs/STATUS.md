@@ -4,11 +4,11 @@ Actualizado: 2026-10-17 (UTC-3) · planner/implementer documental de frontera, T
 ## Próxima acción
 | Campo | Valor |
 |---|---|
-| Acción | Completar T-004 (docs-check, FULL local en clon limpio del HEAD publicado, CI) y pasarla a revisión en sesión distinta; tras su merge, consolidar el kit local |
+| Acción | Revisión ronda 1 de T-004 en sesión distinta y merger del mismo PR (caso A del prompt); tras su merge, consolidar el kit local (caso B) |
 | Tarea y contrato | T-004 · [tasks/T-004-m0-closure-reconciliation.md](tasks/T-004-m0-closure-reconciliation.md), AC-01…06; reconcilia [T-003](tasks/T-003-e2e-gate-and-handoff.md) `done` y el [contrato v2](tasks/T-003-e2e-gate-and-handoff.md#secuencia-posterior-al-merge) |
-| Estado | `in_progress` |
-| Ejecutor | Frontera · implementer documental; después reviewer → merger del mismo PR en sesión distinta; luego sesión del kit. Junie no habilitada |
-| Rama / PR | `docs/T-004-m0-closure-reconciliation` · PR pendiente de crear |
+| Estado | `in_review` |
+| Ejecutor | Frontera · reviewer → merger del mismo PR en sesión distinta de la implementación; luego sesión del kit. Junie no habilitada |
+| Rama / PR | `docs/T-004-m0-closure-reconciliation` · [PR #5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5), único PR abierto; ready tras FULL en clon limpio y CI draft |
 | Hecho remoto comprobado | [PR #4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) MERGED 2026-10-17T04:01:59Z → `8cbdaab6a3f3f24e7c14704c9a5a86b0eaca4460`; [APROBADO ronda 1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229387823) HEAD `819ce26`/base `512bfd9` y [cierre del merger](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229454621); [CI FULL de main 39001033419](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/39001033419) SUCCESS (seis checks). Sin PRs abiertos al iniciar; ruleset y ajustes sin cambios |
 | Bloqueo | Ninguno. S-03 (Google real y stack ordinario) externo con el dueño; no bloquea el cierre técnico |
 
@@ -35,11 +35,11 @@ Preservá cambios heredados; una tarea/PR activos; no modifiques AUTONOMY, rules
 | CI FULL de main | Run 39001033419 SUCCESS sobre `8cbdaab`: classify/docs-check/server/client/e2e/verify-required | Agregado `Política: FULL · draft false`; reconsultado con gh en T-004 |
 | Merge de T-003 | PR #4 MERGED `8cbdaab`, HEAD/base iguales al veredicto | Veredicto APROBADO ronda 1 y cierre del merger en el PR |
 | FULL independiente de la revisión de T-003 | Exit 0 en clones limpios de `c3118f2` y `819ce26` | 81 + 60 IT, client, E2E 11/11; dev-auth nginx exit 0; detalle en el checkpoint de revisión de T-003 |
-| Gate de T-004 | Pendiente en esta sesión | docs-check, política del diff y FULL local en clon limpio del HEAD publicado; resultados en checkpoint/PR |
+| Gate de T-004 | docs-check OK y `--docs` en contenedor exit 0; política `DOCS_ONLY` | FULL en clon limpio del HEAD publicado y CI del HEAD ready en el comentario de publicación del PR #5, nunca anticipados en commit |
 | Externos | S-03 pendiente del dueño, registro explícito 2026-10-16 | Google real y stack ordinario sin observar/operar; acción del dueño en HANDOFF/SETUP |
 
 ## Checkpoint breve
-T-004 en curso: precondición (caso b) reconciliada con gh; T-003 done; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` con G-03/H-03; observaciones no bloqueantes de la revisión resueltas (AGENTS, ARCHITECTURE, ADR 0003, README, BACKLOG); corte ROADMAP 2026-10-17 por cierre de hito. Próximo: docs-check, commit/push, PR draft, FULL en clon limpio, ready y revisión en sesión distinta. Kit sin cambios en esta sesión.
+T-004 en curso: precondición (caso b) reconciliada con gh; T-003 done; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` con G-03/H-03; observaciones no bloqueantes de la revisión resueltas (AGENTS, ARCHITECTURE, ADR 0003, README, BACKLOG); corte ROADMAP 2026-10-17 por cierre de hito. Publicado en PR #5 y pasado a `in_review`; FULL en clon limpio, ready y CI se registran en el comentario de publicación. Revisión en sesión distinta. Kit sin cambios en esta sesión.
 
 Los checkpoints inferiores son históricos; la única continuidad vigente es el prompt superior.
 

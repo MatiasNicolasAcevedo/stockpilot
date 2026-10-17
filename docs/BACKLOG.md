@@ -1,7 +1,7 @@
 # Tablero vivo
-Checkpoint 2026-10-17: T-004 (reconciliación documental del cierre de M0, no comercial) en curso en sesión nueva de frontera (Opus 5.5/Claude Code). gh confirma PR #4 MERGED `8cbdaab` (2026-10-17T04:01:59Z) con APROBADO ronda 1 sobre HEAD `819ce26`/base `512bfd9` y comentario de cierre del merger; CI FULL de main 39001033419 SUCCESS. T-003 done; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` (v1 congelado NO_LISTO 9/21); observaciones no bloqueantes de la revisión resueltas; revisión de ciclo por cierre de hito registrada en ROADMAP.
+Checkpoint 2026-10-17: T-004 (reconciliación documental del cierre de M0, no comercial) implementada en sesión nueva de frontera (Opus 5.5/Claude Code). gh confirma PR #4 MERGED `8cbdaab` (2026-10-17T04:01:59Z) con APROBADO ronda 1 sobre HEAD `819ce26`/base `512bfd9` y comentario de cierre del merger; CI FULL de main 39001033419 SUCCESS. T-003 done; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` (v1 congelado NO_LISTO 9/21); observaciones no bloqueantes de la revisión resueltas; revisión de ciclo por cierre de hito registrada en ROADMAP.
 
-Próxima acción: T-004 en curso; docs-check y FULL local en clon limpio, publicación y revisión/merge en sesión distinta. Después de su merge, consolidar el kit local (sin commits en StockPilot) con el prompt de STATUS. Sin negocio ni Junie.
+Próxima acción: T-004 in_review (PR #5); revisión ronda 1 y merger en sesión distinta tras el comentario de publicación con FULL en clon limpio y CI. Después de su merge, consolidar el kit local (sin commits en StockPilot) con el prompt de STATUS. Sin negocio ni Junie.
 
 Corte ROADMAP 2026-10-17: cierre del hito M0 con merges #1–#4 confirmados y CI FULL de main; 0 tareas de producto. Base técnica verificada; S-03 (Google real y stack ordinario) sigue como pendiente externo del dueño. Corte anterior 2026-10-16 por cambio de objetivo del dueño.
 
@@ -13,7 +13,7 @@ Próximo ID libre: T-005 (sin tarea comercial nueva en este repo). WIP máximo: 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 5 | [T-004](tasks/T-004-m0-closure-reconciliation.md) | in_progress | Reconciliar el cierre técnico de M0: T-003 done, HANDOFF v2 22/22, observaciones de la revisión, corte ROADMAP y prompt del kit | `docs/T-004-m0-closure-reconciliation` / PR pendiente | Ninguno |
+| 5 | [T-004](tasks/T-004-m0-closure-reconciliation.md) | in_review | Reconciliar el cierre técnico de M0: T-003 done, HANDOFF v2 22/22, observaciones de la revisión, corte ROADMAP y prompt del kit | `docs/T-004-m0-closure-reconciliation` / [#5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5) | Revisión en sesión distinta; FULL/CI del HEAD en el comentario de publicación |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

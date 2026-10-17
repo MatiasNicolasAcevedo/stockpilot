@@ -1,7 +1,7 @@
 # Tablero vivo
-Checkpoint 2026-10-17: T-004 (reconciliación documental del cierre de M0, no comercial) implementada en sesión nueva de frontera (Opus 5.5/Claude Code). gh confirma PR #4 MERGED `8cbdaab` (2026-10-17T04:01:59Z) con APROBADO ronda 1 sobre HEAD `819ce26`/base `512bfd9` y comentario de cierre del merger; CI FULL de main 39001033419 SUCCESS. T-003 done; HANDOFF v2 22/22 `CIERRE_TECNICO_VERIFICADO` (v1 congelado NO_LISTO 9/21); observaciones no bloqueantes de la revisión resueltas; revisión de ciclo por cierre de hito registrada en ROADMAP.
+Checkpoint 2026-10-17: revisión T-004 ronda 1 (reviewer de frontera, Opus 5.5/Claude Code, sesión distinta de la implementación). Precondición del caso A reconciliada (HEAD/PR 456a2bd, base 8cbdaab, CI ready 39002790741 verify-required SUCCESS, comentario de publicación con FULL en clon limpio). Hechos de #4 (MERGED 8cbdaab, APROBADO, cierre del merger, CI 39000342996/39001033419) contrastados con gh; diff completo solo Markdown, árbol técnico idéntico a main; HANDOFF v2 22/22 aceptado criterio por criterio; docs-check OK, DOCS_ONLY y --docs exit 0. Favorable → mergeable; SHA/CI del HEAD documental, veredicto y merge en PR #5.
 
-Próxima acción: T-004 in_review (PR #5); revisión ronda 1 y merger en sesión distinta tras el comentario de publicación con FULL en clon limpio y CI. Después de su merge, consolidar el kit local (sin commits en StockPilot) con el prompt de STATUS. Sin negocio ni Junie.
+Próxima acción: T-004 mergeable; publicar veredicto APROBADO tras la CI del HEAD documental y merger del mismo PR #5 según AUTONOMY. Después de su merge, consolidar el kit local (sin commits en StockPilot) con el caso B del prompt de STATUS. Sin negocio ni Junie.
 
 Corte ROADMAP 2026-10-17: cierre del hito M0 con merges #1–#4 confirmados y CI FULL de main; 0 tareas de producto. Base técnica verificada; S-03 (Google real y stack ordinario) sigue como pendiente externo del dueño. Corte anterior 2026-10-16 por cambio de objetivo del dueño.
 
@@ -13,7 +13,7 @@ Próximo ID libre: T-005 (sin tarea comercial nueva en este repo). WIP máximo: 
 ## En vuelo
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
-| 5 | [T-004](tasks/T-004-m0-closure-reconciliation.md) | in_review | Reconciliar el cierre técnico de M0: T-003 done, HANDOFF v2 22/22, observaciones de la revisión, corte ROADMAP y prompt del kit | `docs/T-004-m0-closure-reconciliation` / [#5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5) | Revisión en sesión distinta; FULL/CI del HEAD en el comentario de publicación |
+| 5 | [T-004](tasks/T-004-m0-closure-reconciliation.md) | mergeable | Reconciliar el cierre técnico de M0: T-003 done, HANDOFF v2 22/22, observaciones de la revisión, corte ROADMAP y prompt del kit | `docs/T-004-m0-closure-reconciliation` / [#5](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5), ready | Revisión ronda 1 favorable; veredicto tras CI del HEAD documental y merge del mismo PR |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |

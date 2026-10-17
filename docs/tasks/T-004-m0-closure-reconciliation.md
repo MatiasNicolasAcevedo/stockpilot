@@ -1,6 +1,6 @@
 ---
 id: T-004
-status: in_review
+status: mergeable
 priority: P0
 size: S
 milestone: M0
@@ -11,11 +11,21 @@ spec_version: null
 depends_on: [T-003]
 branch: docs/T-004-m0-closure-reconciliation
 risk: standard
-role: reviewer
+role: merger
 executor: frontier
 pr: 5
 ---
 # T-004 · Reconciliación del cierre técnico de M0
+
+## Checkpoint de revisión · ronda 1 · favorable → mergeable · 2026-10-17
+- Rol: reviewer de frontera en sesión nueva desde la raíz, distinta de la implementación de T-004 y de la revisión/merger de T-003. Opus 5.5 (`claude-opus-5-5`) en Claude Code (app de escritorio); esfuerzo efectivo no expuesto (settings xhigh; high recomendado, no simulado). GPT-6.1 Sol/Codex recomendado no disponible en esta sesión: revisa el mismo modelo que implementó, en sesión distinta. Sin otra sesión/modelo/delegación.
+- Precondición del prompt (caso A) reconciliada antes de actuar: árbol limpio sin heredados; HEAD local = tracking = PR #5 `456a2bdfb402149e86cece0245f6d6d387b0296e`, base `8cbdaab6a3f3f24e7c14704c9a5a86b0eaca4460`; #5 OPEN/ready, MERGEABLE/CLEAN, único PR abierto; [comentario de publicación](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5#issuecomment-6229658193) con HEAD/base, FULL local en clon limpio exit 0 (81 + 60 IT, client 100, E2E 11/11) y CI ready [39002790741](https://github.com/MatiasNicolasAcevedo/stockpilot/actions/runs/39002790741) del mismo HEAD con `verify-required` SUCCESS (DOCS_ONLY; draft 39002229212 FAILURE intencional).
+- Hechos de GitHub contrastados con gh: PR #4 MERGED 2026-10-17T04:01:59Z → `8cbdaab`, HEAD `819ce26`/base `512bfd9` iguales a los del [veredicto APROBADO ronda 1](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229387823); [cierre del merger](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4#issuecomment-6229454621) con `--squash --delete-branch --match-head-commit 819ce26…` sin `--admin`. CI 39000342996 (HEAD `819ce26`, pull_request) y main 39001033419 (`8cbdaab`, push): classify/docs-check/server/client/e2e/verify-required SUCCESS. Ruleset 24964732 activo sin bypass; ajustes: público, solo squash, borrado de ramas, sin auto-merge.
+- Diff completo `8cbdaab..456a2bd` revisado (10 Markdown): AGENTS (Junie histórica, checklist v2 de 22), README (estado y Playwright), ARCHITECTURE y ADR 0003 (aceptación registrada sin cambiar decisiones), BACKLOG (T-003 en hechas, tres ítems resueltos retirados con traza, T-005 libre), ROADMAP (M0 cerrado, T-004 no comercial, corte 2026-10-17), T-003 `done`/AC-12 v2, HANDOFF y STATUS. Fuera del Markdown no cambia ningún archivo (`git diff --name-only 8cbdaab 456a2bd -- . ':(exclude)*.md'` vacío): el código probado es el mismo de la CI FULL de main.
+- HANDOFF v2 criterio por criterio: C-01…C-03, E-01…E-03, B-01…B-03, S-01, S-02, V-01…V-03, G-01, G-02, H-02 y O-01 con la evidencia aceptada en el veredicto ronda 1 de T-003; S-03 verificado solo como pendiente externo explícito del dueño (Google real no probado), igual que lo aceptó la revisión; G-03 con #1–#4 MERGED y CI FULL de main; H-01 (contraste independiente de esta revisión: AGENTS/ARCHITECTURE/ADR 0003/README/ROADMAP/BACKLOG coherentes con el objetivo vigente) y H-03 (cierre del merger y prompt con precondición) cumplidos. 22/22 `CIERRE_TECNICO_VERIFICADO` conforme a la regla de veredictos (MERGED + CI FULL de main, en la reconciliación posterior); v1 9/21 intacto.
+- Gate de la política del diff: `node scripts/docs-check.mjs` OK (39 Markdown, 5 tareas, v1 9/21, v2 22/22); `bash scripts/verify.sh --policy main` → `DOCS_ONLY` (10 archivos); `bash scripts/verify.sh --docs` en contenedor con `COMPOSE_ENV_FILES=.env.example`, proyecto `stockpilot-t004-review-docs` → exit 0 (log `$TEMP/stockpilot-T004-review-docs.log`); `down --volumes --remove-orphans`, cero contenedores/redes/volúmenes por label y sin tags propios. FULL no repetido: DOCS_ONLY y árbol técnico idéntico a `8cbdaab`. Nunca se operaron el stack ordinario, `stockpilot_db-data` ni Google real.
+- Observaciones no bloqueantes (para la constancia de detención): (i) HANDOFF conserva «rige en `main` cuando T-004 se revise… y se mergee» y responsables «Revisor de T-004» en H-01/H-03; quedan satisfechos con este veredicto y el merge, y la constancia puede reescribirlos en pasado. (ii) Referencias a «21 criterios» que persisten en T-000/T-003 son checkpoints históricos, no reglas vigentes.
+- Transición: favorable → `mergeable` (este commit, solo tarea/STATUS/BACKLOG). El prompt de STATUS cambia su caso A a la retoma de merge y conserva el caso B sin cambios. Después del push: docs-check y CI del nuevo HEAD; veredicto APROBADO con SHA HEAD/base en el PR y merger del mismo PR según AUTONOMY. SHA final, CI, veredicto y merge solo en comentarios del PR.
 
 ## Checkpoint de inicio e impacto · 2026-10-17
 - Rol: planner/implementer documental de frontera en sesión nueva desde la raíz. Opus 5.5 (`claude-opus-5-5`) en Claude Code (app de escritorio); esfuerzo efectivo no expuesto (high recomendado, no simulado). Sin otra sesión/modelo/delegación. Distinta de la sesión revisora/merger de T-003.
@@ -45,7 +55,7 @@ No incluye: código, scripts, CI, configuración, AUTONOMY, ruleset/ajustes, kit
 | AC-03 | Observaciones no bloqueantes de la revisión resueltas sin cambiar decisiones: AGENTS sin «21 criterios» como checklist vigente y con Junie marcada histórica; ARCHITECTURE/ADR 0003 con la aceptación independiente registrada; BACKLOG sin ítems resueltos por T-003 | `rg` de las frases + revisión | Registrado: AGENTS (Junie histórica, checklist v2 de 22), ARCHITECTURE (E2E y ADR 0003), estado de ADR 0003, README (estado y stack); BACKLOG sin las tres filas resueltas, listadas en la fila de T-003 |
 | AC-04 | Revisión de ciclo por cierre de hito registrada en ROADMAP (corte, balance, próximo tramo, decisiones pendientes) sin abrir negocio | revisión | Registrado: corte 2026-10-17 en «Ciclo de producto» y M0 cerrado técnicamente |
 | AC-05 | STATUS deja un único prompt con precondiciones explícitas: revisión/merger de T-004 y, tras su MERGED, consolidación del kit local; orden kit → starter genérico validado/publicado desde copia limpia con contexto ficticio distinto → constancia de detención; nunca prompt Junie | docs-check (prompt sin placeholders, menciona T-004) + revisión | Registrado: prompt único con casos A/B; docs-check sin placeholders |
-| AC-06 | Gate según TESTING: política del diff DOCS_ONLY, docs-check verde; como reconciliación del cierre de M0, además FULL local desde clon limpio del HEAD publicado; CI del HEAD final ready con `verify-required` SUCCESS | `bash scripts/verify.sh --policy`, `--docs`, FULL en clon limpio, gh | pendiente |
+| AC-06 | Gate según TESTING: política del diff DOCS_ONLY, docs-check verde; como reconciliación del cierre de M0, además FULL local desde clon limpio del HEAD publicado; CI del HEAD final ready con `verify-required` SUCCESS | `bash scripts/verify.sh --policy`, `--docs`, FULL en clon limpio, gh | Verificado en revisión: implementer con FULL exit 0 en clon limpio de `456a2bd` y CI ready 39002790741 `verify-required` SUCCESS ([comentario de publicación](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/5#issuecomment-6229658193)); reviewer con docs-check OK, `--policy main` DOCS_ONLY y `--docs` exit 0. CI del HEAD documental final en el veredicto del PR |
 
 Política de gate: el diff es solo Markdown de la allowlist, así que la CI aplica `DOCS_ONLY`. No se reducen suites, asserts ni umbrales.
 

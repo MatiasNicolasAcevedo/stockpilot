@@ -59,10 +59,13 @@ function execute(request) {
     default: throw new Error('Unknown test control operation');
   }
 }
-const inducedFailure = process.env.STOCKPILOT_E2E_ASSERT_FAILURE === '1';
-const directedArguments = inducedFailure ? ['--', 'system.spec.ts'] : [];
+// Directed red assays: each value selects one spec, which changes only its relevant expected UI result.
+const directedSpecs = { 1: 'system.spec.ts', swagger: 'swagger.spec.ts' };
+const requested = process.env.STOCKPILOT_E2E_ASSERT_FAILURE ?? '';
+const inducedFailure = Object.hasOwn(directedSpecs, requested) ? requested : '0';
+const directedArguments = inducedFailure === '0' ? [] : ['--', directedSpecs[inducedFailure]];
 const runner = spawn('docker', [...args, 'run', '--rm', '--no-deps',
-  '-e', `E2E_ASSERT_FAILURE=${inducedFailure ? '1' : '0'}`,
+  '-e', `E2E_ASSERT_FAILURE=${inducedFailure}`,
   'e2e', 'npm', 'test', ...directedArguments], { stdio: 'inherit' });
 let finished = false;
 const completion = new Promise(resolveExit => {

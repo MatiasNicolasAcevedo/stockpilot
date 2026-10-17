@@ -3,6 +3,8 @@ services:
   server:
     environment:
       APP_PUBLIC_URL: ${APP_PUBLIC_URL:?dev-auth.sh supplies the mode's origin}
+      # Explicit opt-in (ADR 0003): <origin>/api/docs/swagger-ui.html; both modes use HTTP loopback origins.
+      STOCKPILOT_API_DOCS_ENABLED: "true"
   client:
     environment:
       APP_PUBLIC_URL: ${APP_PUBLIC_URL:?dev-auth.sh supplies the mode's origin}

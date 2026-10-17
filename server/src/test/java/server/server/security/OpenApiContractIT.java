@@ -24,11 +24,13 @@ import server.server.TestcontainersConfiguration;
 
 /**
  * AC-10: the OpenAPI document generated from the running code describes me/csrf/logout with cookie session and CSRF
- * header security, without credentials, while the documentation routes stay denied over HTTP.
+ * header security, without credentials, while the documentation routes stay denied over HTTP. ADR 0003 switch off:
+ * only springdoc's own generation flag is forced on to obtain the bean, so the denial proves the permission depends
+ * exclusively on the StockPilot switch (the true default, without springdoc routes, is ApiDocsDisabledIT).
  */
 @Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(properties = "springdoc.api-docs.enabled=true")
 @AutoConfigureMockMvc
 class OpenApiContractIT {
     @Autowired
@@ -43,8 +45,8 @@ class OpenApiContractIT {
     @BeforeEach
     void generateFromCode() throws Exception {
         // Direct bean call: generation does not require (nor open) the HTTP route.
-        var request = new MockHttpServletRequest("GET", "/v3/api-docs");
-        json = new String(openApi.openapiJson(request, "/v3/api-docs", Locale.ROOT), StandardCharsets.UTF_8);
+        var request = new MockHttpServletRequest("GET", "/api/docs/openapi");
+        json = new String(openApi.openapiJson(request, "/api/docs/openapi", Locale.ROOT), StandardCharsets.UTF_8);
         document = JsonPath.parse(json);
     }
 
@@ -108,5 +110,15 @@ class OpenApiContractIT {
     void documentationRoutesStayDeniedOverHttp() throws Exception {
         mockMvc.perform(get("/v3/api-docs")).andExpect(status().isUnauthorized());
         mockMvc.perform(get("/swagger-ui/index.html")).andExpect(status().isUnauthorized());
+        // ADR 0003 routes: springdoc serves the document here, but the switch is off.
+        for (String path : new String[] {
+            "/api/docs/openapi",
+            "/api/docs/openapi/swagger-config",
+            "/api/docs/openapi.yaml",
+            "/api/docs/swagger-ui.html",
+            "/api/docs/swagger-ui/index.html"
+        }) {
+            mockMvc.perform(get(path)).andExpect(status().isUnauthorized());
+        }
     }
 }

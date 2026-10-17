@@ -4,6 +4,8 @@ services:
   server:
     environment:
       APP_PUBLIC_URL: http://localhost
+      # Explicit opt-in (ADR 0003): Swagger UI and document under /api/docs/ for swagger.spec.ts.
+      STOCKPILOT_API_DOCS_ENABLED: "true"
   client:
     ports: !reset []
     environment:

@@ -36,6 +36,8 @@ services:
       APP_PUBLIC_URL: &public-origin ${APP_PUBLIC_URL:-http://127.0.0.1:${CLIENT_PORT:-5173}}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # OpenAPI/Swagger UI (ADR 0003): apagado; opt-in solo con APP_PUBLIC_URL HTTP loopback, en /api/docs/.
+      STOCKPILOT_API_DOCS_ENABLED: ${STOCKPILOT_API_DOCS_ENABLED:-false}
       SERVER_FORWARD_HEADERS_STRATEGY: framework
     depends_on:
       db:

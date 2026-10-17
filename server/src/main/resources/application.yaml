@@ -25,6 +25,24 @@ spring:
 stockpilot:
   # Versión del artefacto Maven, filtrada en el build por spring-boot-starter-parent (delimitador @).
   version: "@project.version@"
+  api-docs:
+    # ADR 0003: OpenAPI/Swagger UI opt-in, solo con APP_PUBLIC_URL HTTP loopback (ApiDocsAccess valida al arrancar).
+    # Mapeo explícito: el binding relajado esperaría STOCKPILOT_APIDOCS_ENABLED.
+    enabled: ${STOCKPILOT_API_DOCS_ENABLED:false}
+
+# El mismo interruptor gobierna springdoc y el permiso GET de SecurityConfig; apagado no registra rutas.
+springdoc:
+  api-docs:
+    enabled: ${stockpilot.api-docs.enabled}
+    path: /api/docs/openapi
+  swagger-ui:
+    enabled: ${stockpilot.api-docs.enabled}
+    # Raíz de la UI = /api/docs/ (recursos en /api/docs/swagger-ui/**): atraviesa los proxies existentes de /api/.
+    path: /api/docs/swagger-ui.html
+    supported-submit-methods: get
+    persist-authorization: false
+    # Sin la URL de ejemplo externa (petstore) en el inicializador: solo llamadas same-origin.
+    disable-swagger-default-url: true
 
 server:
   # No host publication in ordinary Compose; nginx/Vite remove incoming forwarding metadata.

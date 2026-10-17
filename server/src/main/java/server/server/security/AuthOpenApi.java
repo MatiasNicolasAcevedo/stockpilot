@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * OpenAPI metadata for the session/CSRF contract (S-001). Documentation only: the generated document is not exposed,
- * because SecurityConfig keeps /v3/api-docs and swagger-ui under deny-by-default.
+ * OpenAPI metadata for the session/CSRF contract (S-001). Documentation only: the document is published solely by the
+ * local opt-in of ADR 0003 (GET under /api/docs/); otherwise SecurityConfig keeps every documentation route denied.
  */
 @Configuration(proxyBeanMethods = false)
 class AuthOpenApi {

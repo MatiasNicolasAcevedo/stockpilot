@@ -23,6 +23,11 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop', use: { viewport: { width: 1280, height: 800 } } },
-    { name: 'mobile', use: { viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true } },
+    // Swagger UI is a developer tool (ADR 0003), not the SPA's 375 px contract: its smoke runs only at desktop 1280.
+    {
+      name: 'mobile',
+      testIgnore: /swagger\.spec\.ts$/,
+      use: { viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true },
+    },
   ],
 });

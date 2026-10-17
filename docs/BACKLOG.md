@@ -1,7 +1,7 @@
 # Tablero vivo
-Checkpoint 2026-10-16: D1 completa (planner/implementer documental de frontera): contrato v2 de cierre técnico y adopción, checklist v2 de HANDOFF con trazabilidad 1:1 (8/22; v1 congelado 9/21), ADR 0003 de Swagger opt-in y docs-check v2 con 14 rojos dirigidos. Inicio local=PR `3a973e8` (CI suites con e2e SUCCESS, agregado rechazo DRAFT), mismo #4 OPEN/draft; SHA/CI de publicación en comentario del PR. D2/E pendientes; Junie no habilitada.
+Checkpoint 2026-10-16: D2 completa (implementer de frontera): ADR 0003 implementado sin enmienda (Swagger/OpenAPI opt-in solo con origen HTTP loopback, rutas reales bajo `/api/docs/` solo GET, `servers` fijo, UI solo GET), encendido en overlay E2E y dev-auth; rojo previo del IT encendido, unitarios/IT apagado/encendido, 4 mutaciones rojas, `swagger.spec.ts` real (11/11 y rojo dirigido saneado) y FULL local verde. Inicio local=PR `e7e2040` (CI suites con e2e SUCCESS, agregado rechazo DRAFT), mismo #4 OPEN/draft; SHA/CI de publicación en comentario del PR. E pendiente; Junie no habilitada.
 
-Próxima acción: T-003 in_progress; A/B/C/D1 entregadas; sesión nueva de frontera solo D2 (implementar ADR 0003: Swagger/OpenAPI opt-in con pruebas reforzadas y smoke de navegador real), misma rama y PR #4 OPEN/draft. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
+Próxima acción: T-003 in_progress; A/B/C/D1/D2 entregadas; sesión nueva de frontera solo E (inventario, FULL y dev-auth desde clon limpio, HANDOFF v2 reconciliado como máximo `PENDIENTE_MERGE_M0`, `in_review`, PR ready con CI FULL y prompt de revisión independiente), misma rama y PR #4 OPEN/draft. T-002 done: PR #3 MERGED `512bfd9`, R2 APROBADO y CI HEAD/main BOOTSTRAP verdes comprobados el 2026-10-14.
 
 Corte ROADMAP 2026-10-16: cambio de objetivo del dueño, sin continuidad comercial; 0 tareas de producto. Contrato técnico T-003 v1 de A/B/C conservado y cumplido; D1 registró el contrato v2 y el checklist v2 (AC-11/AC-12 v1 sustituidos sin cumplirse, AC-13 nuevo), sujetos a la revisión independiente de E. HANDOFF v2 NO_LISTO 8/22; E-01 sin disponibilidad Junie y parte ordinaria de B-01 trasladada a S-03 con acción del dueño.
 
@@ -14,7 +14,7 @@ Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
 |---|---|---|---|---|---|
 
-| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | Base E2E/FULL; A/B/C/D1 completas (contrato v2, checklist v2, ADR 0003), retomar solo D2 Swagger opt-in sin negocio | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | D2 ejecutable; si springdoc exige salir de `/api/docs/` o ampliar proxies, checkpoint y enmienda del ADR; S-03 (Google real/stack ordinario) con acción del dueño |
+| 4 | [T-003](tasks/T-003-e2e-gate-and-handoff.md) | in_progress | Base E2E/FULL; A/B/C/D1/D2 completas (contrato v2, checklist v2, ADR 0003 implementado), retomar solo E (evidencia final y paso a revisión) sin negocio | `ci/T-003-e2e-gate-and-handoff` / [#4](https://github.com/MatiasNicolasAcevedo/stockpilot/pull/4) draft | E ejecutable; S-03 (Google real/stack ordinario) con acción del dueño |
 
 ## Listas
 | Orden | ID | Estado | Objetivo | Rama / PR | Bloqueo |
@@ -28,7 +28,7 @@ Próximo ID libre: T-004 (sin tarea comercial nueva en este repo). WIP máximo: 
 | Necesidad | Relación | Notas |
 |---|---|---|
 | Primer flujo M1 y resto del negocio StockPilot | Contexto histórico; continuidad retirada por dueño 2026-10-16 | No refinar S-002 ni T-004/T-005 comerciales; no tomar implementación M1…M3 ni iniciar Junie en este repo |
-| Cierre técnico y Swagger utilizable | Pedido del dueño 2026-10-16; T-003 D/E | Refinado en D1 (2026-10-16): contrato v2 y checklist v2 con trazabilidad, ADR 0003 (opt-in local bajo `/api/docs/`, solo GET, smoke de navegador system/info 200 y me 401). Implementación D2 y evidencia/revisión E pendientes; se quita de la cola al mergear T-003 |
+| Cierre técnico y Swagger utilizable | Pedido del dueño 2026-10-16; T-003 D/E | Refinado en D1 (contrato v2, checklist v2, ADR 0003) e implementado en D2 (2026-10-16): opt-in local bajo `/api/docs/`, solo GET, smoke de navegador system/info 200 y me 401, FULL local. Evidencia en clon limpio/CI FULL y revisión independiente en E; se quita de la cola al mergear T-003 |
 | Consolidar kit personal y crear primer starter; detener StockPilot | Pedido del dueño 2026-10-16; después de M0 | Primero consolidación genérica local; luego extracción/validación/publicación en carpeta/repo propios, FULL/CI y ensayo desde copia limpia: contexto de app ficticia distinta, instalar/levantar/probar/detener/retomar, stack conectado, E2E y Swagger. Fuera de T-003; sin otro PR activo ahora. Nombre/ruta se concretan al refinar. Registrar detención antes de Junie y no emitir prompt de recepción aquí |
 | Resto del MVP (invitaciones, catálogo/inventario, ventas, anulación) | ROADMAP M2 histórico; F-01–F-04 | Suspendido por decisión del dueño 2026-10-16; no tomar tareas |
 | Dashboard básico (P-07) | Deseable histórico | Suspendido junto al negocio |

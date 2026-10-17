@@ -60,6 +60,8 @@ Usar `app_user` y constraint única de V1; ninguna nueva tabla comercial o token
 ## Criterios de aceptación
 Aclaración de estado (2026-10-13, T-002 D; criterios sin cambios): todos los AC tienen evidencia ejecutable en PR #3, registrada por parte en la [tarea](../tasks/T-002-google-auth.md#aceptación-y-pruebas); revisión independiente pendiente. Nombres reales: `AuthSession.test.tsx`/`AppRoutes.test.tsx`/`csrf.test.ts` (client), `OidcLoginIT`/`OidcFailureIT`/`PublicOriginIT`/`OidcProfileTest`/`OpenApiContractIT` (server), smoke `scripts/test-auth-ui-smoke.mjs`. OpenAPI (AC-10) se genera desde el código y se verifica sin publicar `/v3/api-docs`, que sigue denegado. AC-10 deja Google real como pendiente externo explícito del dueño (S-03).
 
+Trazabilidad (2026-10-16, T-003 D1; criterios sin cambios): [ADR 0003](../adr/0003-openapi-swagger-opt-in.md) acepta publicar OpenAPI/Swagger UI solo por opt-in explícito en desarrollo local loopback, bajo `/api/docs/` y solo GET; implementación y pruebas en T-003 D2. Por defecto las rutas de documentación siguen denegadas como verifica AC-10, y la UI no concede permisos: cada llamada atraviesa esta misma cadena de seguridad.
+
 | ID | Dado / cuando / entonces | CA del contexto | Nivel / archivo previsto | Parte T-002 |
 |---|---|---|---|---|
 | AC-01 | OIDC válido crea usuario; segundo login conserva ID y actualiza atributos; mismo email con identidad distinta no fusiona; concurrencia no duplica | Prerrequisito CA-01/02 | unit `IdentityServiceTest`; PostgreSQL `IdentityServiceIT` | A |

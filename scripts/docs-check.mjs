@@ -146,24 +146,68 @@ if (existsSync(join(ROOT, 'docs/BACKLOG.md'))) {
   for (const t of [...inFlight, ...ready]) if (!listed.has(t.id)) fail('docs/BACKLOG.md', `${t.id} (${t.status}) no figura`);
 }
 
-// 6. HANDOFF: 21 criterios, estados válidos y veredicto coherente
+// 6. HANDOFF: checklist v1 histórico (21, congelado) y checklist v2 de cierre técnico (22, T-003 D1).
+// Cada tabla se lee solo dentro de su sección; v2 traza cada ID v1 con su origen.
 const CRITERIA = ['C-01', 'C-02', 'C-03', 'E-01', 'E-02', 'E-03', 'B-01', 'B-02', 'B-03', 'S-01', 'S-02', 'S-03',
   'V-01', 'V-02', 'V-03', 'G-01', 'G-02', 'G-03', 'H-01', 'H-02', 'H-03'];
+const CRITERIA_V2 = [...CRITERIA, 'O-01'];
+const ORIGINS = ['conservado', 'ajustado', 'sustituido', 'nuevo'];
 let verified = null;
+let verifiedV2 = null;
 if (existsSync(join(ROOT, 'docs/HANDOFF.md'))) {
   const handoff = read('docs/HANDOFF.md');
-  const states = new Map();
+  const sections = new Map();
+  let current = null;
   for (const line of handoff.split('\n')) {
-    const m = line.match(/^\|\s*([CEBSVGH]-0[1-3])\s*\|[^|]*\|\s*`?(pendiente|verificado|bloqueado)`?\s*\|/);
-    if (!m) continue;
-    if (states.has(m[1])) fail('docs/HANDOFF.md', `criterio repetido ${m[1]}`);
-    states.set(m[1], m[2]);
+    const h = line.match(/^## (.+)$/);
+    if (h) { current = h[1].trim(); sections.set(current, []); } else if (current) sections.get(current).push(line);
   }
-  for (const id of CRITERIA) if (!states.has(id)) fail('docs/HANDOFF.md', `falta el criterio ${id} con estado válido`);
-  verified = [...states.values()].filter((s) => s === 'verificado').length;
-  const verdict = handoff.match(/Veredicto[^\n]*?`(NO_LISTO|PENDIENTE_MERGE_M0|LISTO_PARA_JUNIE)`/)?.[1];
-  if (!verdict) fail('docs/HANDOFF.md', 'veredicto ausente o inválido');
-  if (verdict === 'LISTO_PARA_JUNIE' && verified !== 21) fail('docs/HANDOFF.md', 'LISTO_PARA_JUNIE exige 21 verificados');
+  const sectionLines = (prefix) => {
+    const names = [...sections.keys()].filter((name) => name.startsWith(prefix));
+    if (names.length !== 1) fail('docs/HANDOFF.md', `se espera una sección "${prefix}…" (hay ${names.length})`);
+    return names.flatMap((name) => sections.get(name));
+  };
+  const rows = (lines, pattern, version) => {
+    const found = new Map();
+    for (const line of lines) {
+      const m = line.match(pattern);
+      if (!m) continue;
+      if (found.has(m[1])) fail('docs/HANDOFF.md', `criterio ${version} repetido ${m[1]}`);
+      found.set(m[1], { text: m[2].trim(), state: m[3], origin: m[4] });
+    }
+    return found;
+  };
+
+  const v1 = rows(sectionLines('Checklist v1'),
+    /^\|\s*([CEBSVGH]-0[1-3])\s*\|([^|]*)\|\s*`?(pendiente|verificado|bloqueado)`?\s*\|/, 'v1');
+  for (const id of CRITERIA) if (!v1.has(id)) fail('docs/HANDOFF.md', `falta el criterio v1 ${id} con estado válido`);
+  verified = [...v1.values()].filter((c) => c.state === 'verificado').length;
+  const verdict = handoff.match(/^- \*\*Veredicto v1[^\n]*?`(NO_LISTO|PENDIENTE_MERGE_M0|LISTO_PARA_JUNIE)`/m)?.[1];
+  if (!verdict) fail('docs/HANDOFF.md', 'veredicto v1 ausente o inválido');
+  else if (verdict !== 'NO_LISTO') fail('docs/HANDOFF.md', `veredicto v1 congelado como historial: NO_LISTO, no ${verdict}`);
+
+  const v2 = rows(sectionLines('Checklist v2'),
+    /^\|\s*([CEBSVGHO]-0[1-3])\s*\|([^|]*)\|\s*`?(pendiente|verificado|bloqueado)`?\s*\|\s*`?([a-z]+)/, 'v2');
+  for (const id of v2.keys()) if (!CRITERIA_V2.includes(id)) fail('docs/HANDOFF.md', `criterio v2 desconocido ${id}`);
+  for (const id of CRITERIA_V2) {
+    const c = v2.get(id);
+    if (!c) { fail('docs/HANDOFF.md', `falta el criterio v2 ${id} con estado y origen válidos`); continue; }
+    if (!ORIGINS.includes(c.origin)) fail('docs/HANDOFF.md', `${id} v2 con origen inválido "${c.origin}"`);
+    else if ((id === 'O-01') !== (c.origin === 'nuevo')) fail('docs/HANDOFF.md', `${id} v2: solo O-01 es nuevo; los IDs v1 se trazan`);
+    else if (c.origin === 'conservado' && c.text !== v1.get(id)?.text) fail('docs/HANDOFF.md', `${id} v2 conservado con texto distinto de v1`);
+    else if (['ajustado', 'sustituido'].includes(c.origin) && c.text === v1.get(id)?.text) {
+      fail('docs/HANDOFF.md', `${id} v2 ${c.origin} con el mismo texto que v1`);
+    }
+  }
+  verifiedV2 = [...v2.values()].filter((c) => c.state === 'verificado').length;
+  const verdictV2 = handoff.match(/^- \*\*Veredicto v2[^\n]*?`(NO_LISTO|PENDIENTE_MERGE_M0|CIERRE_TECNICO_VERIFICADO)`/m)?.[1];
+  if (!verdictV2) fail('docs/HANDOFF.md', 'veredicto v2 ausente o inválido');
+  if (verdictV2 === 'CIERRE_TECNICO_VERIFICADO' && verifiedV2 !== 22) {
+    fail('docs/HANDOFF.md', 'CIERRE_TECNICO_VERIFICADO exige 22/22 verificados');
+  }
+  if (verdictV2 === 'PENDIENTE_MERGE_M0' && (verifiedV2 !== 21 || v2.get('G-03')?.state === 'verificado')) {
+    fail('docs/HANDOFF.md', 'PENDIENTE_MERGE_M0 exige 21/22 con solo G-03 pendiente');
+  }
   if (!/`(POR_SESION|CICLO_AUTOMATICO_VERIFICADO)`/.test(handoff)) fail('docs/HANDOFF.md', 'modalidad de continuidad ausente');
   if (!/`(AUTOMATICO_ELEGIBLE|MANUAL_POR_DUENO)`/.test(handoff)) fail('docs/HANDOFF.md', 'modalidad de merge ausente');
 }
@@ -188,6 +232,10 @@ if (existsSync(join(ROOT, 'docs/STATUS.md'))) {
   }
   const count = status.match(/Verificados:\s*(\d+)\/21/)?.[1];
   if (verified !== null && Number(count) !== verified) fail('docs/STATUS.md', `Verificados ${count}/21 ≠ HANDOFF ${verified}/21`);
+  const countV2 = status.match(/Cierre técnico v2:\s*(\d+)\/22/)?.[1];
+  if (verifiedV2 !== null && Number(countV2) !== verifiedV2) {
+    fail('docs/STATUS.md', `Cierre técnico v2 ${countV2}/22 ≠ HANDOFF ${verifiedV2}/22`);
+  }
   if (existsSync(join(ROOT, 'docs/BACKLOG.md'))) {
     const next = read('docs/BACKLOG.md').match(/^Próxima acción:[^\n]*/m)?.[0] ?? '';
     if (id && !next.includes(id)) fail('docs/BACKLOG.md', `la próxima acción no coincide con STATUS (${id})`);
@@ -235,4 +283,4 @@ if (errors.length) {
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`docs-check: OK (${markdown.length} Markdown, ${tasks.size} tareas, HANDOFF ${verified}/21 verificados)`);
+console.log(`docs-check: OK (${markdown.length} Markdown, ${tasks.size} tareas, HANDOFF v1 ${verified}/21, v2 ${verifiedV2}/22 verificados)`);
